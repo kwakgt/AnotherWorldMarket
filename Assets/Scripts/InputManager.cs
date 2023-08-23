@@ -1,16 +1,33 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 public class InputManager : MonoBehaviour
 {
-    static InputManager instance;
+    public static InputManager instance;
 
+    public bool rKeyDown { get; private set; }
     void Awake()
     {
         instance = this;
+    }
+
+    void Update()
+    {
+        InputButton();
+    }
+
+
+
+    void InputButton()
+    {
+        if(Input.GetKeyDown(KeyCode.R))
+        {
+            rKeyDown = true;
+        }
+
+        if(Input.GetKeyDown(KeyCode.B))
+        {
+            GameManager.instance.ChangeBuliderMode();
+        }
     }
 
     //TODO:: 단축키 추가

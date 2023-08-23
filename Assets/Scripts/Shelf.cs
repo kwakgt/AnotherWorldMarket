@@ -1,10 +1,11 @@
 using UnityEngine;
 using System;
 using Random = UnityEngine.Random;
-using JetBrains.Annotations;
-using System.Linq;
+using UnityEngine.UIElements;
+using UnityEngine.EventSystems;
+using Unity.Mathematics;
 
-public class Shelf : MonoBehaviour
+public class Shelf : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDragHandler
 {
     public bool displayGridGizmos;
 
@@ -154,7 +155,34 @@ public class Shelf : MonoBehaviour
         }
     }
 
+    //test
+
+    private Vector2 deltaValue = Vector2.zero;
+    //pointerDrag : GameObject 호출
+    //dragging : 현재 드래그 작업이 진행 중입니다.
+    //delta : 드래그 위치부터의 위치변화량
+    public void OnBeginDrag(PointerEventData eventData)
+    {
+        
+    }
+
+    public void OnDrag(PointerEventData eventData)
+    {
+        Vector2 firstPosition = transform.position;                                     //처음위치 저장(복구 시 사용)
+        Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);    //마우스포지션 저장
+        int dx = (int)(mousePosition.x - firstPosition.x);                              //마우스 위치와 처음위치의 x변화량
+        int dy = (int)(mousePosition.y - firstPosition.y);                              //마우스 위치와 처음위치의 y변화량
+        transform.Translate(dx, dy, 0);                                                 //변화량만큼 이동, (int)를 이용해 1칸씩 이동
+    }
+
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        Debug.Log("OnEndDrag : " + eventData.pointerDrag);
+        deltaValue = Vector2.zero;
+        eventData.dragging = true;
+    }
+    
     enum Type { SmallShelf, MediumShelf, LargeShelf }
-    enum SalesDir { Left, Right, Up, Down }
+    enum SalesDir { Left, Down, Right, Up }
 
 }

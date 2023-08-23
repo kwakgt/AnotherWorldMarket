@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using static UnityEngine.UI.CanvasScaler;
+
 
 public class MouseController : MonoBehaviour
 {
@@ -19,7 +16,6 @@ public class MouseController : MonoBehaviour
     {
         cam = GetComponent<Camera>();
         customerPanel = GameObject.Find("CustomerPanel");
-        Debug.Log(customerPanel.name);
     }
 
     void Update()
@@ -56,7 +52,5 @@ public class MouseController : MonoBehaviour
             GameManager.instance.selectedUnit = null;
             customerPanel.SetActive(false);
         }
-
-
     }
 }

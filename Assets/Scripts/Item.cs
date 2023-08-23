@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.Build;
 using UnityEngine;
-using UnityEngine.U2D;
+
 
 public class Item
 {
