@@ -1,11 +1,10 @@
 using UnityEngine;
 using System;
+using UnityEngine.EventSystems;
 using Random = UnityEngine.Random;
 using UnityEngine.UIElements;
-using UnityEngine.EventSystems;
-using Unity.Mathematics;
 
-public class Shelf : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDragHandler
+public class Shelf : MonoBehaviour, IBeginDragHandler
 {
     public bool displayGridGizmos;
 
@@ -13,12 +12,13 @@ public class Shelf : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDragHan
     Vector2 worldPosition;                      //중심점 월드포인트
     int shelfFrontSize;                         //매대 판매위치 노드크기
     int shelfWidth;                             //매대 노드너비
-    SalesDir salesDir;                          //현재 매대의 판매방향
+    int shelfHeight;                             //매대 노드높이
+    SaleDir saleDir;                          //현재 매대의 판매방향
 
     Node[,] nodeOccupiedByShelf;                //매대가 차지하고 있는 노드들
     Vector2[] ShelfFrontPosition;               //판매위치 노드의 중심좌표
-    
 
+    bool isMoving;                              //모드 플래그
     float nodeRadius;                           //노드 반지름
     float nodeDiameter;                         //노드 지름
     Item[] ItemSlot;                            //매대 아이템 슬롯
@@ -26,9 +26,10 @@ public class Shelf : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDragHan
     void Awake()
     {
         shelfFrontSize = 4;
-        shelfWidth = 1;
+        shelfHeight = 4;
+        shelfWidth = 2;
         worldPosition = transform.position;
-        salesDir = SalesDir.Left;
+        saleDir = SaleDir.Left;
         ItemSlot = new Item[shelfFrontSize];
     }
     // Start is called before the first frame update
@@ -37,8 +38,8 @@ public class Shelf : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDragHan
         nodeRadius = Nodefinding.instance.GetNodeRadius();
         nodeDiameter = nodeRadius * 2;
         shelfIndex = ShelfManager.instance.RequestShelfIndex();
-        nodeOccupiedByShelf = SetNodeOccupiedByShelf(worldPosition, shelfWidth, shelfFrontSize);
-        ShelfFrontPosition = SetShelfFrontPosition();
+        nodeOccupiedByShelf = SetNodeOccupiedByShelf(worldPosition, shelfWidth, shelfHeight);    //SetShelfFrontPosition(); 이전에 실행되야함,  순서중요!!!
+        ShelfFrontPosition = SetShelfFrontPosition(nodeOccupiedByShelf);                                               //SetNodeOccupiedByShelf();가 먼저 실행되야함, nodeOccupiedByShelf값이 있어야 ShelfFrontPosition 계산 가능
 
         ShelfManager.instance.AddShelfDictionary(shelfIndex, this); //현재 매대를 매니저에 추가
 
@@ -53,7 +54,9 @@ public class Shelf : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDragHan
     private void Update()
     {
         //TEST
-        Debug.Log(((ItemSlot[0] != null) ? ItemSlot[0].amount : 0) + "  ,  " + ((ItemSlot[1] != null) ? ItemSlot[1].amount : 0) + "  ,  " + ((ItemSlot[2] != null) ? ItemSlot[2].amount : 0) + "  ,  " + ((ItemSlot[3] != null) ? ItemSlot[3].amount : 0));
+        OnMoving();
+        
+        //Debug.Log(((ItemSlot[0] != null) ? ItemSlot[0].amount : 0) + "  ,  " + ((ItemSlot[1] != null) ? ItemSlot[1].amount : 0) + "  ,  " + ((ItemSlot[2] != null) ? ItemSlot[2].amount : 0) + "  ,  " + ((ItemSlot[3] != null) ? ItemSlot[3].amount : 0));
     }
 
     Node[,] SetNodeOccupiedByShelf(Vector2 center, int sizeX, int sizeY) //매대가 점유하고 있는 노드들, 매대의 중심점, 크기
@@ -75,27 +78,27 @@ public class Shelf : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDragHan
         return Nodefinding.instance.RequestNodeArea(vector2s, sizeX, sizeY);    //월드 좌표를 노드로 변경
     }
 
-    Vector2[] SetShelfFrontPosition()    //판매위치의 월드좌표(판매위치는 매대 앞)
+    Vector2[] SetShelfFrontPosition(Node[,] occupiedNodes)    //판매위치의 월드좌표(판매위치는 매대 앞)
     {
         Vector2[] position = new Vector2[shelfFrontSize];
 
-        switch (salesDir)
+        switch (saleDir)
         {
-            case SalesDir.Left:
+            case SaleDir.Left:
                 for (int i = 0; i < shelfFrontSize; i++)    //가장 왼쪽줄의 worldpoint - 노드지름 
-                    position[i] = new Vector2(nodeOccupiedByShelf[shelfWidth - 1, i].worldPosition.x - nodeDiameter, nodeOccupiedByShelf[shelfWidth - 1, i].worldPosition.y);
+                    position[i] = new Vector2(occupiedNodes[0, i].worldPosition.x - nodeDiameter, occupiedNodes[0, i].worldPosition.y);
                 break;
-            case SalesDir.Right:
+            case SaleDir.Right:
                 for (int i = 0; i < shelfFrontSize; i++)    //가장 오른쪽줄의 worldpoint + 노드지름 
-                    position[i] = new Vector2(nodeOccupiedByShelf[shelfWidth - 1, i].worldPosition.x + nodeDiameter, nodeOccupiedByShelf[shelfWidth - 1, i].worldPosition.y);
+                    position[i] = new Vector2(occupiedNodes[shelfWidth - 1, i].worldPosition.x + nodeDiameter, occupiedNodes[shelfWidth - 1, i].worldPosition.y);
                 break;
-            case SalesDir.Up:
+            case SaleDir.Up:
                 for (int i = 0; i < shelfFrontSize; i++)    //가장 위쪽줄의 worldpoint + 노드지름 
-                    position[i] = new Vector2(nodeOccupiedByShelf[i, shelfWidth - 1].worldPosition.x, nodeOccupiedByShelf[i, shelfWidth - 1].worldPosition.y + nodeDiameter);
+                    position[i] = new Vector2(occupiedNodes[i, shelfHeight - 1].worldPosition.x, occupiedNodes[i, shelfHeight - 1].worldPosition.y + nodeDiameter);
                 break;
-            case SalesDir.Down:
-                for (int i = 0; i < shelfFrontSize; i++)    //가장 위쪽줄의 worldpoint - 노드지름
-                    position[i] = new Vector2(nodeOccupiedByShelf[i, 0].worldPosition.x, nodeOccupiedByShelf[i, 0].worldPosition.y - nodeDiameter);
+            case SaleDir.Down:
+                for (int i = 0; i < shelfFrontSize; i++)    //가장 아래줄의 worldpoint - 노드지름
+                    position[i] = new Vector2(occupiedNodes[i, 0].worldPosition.x, occupiedNodes[i, 0].worldPosition.y - nodeDiameter);
                 break;
         }
         return position;
@@ -155,34 +158,131 @@ public class Shelf : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDragHan
         }
     }
 
-    //test
+    
 
-    private Vector2 deltaValue = Vector2.zero;
+    void OnMoving()     //판매대 이동,회전,설치
+    {
+        if (isMoving)
+        {
+            //이동, worldposition 변수가 아닌 transform 현재위치로 계산해야됨
+            Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);    //마우스포지션 저장
+            int dx = (int)(mousePosition.x - transform.position.x);                         //마우스 위치와 처음위치의 x변화량
+            int dy = (int)(mousePosition.y - transform.position.y);                         //마우스 위치와 처음위치의 y변화량
+            transform.Translate(dx, dy, 0, Space.World);                                    //변화량만큼 이동, (int)를 이용해 정수칸씩 이동, Space.World 필수
+
+            //회전
+            if (InputManager.instance.rKeyDown)
+            {
+                Debug.Log("R눌림");
+                transform.Rotate(Vector3.forward, 90);                                      //90도 회전
+                ChangeSaleDirection();                                                      //판매방향 변경
+                SwapWidthAndHeight();                                                       //노드 가로,세로 크기변경
+                InputManager.instance.rKeyDown = false;
+            }
+
+            //설치
+            if(Input.GetMouseButtonDown(0))
+            {
+                //이동중에 마우스 클릭하면 현재 위치에 설치시도
+                //설치 :: 설치할 위치에서 점유노드, 판매노드가 전부 walkable이면 설치
+                //취소 :: 설치할 위치에서 점유노드, 판매노드 중에 unwalkable이 하나라도 있으면 취소
+
+                Node[,] occupiedNodes = SetNodeOccupiedByShelf(transform.position, shelfWidth, shelfHeight); //현재 위치의 점유노드 계산
+                Vector2[] frontPosition = SetShelfFrontPosition(occupiedNodes);                                              //현재 위치의 판매위치 계산
+
+
+                bool frontcheck = false;
+                for (int i = 0; i < shelfFrontSize; i++)
+                {
+                    Node checkFrontNode = Nodefinding.instance.RequestNode(frontPosition[i]);   //판매위치로 노드위치 계산
+                    if(checkFrontNode != null && checkFrontNode.walkable)
+                    {
+                        frontcheck = true;
+                    }
+                    else
+                    {
+                        frontcheck = false;
+                        break;
+                    }
+                }
+
+                bool walkableCheck = false;
+                for (int y = 0; y < shelfHeight; y++)
+                {
+                    for (int x = 0; x < shelfWidth; x++)
+                    {
+                        Node checkOccupiedNode = occupiedNodes[x, y];
+                        if (checkOccupiedNode != null && checkOccupiedNode.walkable)    //이동이 아닌 새로 설치할 때 점유노드가 없으므로 Null체크
+                        {
+                            walkableCheck = true;
+                            checkOccupiedNode.walkable = false;                 //매대는 장애물이므로 walkable false로 변경
+                        }
+                        else
+                        {
+                            walkableCheck = false;                      //노드가 없거나 하나라도 unwalkable일 시 설치 취소
+                            break;
+                        }
+                    }
+                }
+
+                if (walkableCheck && frontcheck)                      //노드가 전부 walkable이라면 설치시작
+                {
+                    worldPosition = transform.position;     //월드포지션 변경
+                    nodeOccupiedByShelf = occupiedNodes;  //점유노드 변경
+                    ShelfFrontPosition = frontPosition;     //판매위치 변경
+                    ShelfManager.instance.UpdateShelfDictionary(shelfIndex, this);  //변경된 정보 매니저에 업데이트
+                }
+                else
+                {
+                    ChangeWalkebleNodeOccupiedbyshelf(false);   //취소되면 처음에 walkable → true로 변경한 거 원상복구
+                }
+                isMoving = false;                       //설치 or 취소가 완료되면 이동완료
+            }
+        }
+    }
+
+    void ChangeWalkebleNodeOccupiedbyshelf(bool walkable) //노드들의 walkable 변경
+    {
+        for (int y = 0; y < shelfHeight; y++)
+        {
+            for (int x = 0; x < shelfWidth; x++)
+            {
+                if (nodeOccupiedByShelf[x, y] != null) nodeOccupiedByShelf[x, y].walkable = walkable;   //이동이 아닌 새로 설치할 때 점유노드가 없으므로 NULL체크
+                else break;
+            }
+        }
+    }
+
+    void ChangeSaleDirection()
+    {
+        if(saleDir == SaleDir.Up)
+        {
+            saleDir = SaleDir.Left;
+        }
+        saleDir += 1;
+    }
+
+    void SwapWidthAndHeight()
+    {
+        int swap = shelfWidth;
+        shelfWidth = shelfHeight;
+        shelfHeight = swap;
+    }
+
     //pointerDrag : GameObject 호출
     //dragging : 현재 드래그 작업이 진행 중입니다.
     //delta : 드래그 위치부터의 위치변화량
     public void OnBeginDrag(PointerEventData eventData)
     {
-        
+        if (GameManager.instance.gameMode == GameManager.GameMode.Builder)
+        {
+            isMoving = true;    //이동모드로 전환
+            //드래그로 들어올려진 순간 현재 점유하고 있는 노드를 walkable로 변경
+            ChangeWalkebleNodeOccupiedbyshelf(true);
+        }
     }
 
-    public void OnDrag(PointerEventData eventData)
-    {
-        Vector2 firstPosition = transform.position;                                     //처음위치 저장(복구 시 사용)
-        Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);    //마우스포지션 저장
-        int dx = (int)(mousePosition.x - firstPosition.x);                              //마우스 위치와 처음위치의 x변화량
-        int dy = (int)(mousePosition.y - firstPosition.y);                              //마우스 위치와 처음위치의 y변화량
-        transform.Translate(dx, dy, 0);                                                 //변화량만큼 이동, (int)를 이용해 1칸씩 이동
-    }
-
-    public void OnEndDrag(PointerEventData eventData)
-    {
-        Debug.Log("OnEndDrag : " + eventData.pointerDrag);
-        deltaValue = Vector2.zero;
-        eventData.dragging = true;
-    }
-    
     enum Type { SmallShelf, MediumShelf, LargeShelf }
-    enum SalesDir { Left, Down, Right, Up }
+    enum SaleDir { Left, Down, Right, Up }
 
 }

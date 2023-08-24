@@ -21,7 +21,12 @@ public class GameManager : MonoBehaviour
 
     void Pause()
     {
-        
+        if(InputManager.instance.bKeyDown)
+        {
+            ChangeBuliderMode();
+            InputManager.instance.bKeyDown = false;
+        }
+
         if (gameMode == GameMode.Builder)
         {
             Time.timeScale = 0;

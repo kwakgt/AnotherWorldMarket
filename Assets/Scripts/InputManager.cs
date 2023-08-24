@@ -4,7 +4,8 @@ public class InputManager : MonoBehaviour
 {
     public static InputManager instance;
 
-    public bool rKeyDown { get; private set; }
+    public bool bKeyDown { get; set; }
+    public bool rKeyDown { get; set; }
     void Awake()
     {
         instance = this;
@@ -12,21 +13,22 @@ public class InputManager : MonoBehaviour
 
     void Update()
     {
-        InputButton();
+        InputKey();
     }
 
 
 
-    void InputButton()
+    void InputKey()
     {
-        if(Input.GetKeyDown(KeyCode.R))
+  
+        if (Input.GetKeyDown(KeyCode.R))
         {
             rKeyDown = true;
         }
 
-        if(Input.GetKeyDown(KeyCode.B))
+        if (Input.GetKeyDown(KeyCode.B))
         {
-            GameManager.instance.ChangeBuliderMode();
+            bKeyDown = true;
         }
     }
 
