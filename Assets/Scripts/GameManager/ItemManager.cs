@@ -31,9 +31,22 @@ public class ItemManager : MonoBehaviour
 
     public Item GetItem(string name)
     {
-        Item item = new Item(itemNameDB[name]);
-        if (itemNameDB.ContainsKey(name))   return item;
-        else                            return null;
+        if (itemNameDB.ContainsKey(name))
+        {
+            Item item = new Item(itemNameDB[name]);
+            return item;
+        }
+        else return null;
+    }
+
+    public Item GetItem(int uniqueKey)
+    {
+        if (itemUniqueKeyDB.ContainsKey(uniqueKey))
+        {
+            Item item = new Item(itemUniqueKeyDB[uniqueKey]);
+            return item;
+        }
+        else return null;
     }
 
     public Item GetRandomItem()
@@ -43,5 +56,10 @@ public class ItemManager : MonoBehaviour
             return new Item(item);
         else
             return null;
+    }
+
+    public int CountOfAllItem()     //아이템 총 개수
+    {
+        return itemUniqueKeyDB.Count;
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class InputManager : MonoBehaviour
@@ -5,6 +6,7 @@ public class InputManager : MonoBehaviour
     public static InputManager instance;
 
     public bool bKeyDown { get; set; }
+    public bool iKeyDown { get; set; }
     public bool rKeyDown { get; set; }
     void Awake()
     {
@@ -29,6 +31,11 @@ public class InputManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.B))
         {
             bKeyDown = true;
+        }
+
+        if(Input.GetKeyDown(KeyCode.I))
+        {
+            iKeyDown = true;
         }
     }
 

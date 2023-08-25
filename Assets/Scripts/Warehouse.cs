@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,7 +22,7 @@ public class Warehouse : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
     SpriteRenderer thisRenderer;                //이동중 색변경
 
     int maxInvenSize;                           //최대 인벤토리
-    Item[] inventory;                           //인벤토리 슬롯
+    public Item[] inventory;                           //인벤토리 슬롯
 
     bool isMoving;                              //이동 플래그
     float nodeRadius;                           //노드 반지름
@@ -47,6 +48,9 @@ public class Warehouse : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         nodeDiameter = nodeRadius * 2;
         nodeOccupiedByWarehouse = SetNodeOccupiedByShelf(worldPosition, width, height);    //SetShelfFrontPosition(); 이전에 실행되야함,  순서중요!!!
         frontPosition = SetFrontPosition(nodeOccupiedByWarehouse);           //SetNodeOccupiedByShelf();가 먼저 실행되야함, nodeOccupiedByShelf값이 있어야 ShelfFrontPosition 계산 가능
+
+        //TEST
+        PutAllItemInInventory(1000);  //모든 아이템 창고에 넣기  
     }
 
     void Update()
@@ -103,6 +107,17 @@ public class Warehouse : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
     {
         if (index < 0 || index >= frontSize) return frontPosition[Random.Range(0, frontSize)];
         return frontPosition[index];
+    }
+
+    //TEST
+    void PutAllItemInInventory(int amount)
+    {
+        int max = (ItemManager.instance.CountOfAllItem() < inventory.Length) ? ItemManager.instance.CountOfAllItem() : inventory.Length;
+        for (int i = 0; i < max; i++)
+        {
+            inventory[i] = ItemManager.instance.GetItem(i);
+            inventory[i].PlusAmount(amount);
+        }
     }
 
     void OnMoving()     //판매대 이동,회전,설치

@@ -19,6 +19,7 @@ public class MouseController : MonoBehaviour
         cam = GetComponent<Camera>();
         customerPanel = GameObject.Find("CustomerPanel");
         shelfPanel = GameObject.Find("ShelfPanel");
+        warehousePanel = GameObject.Find("WarehousePanel");
     }
 
     void Update()
@@ -55,7 +56,7 @@ public class MouseController : MonoBehaviour
             else if (downHit.transform.CompareTag("Warehouse"))
             {
                 GameManager.instance.selectedWarehouse = downHit.transform.GetComponent<Warehouse>();
-                customerPanel.SetActive(true);
+                warehousePanel.SetActive(true);
             }
             //TODO::다른 태그 선택 클릭시 추가
         }
@@ -64,6 +65,7 @@ public class MouseController : MonoBehaviour
             GameManager.instance.selectedUnit = null;
             customerPanel.SetActive(false);
             shelfPanel.SetActive(false);
+            warehousePanel.SetActive(false);
         }
     }
 }
