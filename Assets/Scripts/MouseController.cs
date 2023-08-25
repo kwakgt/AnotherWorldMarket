@@ -12,18 +12,21 @@ public class MouseController : MonoBehaviour
 
     //패널 활성화/비활성화
     GameObject customerPanel;
+    GameObject shelfPanel;
+    GameObject warehousePanel;
     void Awake()
     {
         cam = GetComponent<Camera>();
         customerPanel = GameObject.Find("CustomerPanel");
+        shelfPanel = GameObject.Find("ShelfPanel");
     }
 
     void Update()
     {
-        UnitSelection();
+        Selection();
     }
 
-    void UnitSelection()
+    void Selection()
     {
         if (Input.GetMouseButtonDown(0))
         {
@@ -44,13 +47,23 @@ public class MouseController : MonoBehaviour
                 GameManager.instance.selectedUnit = downHit.transform.GetComponent<Unit>();
                 customerPanel.SetActive(true);
             }
-
+            else if(downHit.transform.CompareTag("Shelf"))
+            {
+                GameManager.instance.selectedShelf = downHit.transform.GetComponent<Shelf>();
+                shelfPanel.SetActive(true);
+            }
+            else if (downHit.transform.CompareTag("Warehouse"))
+            {
+                GameManager.instance.selectedWarehouse = downHit.transform.GetComponent<Warehouse>();
+                customerPanel.SetActive(true);
+            }
             //TODO::다른 태그 선택 클릭시 추가
         }
         else
         {
             GameManager.instance.selectedUnit = null;
             customerPanel.SetActive(false);
+            shelfPanel.SetActive(false);
         }
     }
 }

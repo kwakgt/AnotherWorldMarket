@@ -7,28 +7,29 @@ public class Warehouse : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 {
     public bool displayGridGizmos;
 
-    int index = 1;                             //창고 고유번호
-    Vector2 worldPosition;                     //창고 월드포인트
-    int frontSize;                             //창고 판매위치 노드크기
-    int width;                                 //창고 노드너비
-    int height;                                //창고 노드높이
+    int index = 1;                              //창고 고유번호
+    Vector2 worldPosition;                      //창고 월드포인트
+    int frontSize;                              //창고 판매위치 노드크기
+    int width;                                  //창고 노드너비
+    int height;                                 //창고 노드높이
     Direction frontDir;                         //창고 입구 방향
 
-    Node[,] nodeOccupiedByWarehouse;
-    Vector2[] frontPosition;
+    Node[,] nodeOccupiedByWarehouse;            //점유노드
+    Vector2[] frontPosition;                    //전방 포지션(입구)
 
-    SpriteRenderer frontRenderer;
-    SpriteRenderer thisRenderer;
+    SpriteRenderer frontRenderer;               //이동중 색변경
+    SpriteRenderer thisRenderer;                //이동중 색변경
 
-    int maxInvenSize;
-    Item[] inventory;
+    int maxInvenSize;                           //최대 인벤토리
+    Item[] inventory;                           //인벤토리 슬롯
 
-    bool isMoving;
+    bool isMoving;                              //이동 플래그
     float nodeRadius;                           //노드 반지름
     float nodeDiameter;                         //노드 지름
 
     void Awake()
     {
+        maxInvenSize = 40;
         frontSize = 4;
         height = 4;
         width = 4;
@@ -36,6 +37,7 @@ public class Warehouse : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         frontDir = Direction.Left;
         thisRenderer = GetComponent<SpriteRenderer>();
         frontRenderer = transform.GetChild(0).GetComponent<SpriteRenderer>();
+        frontRenderer.color = Color.clear;
         inventory = new Item[maxInvenSize];
     }
 

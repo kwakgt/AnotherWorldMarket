@@ -19,13 +19,13 @@ public class Shelf : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
     Node[,] nodeOccupiedByShelf;                //매대가 차지하고 있는 노드들
     Vector2[] ShelfFrontPosition;               //판매위치 노드의 중심좌표
 
-    SpriteRenderer thisRenderer;
-    SpriteRenderer frontRenderer;
+    SpriteRenderer thisRenderer;                //이동중 색변경
+    SpriteRenderer frontRenderer;               //이동중 색변경
 
-    bool isMoving;                              //모드 플래그
+    bool isMoving;                              //이동 플래그
     float nodeRadius;                           //노드 반지름
     float nodeDiameter;                         //노드 지름
-    Item[] ItemSlot;                            //매대 아이템 슬롯
+    public Item[] ItemSlot;                            //매대 아이템 슬롯
 
     void Awake()
     {

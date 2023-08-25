@@ -6,6 +6,9 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
     public Unit selectedUnit;
+    public Shelf selectedShelf;
+    public Warehouse selectedWarehouse;
+
     public GameMode gameMode { get; private set; } = GameMode.Seller;
 
     void Awake()
