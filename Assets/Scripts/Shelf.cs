@@ -14,7 +14,7 @@ public class Shelf : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
     int shelfFrontSize;                         //매대 판매위치 노드크기
     int shelfWidth;                             //매대 노드너비
     int shelfHeight;                             //매대 노드높이
-    SaleDir saleDir;                          //현재 매대의 판매방향
+    Direction saleDir;                          //현재 매대의 판매방향
 
     Node[,] nodeOccupiedByShelf;                //매대가 차지하고 있는 노드들
     Vector2[] ShelfFrontPosition;               //판매위치 노드의 중심좌표
@@ -30,7 +30,7 @@ public class Shelf : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
         shelfHeight = 4;
         shelfWidth = 2;
         worldPosition = transform.position;
-        saleDir = SaleDir.Left;
+        saleDir = Direction.Left;
         ItemSlot = new Item[shelfFrontSize];
     }
     // Start is called before the first frame update
@@ -85,19 +85,19 @@ public class Shelf : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
 
         switch (saleDir)
         {
-            case SaleDir.Left:
+            case Direction.Left:
                 for (int i = 0; i < shelfFrontSize; i++)    //가장 왼쪽줄의 worldpoint - 노드지름 
                     position[i] = new Vector2(occupiedNodes[0, i].worldPosition.x - nodeDiameter, occupiedNodes[0, i].worldPosition.y);
                 break;
-            case SaleDir.Right:
+            case Direction.Right:
                 for (int i = 0; i < shelfFrontSize; i++)    //가장 오른쪽줄의 worldpoint + 노드지름 
                     position[i] = new Vector2(occupiedNodes[shelfWidth - 1, i].worldPosition.x + nodeDiameter, occupiedNodes[shelfWidth - 1, i].worldPosition.y);
                 break;
-            case SaleDir.Up:
+            case Direction.Up:
                 for (int i = 0; i < shelfFrontSize; i++)    //가장 위쪽줄의 worldpoint + 노드지름 
                     position[i] = new Vector2(occupiedNodes[i, shelfHeight - 1].worldPosition.x, occupiedNodes[i, shelfHeight - 1].worldPosition.y + nodeDiameter);
                 break;
-            case SaleDir.Down:
+            case Direction.Down:
                 for (int i = 0; i < shelfFrontSize; i++)    //가장 아래줄의 worldpoint - 노드지름
                     position[i] = new Vector2(occupiedNodes[i, 0].worldPosition.x, occupiedNodes[i, 0].worldPosition.y - nodeDiameter);
                 break;
@@ -256,9 +256,9 @@ public class Shelf : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
 
     void ChangeSaleDirection()
     {
-        if(saleDir == SaleDir.Up)
+        if(saleDir == Direction.Up)
         {
-            saleDir = SaleDir.Left;
+            saleDir = Direction.Left;
             return;
         }
         saleDir += 1;
@@ -296,6 +296,6 @@ public class Shelf : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
     }
 
     enum Type { SmallShelf, MediumShelf, LargeShelf }
-    enum SaleDir { Left, Down, Right, Up }
+    enum Direction { Left, Down, Right, Up }
 
 }

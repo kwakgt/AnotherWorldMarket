@@ -26,7 +26,6 @@ public class Unit : MonoBehaviour //IPointerClickHandler //UI가 아니면 카메라에 
     TextMeshProUGUI priceText;  //자식인덱스 1;
     Slider slider;              //자식인덱스 2;
 
-    
     void Awake()
     {
         respawn = UnitManager.instance.GetRespawn();    //test
