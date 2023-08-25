@@ -4,7 +4,8 @@ using UnityEngine.EventSystems;
 using Random = UnityEngine.Random;
 using UnityEngine.UIElements;
 
-public class Shelf : MonoBehaviour, IBeginDragHandler
+//리지디바디 Kinematic 설정을 해야 이동할 때 콜라이더도 같이 이동된다.
+public class Shelf : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     public bool displayGridGizmos;
 
@@ -162,7 +163,7 @@ public class Shelf : MonoBehaviour, IBeginDragHandler
 
     void OnMoving()     //판매대 이동,회전,설치
     {
-        if (isMoving)
+        if (isMoving && GameManager.instance.gameMode == GameManager.GameMode.Builder)
         {
             //이동, worldposition 변수가 아닌 transform 현재위치로 계산해야됨
             Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);    //마우스포지션 저장
@@ -258,6 +259,7 @@ public class Shelf : MonoBehaviour, IBeginDragHandler
         if(saleDir == SaleDir.Up)
         {
             saleDir = SaleDir.Left;
+            return;
         }
         saleDir += 1;
     }
@@ -274,12 +276,23 @@ public class Shelf : MonoBehaviour, IBeginDragHandler
     //delta : 드래그 위치부터의 위치변화량
     public void OnBeginDrag(PointerEventData eventData)
     {
+        Debug.Log("드래그 시작");
         if (GameManager.instance.gameMode == GameManager.GameMode.Builder)
         {
             isMoving = true;    //이동모드로 전환
             //드래그로 들어올려진 순간 현재 점유하고 있는 노드를 walkable로 변경
             ChangeWalkebleNodeOccupiedbyshelf(true);
         }
+    }
+
+    public void OnDrag(PointerEventData eventData)
+    {
+        Debug.Log("드래그 중");
+    }
+
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        Debug.Log("드래그 끝");
     }
 
     enum Type { SmallShelf, MediumShelf, LargeShelf }

@@ -6,7 +6,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
     public Unit selectedUnit;
-    public GameMode gameMode = GameMode.Seller;
+    public GameMode gameMode { get; private set; } = GameMode.Seller;
 
     void Awake()
     {
@@ -15,32 +15,32 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        Debug.Log(gameMode);
-        Pause();
+        ChangeMode();
     }
 
-    void Pause()
+    void ChangeMode()
     {
         if(InputManager.instance.bKeyDown)
         {
-            ChangeBuliderMode();
+            if (gameMode != GameMode.Builder)   ChangeBuliderMode();
+            else                                ChangeSellerMode();
+
+            if (gameMode == GameMode.Seller) Time.timeScale = 1f;   //모드가 판매모드이면 정상속도로 변경
             InputManager.instance.bKeyDown = false;
         }
 
-        if (gameMode == GameMode.Builder)
-        {
-            Time.timeScale = 0;
-        }
-        else
-        {
-            Time.timeScale = 1f;
-        }
+        if (gameMode == GameMode.Builder) Time.timeScale = 0;   //건설모드이면 무조건 일시정지
     }
-    
-    public void ChangeBuliderMode()
+
+  
+    public void ChangeBuliderMode()   //메뉴버튼 사용
     {
-        if(gameMode != GameMode.Builder) { gameMode = GameMode.Builder; }
-        else { gameMode = GameMode.Seller; }
-    }   
+        gameMode = GameMode.Builder;
+    }
+
+    public void ChangeSellerMode()    //메뉴버튼 사용
+    {
+        gameMode = GameMode.Seller;
+    }
     public enum GameMode { Seller, Builder }
 }

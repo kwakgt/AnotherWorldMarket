@@ -30,7 +30,7 @@ public class CustomerPanel : MonoBehaviour
         Unit unit = GameManager.instance.selectedUnit;
         if (unit == null) return;   //선택된 유닛이 없으면 종료
 
-        for (int i = 1; i < unit.invenSizeAvailable + 1; i++)    //1부터 시작하므로 범위에 +1해준다.
+        for (int i = 1; i < unit.invenSizeAvailable + 1; i++)    //1부터 시작하므로 범위에 +1해준다, 0은 부모 Image여서 제외
         {
             if (unit.inventory[i - 1] != null)                  //unit 인벤트로니는 0부터
                 invenImage[i].sprite = unit.inventory[i - 1].sprite;
