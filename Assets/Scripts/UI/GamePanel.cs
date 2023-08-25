@@ -56,7 +56,7 @@ public class GamePanel : MonoBehaviour
             menuImage[2].color = Color.white;
         }
     }
-    public void ChangeGameSpeed(int controlKey)   //스피드버튼 사용
+    public void ChangeGameSpeed(int controlKey = 3)   //스피드버튼 사용
     {
         if (GameManager.instance.gameMode == GameManager.GameMode.Builder) return;
 

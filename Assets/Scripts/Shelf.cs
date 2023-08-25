@@ -19,6 +19,9 @@ public class Shelf : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
     Node[,] nodeOccupiedByShelf;                //매대가 차지하고 있는 노드들
     Vector2[] ShelfFrontPosition;               //판매위치 노드의 중심좌표
 
+    SpriteRenderer thisRenderer;
+    SpriteRenderer frontRenderer;
+
     bool isMoving;                              //모드 플래그
     float nodeRadius;                           //노드 반지름
     float nodeDiameter;                         //노드 지름
@@ -31,6 +34,9 @@ public class Shelf : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
         shelfWidth = 2;
         worldPosition = transform.position;
         saleDir = Direction.Left;
+        thisRenderer = GetComponent<SpriteRenderer>();
+        frontRenderer = transform.GetChild(0).GetComponent<SpriteRenderer>();
+        frontRenderer.color = Color.clear;
         ItemSlot = new Item[shelfFrontSize];
     }
     // Start is called before the first frame update
@@ -60,6 +66,7 @@ public class Shelf : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
         //Debug.Log(((ItemSlot[0] != null) ? ItemSlot[0].amount : 0) + "  ,  " + ((ItemSlot[1] != null) ? ItemSlot[1].amount : 0) + "  ,  " + ((ItemSlot[2] != null) ? ItemSlot[2].amount : 0) + "  ,  " + ((ItemSlot[3] != null) ? ItemSlot[3].amount : 0));
     }
 
+    
     Node[,] SetNodeOccupiedByShelf(Vector2 center, int sizeX, int sizeY) //매대가 점유하고 있는 노드들, 매대의 중심점, 크기
     {
         Vector2[,] vector2s = new Vector2[sizeX, sizeY];
@@ -78,7 +85,6 @@ public class Shelf : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
 
         return Nodefinding.instance.RequestNodeArea(vector2s, sizeX, sizeY);    //월드 좌표를 노드로 변경
     }
-
     Vector2[] SetShelfFrontPosition(Node[,] occupiedNodes)    //판매위치의 월드좌표(판매위치는 매대 앞)
     {
         Vector2[] position = new Vector2[shelfFrontSize];
@@ -165,10 +171,15 @@ public class Shelf : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
     {
         if (isMoving && GameManager.instance.gameMode == GameManager.GameMode.Builder)
         {
+            //색변경
+            frontRenderer.color = Color.Lerp(Color.white, Color.green, 0.5f);
+            thisRenderer.color = Color.Lerp(Color.white, Color.blue, 0.5f);
+
             //이동, worldposition 변수가 아닌 transform 현재위치로 계산해야됨
+            Vector2 firstPosition = worldPosition;
             Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);    //마우스포지션 저장
-            int dx = (int)(mousePosition.x - transform.position.x);                         //마우스 위치와 처음위치의 x변화량
-            int dy = (int)(mousePosition.y - transform.position.y);                         //마우스 위치와 처음위치의 y변화량
+            int dx = Mathf.RoundToInt(mousePosition.x - transform.position.x);              //마우스 위치와 처음위치의 x변화량
+            int dy = Mathf.RoundToInt(mousePosition.y - transform.position.y);              //마우스 위치와 처음위치의 y변화량
             transform.Translate(dx, dy, 0, Space.World);                                    //변화량만큼 이동, (int)를 이용해 정수칸씩 이동, Space.World 필수
 
             //회전
@@ -235,9 +246,14 @@ public class Shelf : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
                 }
                 else
                 {
+                    transform.position = firstPosition;
                     ChangeWalkebleNodeOccupiedbyshelf(false);   //취소되면 처음에 walkable → true로 변경한 거 원상복구
                 }
                 isMoving = false;                       //설치 or 취소가 완료되면 이동완료
+
+                //색 원상복구
+                frontRenderer.color = Color.clear;
+                thisRenderer.color = Color.white;
             }
         }
     }
