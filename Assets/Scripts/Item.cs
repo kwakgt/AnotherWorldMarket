@@ -10,7 +10,7 @@ public class Item
     public int amount { get; private set; }
 
     public Sprite sprite { get; private set; }
-    public Item(string _name, int _uniqueKey, int _price, Sprite _sprite)  //아이템 처음 생성 시 개수는 1이다.
+    public Item(string _name, int _uniqueKey, int _price, Sprite _sprite)  //아이템 처음 생성 시 개수는 0이다. PlusAmount함수로 개수를 추가해야된다.
     {
         this.name = _name;
         this.uniqueKey = _uniqueKey;

@@ -148,7 +148,7 @@ public class Unit : MonoBehaviour //IPointerClickHandler //UI가 아니면 카메라에 
     {
         do
         {
-            shelf = ShelfManager.instance.RequestRandomShelfPoint();
+            shelf = ShelfManager.instance.RequestRandomShelf();
             if (shelf == null)
                 Debug.Log("마켓에 아무것도 없네");
             else

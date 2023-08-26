@@ -46,26 +46,34 @@ public class MouseController : MonoBehaviour
             if (downHit.transform.CompareTag("Customer"))
             {
                 GameManager.instance.selectedUnit = downHit.transform.GetComponent<Unit>();
-                customerPanel.SetActive(true);
+                PanelSetActive(true, false, false);
+
             }
             else if(downHit.transform.CompareTag("Shelf"))
             {
                 GameManager.instance.selectedShelf = downHit.transform.GetComponent<Shelf>();
-                shelfPanel.SetActive(true);
+                PanelSetActive(false, true, false);
             }
             else if (downHit.transform.CompareTag("Warehouse"))
             {
                 GameManager.instance.selectedWarehouse = downHit.transform.GetComponent<Warehouse>();
-                warehousePanel.SetActive(true);
+                PanelSetActive(false, false, true);
             }
+            
             //TODO::다른 태그 선택 클릭시 추가
         }
         else
         {
             GameManager.instance.selectedUnit = null;
-            customerPanel.SetActive(false);
-            shelfPanel.SetActive(false);
-            warehousePanel.SetActive(false);
+            PanelSetActive(false, false, false);
         }
+    }
+
+
+    void PanelSetActive(bool _customerPanel, bool _shelfPanel, bool _warehousePanel)
+    {
+        customerPanel.SetActive(_customerPanel);
+        shelfPanel.SetActive(_shelfPanel);
+        warehousePanel.SetActive(_warehousePanel);
     }
 }

@@ -8,6 +8,8 @@ public class ShelfManager : MonoBehaviour
 {
     public static ShelfManager instance;
 
+    //Dictionary
+    //Remove시 값만 삭제되고 키는 존재한다.
     Dictionary<int, Shelf> shelfDictionary = new Dictionary<int, Shelf>();  //매대 고유인덱스, Shelf
     Queue<int> uniqueIndexQue = new Queue<int>();                           //삭제된 매대의 고유인덱스 저장
     int uniqueIndex;                                                        //고유인덱스
@@ -27,7 +29,7 @@ public class ShelfManager : MonoBehaviour
         return uniqueIndex++;
     }
 
-    public Shelf RequestRandomShelfPoint()          //랜덤 매대 타겟 부여
+    public Shelf RequestRandomShelf()          //랜덤 매대 타겟 부여
     {
         if (shelfDictionary.Count == 0) return null; //매대목록에 값이 없으면 중지
 
@@ -44,6 +46,10 @@ public class ShelfManager : MonoBehaviour
 
     public void AddShelfDictionary(int index, Shelf shelf)
     {
+        if(shelfDictionary.ContainsKey(index))
+        {
+            shelfDictionary[index] = shelf;
+        }
         shelfDictionary.Add(index, shelf);
     }
 
