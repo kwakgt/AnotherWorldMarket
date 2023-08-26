@@ -2717,8 +2717,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 988336852}
-        m_TargetAssemblyTypeName: GamePanel, Assembly-CSharp
+      - m_Target: {fileID: 473404468}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
         m_MethodName: ChangeGameSpeed
         m_Mode: 3
         m_Arguments:
@@ -4768,8 +4768,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 988336852}
-        m_TargetAssemblyTypeName: GamePanel, Assembly-CSharp
+      - m_Target: {fileID: 473404468}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
         m_MethodName: ChangeGameSpeed
         m_Mode: 3
         m_Arguments:
@@ -8501,7 +8501,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -12154,8 +12154,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 988336852}
-        m_TargetAssemblyTypeName: GamePanel, Assembly-CSharp
+      - m_Target: {fileID: 473404468}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
         m_MethodName: ChangeGameSpeed
         m_Mode: 3
         m_Arguments:
@@ -12572,8 +12572,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 988336852}
-        m_TargetAssemblyTypeName: GamePanel, Assembly-CSharp
+      - m_Target: {fileID: 473404468}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
         m_MethodName: ChangeGameSpeed
         m_Mode: 3
         m_Arguments:
@@ -12753,11 +12753,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1717904652}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 25912f0227a042b4fb554aafc020783f, type: 3}
+  m_Script: {fileID: 11500000, guid: ac38820b7cf73c245b1ee36db27ab2ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   target: {x: 0, y: 0}
-  speed: 5
 --- !u!1 &1736774508
 GameObject:
   m_ObjectHideFlags: 0

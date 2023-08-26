@@ -8,6 +8,7 @@ public class InputManager : MonoBehaviour
     public bool bKeyDown { get; set; }
     public bool iKeyDown { get; set; }
     public bool rKeyDown { get; set; }
+    public bool spaceKeyDown { get; set; }
     void Awake()
     {
         instance = this;
@@ -36,6 +37,11 @@ public class InputManager : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.I))
         {
             iKeyDown = true;
+        }
+
+        if( Input.GetKeyDown(KeyCode.Space)) 
+        { 
+            spaceKeyDown = true;
         }
     }
 

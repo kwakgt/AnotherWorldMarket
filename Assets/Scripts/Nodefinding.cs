@@ -1,12 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Nodefinding : MonoBehaviour
 {
-    AstarGrid grid;
     public static Nodefinding instance;
+    AstarGrid grid;
 
     void Awake()
     {

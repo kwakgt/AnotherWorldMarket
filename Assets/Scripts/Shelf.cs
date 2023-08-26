@@ -38,14 +38,14 @@ public class Shelf : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
         frontRenderer.color = Color.clear;
         ItemSlot = new Item[shelfFrontSize];
     }
-    // Start is called before the first frame update
+    
     void Start()
     {
+        shelfIndex = ShelfManager.instance.RequestShelfIndex();
         nodeRadius = Nodefinding.instance.GetNodeRadius();
         nodeDiameter = nodeRadius * 2;
-        shelfIndex = ShelfManager.instance.RequestShelfIndex();
         nodeOccupiedByShelf = SetNodeOccupiedByShelf(worldPosition, shelfWidth, shelfHeight);    //SetShelfFrontPosition(); 이전에 실행되야함,  순서중요!!!
-        ShelfFrontPosition = SetShelfFrontPosition(nodeOccupiedByShelf);                                               //SetNodeOccupiedByShelf();가 먼저 실행되야함, nodeOccupiedByShelf값이 있어야 ShelfFrontPosition 계산 가능
+        ShelfFrontPosition = SetShelfFrontPosition(nodeOccupiedByShelf);                         //SetNodeOccupiedByShelf();가 먼저 실행되야함, nodeOccupiedByShelf값이 있어야 ShelfFrontPosition 계산 가능
 
         ShelfManager.instance.AddShelfDictionary(shelfIndex, this); //현재 매대를 매니저에 추가
 
