@@ -13,9 +13,9 @@ public class Unit : MonoBehaviour //IPointerClickHandler //UI가 아니면 카메라에 
     Vector2 respawn;            //탄생,소멸위치
 
     int buyCount = 5;           //구매횟수
-    int money = 1000;
+    int money = 1000;           //소지금
     int maxWaitTime = 3;        //대기시간
-    public float speed = 5;
+    public float speed = 5;     //속도
    
     int invenSize = 12;
     public int invenSizeAvailable { get; private set; } = ((int)consumables.PlasticBag);  //사용가능한인벤토리
@@ -221,7 +221,7 @@ public class Unit : MonoBehaviour //IPointerClickHandler //UI가 아니면 카메라에 
             return false;
     }
     
-    int PurchaseForFitPrice(Item shelfItem)  //현재 소지금에 맞게 물건을 구입
+    int PurchaseForFitPrice(Item shelfItem)  //현재 소지금에 맞게 물건을 구입, 구매수량 정하는 함수
     {
         int amount = Random.Range(0, shelfItem.amount + 1);
         return Mathf.Clamp(amount, 0, money / shelfItem.price);

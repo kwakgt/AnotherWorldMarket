@@ -2,31 +2,30 @@ using UnityEngine;
 using System;
 using UnityEngine.EventSystems;
 using Random = UnityEngine.Random;
-using UnityEngine.UIElements;
 
 //리지디바디 Kinematic 설정을 해야 이동할 때 콜라이더도 같이 이동된다.
-public class Shelf : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+public class Shelf : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler    //UI가 아니면 카메라에 Physics2DRaycater 컴포넌트 필요
 {
     public bool displayGridGizmos;
+    Vector2 worldPosition;                      //중심점 월드포인트
+    bool isMoving;                              //이동 플래그
 
     int shelfIndex;                             //매대 고유번호
-    Vector2 worldPosition;                      //중심점 월드포인트
     int shelfFrontSize;                         //매대 판매위치 노드크기
     int shelfWidth;                             //매대 노드너비
-    int shelfHeight;                             //매대 노드높이
+    int shelfHeight;                            //매대 노드높이
     Direction saleDir;                          //현재 매대의 판매방향
 
+    float nodeRadius;                           //노드 반지름
+    float nodeDiameter;                         //노드 지름
     Node[,] nodeOccupiedByShelf;                //매대가 차지하고 있는 노드들
     Vector2[] ShelfFrontPosition;               //판매위치 노드의 중심좌표
 
+    public Item[] ItemSlot;                     //매대 아이템 슬롯
+    
     SpriteRenderer thisRenderer;                //이동중 색변경
     SpriteRenderer frontRenderer;               //이동중 색변경
-
-    bool isMoving;                              //이동 플래그
-    float nodeRadius;                           //노드 반지름
-    float nodeDiameter;                         //노드 지름
-    public Item[] ItemSlot;                            //매대 아이템 슬롯
-
+    
     void Awake()
     {
         shelfFrontSize = 4;
@@ -145,27 +144,6 @@ public class Shelf : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
             ItemSlot[index].PlusAmount(amount); 
         }
     }
-
-
-    void OnDrawGizmos()
-    {
-        if (nodeOccupiedByShelf != null && ShelfFrontPosition != null && displayGridGizmos)
-        {
-            foreach (Node n in nodeOccupiedByShelf)
-            {
-                Gizmos.color = Color.blue;
-                Gizmos.DrawCube(n.worldPosition, Vector3.one * (nodeDiameter - .5f));
-            }
-
-            foreach (Vector2 n in ShelfFrontPosition)
-            {
-                Gizmos.color = Color.green;
-                Gizmos.DrawCube(n, Vector3.one * (nodeDiameter - .5f));
-            }
-        }
-    }
-
-    
 
     void OnMoving()     //판매대 이동,회전,설치
     {
@@ -309,6 +287,24 @@ public class Shelf : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
     public void OnEndDrag(PointerEventData eventData)
     {
         Debug.Log("드래그 끝");
+    }
+
+    void OnDrawGizmos()
+    {
+        if (nodeOccupiedByShelf != null && ShelfFrontPosition != null && displayGridGizmos)
+        {
+            foreach (Node n in nodeOccupiedByShelf)
+            {
+                Gizmos.color = Color.blue;
+                Gizmos.DrawCube(n.worldPosition, Vector3.one * (nodeDiameter - .5f));
+            }
+
+            foreach (Vector2 n in ShelfFrontPosition)
+            {
+                Gizmos.color = Color.green;
+                Gizmos.DrawCube(n, Vector3.one * (nodeDiameter - .5f));
+            }
+        }
     }
 
     enum Type { SmallShelf, MediumShelf, LargeShelf }

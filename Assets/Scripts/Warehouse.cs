@@ -5,29 +5,27 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using Random = UnityEngine.Random;
 
-public class Warehouse : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IEquatable<Warehouse>
+public class Warehouse : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IEquatable<Warehouse> //UI가 아니면 카메라에 Physics2DRaycater 컴포넌트 필요
 {
     public bool displayGridGizmos;
-
-    int index;                                  //창고 고유번호
     Vector2 worldPosition;                      //창고 월드포인트
+    bool isMoving;                              //이동 플래그
+    int index;                                  //창고 고유번호
+
+    float nodeRadius;                           //노드 반지름
+    float nodeDiameter;                         //노드 지름
     int frontSize;                              //창고 판매위치 노드크기
     int width;                                  //창고 노드너비
     int height;                                 //창고 노드높이
     Direction frontDir;                         //창고 입구 방향
-
     Node[,] nodeOccupiedByWarehouse;            //점유노드
     Vector2[] frontPosition;                    //전방 포지션(입구)
 
+    int maxInvenSize;                           //최대 인벤토리
+    public Item[] inventory;                    //인벤토리 슬롯
+
     SpriteRenderer frontRenderer;               //이동중 색변경
     SpriteRenderer thisRenderer;                //이동중 색변경
-
-    int maxInvenSize;                           //최대 인벤토리
-    public Item[] inventory;                           //인벤토리 슬롯
-
-    bool isMoving;                              //이동 플래그
-    float nodeRadius;                           //노드 반지름
-    float nodeDiameter;                         //노드 지름
 
     void Awake()
     {
@@ -123,7 +121,7 @@ public class Warehouse : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         }
     }
 
-    void OnMoving()     //판매대 이동,회전,설치
+    void OnMoving()     //창고 이동,회전,설치
     {
         if (isMoving && GameManager.instance.gameMode == GameManager.GameMode.Builder)
         {
@@ -142,7 +140,7 @@ public class Warehouse : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
             {
                 Debug.Log("R눌림");
                 transform.Rotate(Vector3.forward, 90);                                      //90도 회전
-                ChangeSaleDirection();                                                      //판매방향 변경
+                ChangeSaleDirection();                                                      //입구방향 변경
                 SwapWidthAndHeight();                                                       //노드 가로,세로 크기변경
                 InputManager.instance.rKeyDown = false;
             }
@@ -161,7 +159,7 @@ public class Warehouse : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
                 bool frontcheck = false;
                 for (int i = 0; i < frontSize; i++)
                 {
-                    Node checkFrontNode = Nodefinding.instance.RequestNode(frontPosition[i]);   //판매위치로 노드위치 계산
+                    Node checkFrontNode = Nodefinding.instance.RequestNode(frontPosition[i]);   //입구위치로 노드위치 계산
                     if (checkFrontNode != null && checkFrontNode.walkable)
                     {
                         frontcheck = true;
@@ -182,7 +180,7 @@ public class Warehouse : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
                         if (checkOccupiedNode != null && checkOccupiedNode.walkable)    //이동이 아닌 새로 설치할 때 점유노드가 없으므로 Null체크
                         {
                             walkableCheck = true;
-                            checkOccupiedNode.walkable = false;                 //매대는 장애물이므로 walkable false로 변경
+                            checkOccupiedNode.walkable = false;                 //창고는 장애물이므로 walkable false로 변경
                         }
                         else
                         {
