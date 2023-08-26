@@ -20,6 +20,16 @@ public class WarehouseManager : MonoBehaviour
         return uniqueIndex++;
     }
 
+    public Warehouse FindItemInWarehouseList(Item itemToFind)
+    {
+        for (int i = 0; i < warehouseList.Count; i++)
+        {
+            if(warehouseList[i].FindItemInWarehouse(itemToFind))
+                return warehouseList[i];
+        }
+        return null;
+    }
+
     public void AddWarehouseList(Warehouse warehouse)
     {
         warehouseList.Add(warehouse);

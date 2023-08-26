@@ -3,9 +3,13 @@ using UnityEngine;
 
 public class Customer : Unit
 {
+    int amountOfPurchase = 3;
+    int maxWaitTime = 3;        //대기시간
+
     protected override void Awake()
     {
         base.Awake();
+        type = Type.Customer;
     }
 
     protected override void Start()
@@ -35,7 +39,7 @@ public class Customer : Unit
             Item shelfItem = shelf.FindItemInSlot(target);      //매대아이템 보기
             int shelfIndex = shelf.FindItemSlotIndex(target);   //매대아이템 슬롯 인덱스
 
-            yield return StartCoroutine("Waiting");
+            yield return StartCoroutine("Waiting", maxWaitTime);
             if (shelfItem == null) yield break;     //대기시간동안 물건이 다 팔릴수도 있으므로 한번 더 검사
             if (!FindKeyByValue(shelfItem).Equals(-1))                 //내 인벤토리에 아이템이 존재한다면, FindKeyByValue: 아이템을 인벤에서 찾을 수 없으면 인덱스 -1을 반환함
             {
@@ -83,7 +87,7 @@ public class Customer : Unit
 
     int PurchaseForFitPrice(Item shelfItem)  //현재 소지금에 맞게 물건을 구입, 구매수량 정하는 함수
     {
-        int amount = Random.Range(1, shelfItem.amount + 1);
+        int amount = Random.Range(1, amountOfPurchase + 1);
         return Mathf.Clamp(amount, 0, money / shelfItem.price);
     }
 }

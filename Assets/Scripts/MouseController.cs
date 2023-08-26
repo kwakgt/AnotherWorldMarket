@@ -11,13 +11,13 @@ public class MouseController : MonoBehaviour
     RaycastHit2D upHit;
 
     //패널 활성화/비활성화
-    GameObject customerPanel;
+    GameObject unitPanel;
     GameObject shelfPanel;
     GameObject warehousePanel;
     void Awake()
     {
         cam = GetComponent<Camera>();
-        customerPanel = GameObject.Find("CustomerPanel");
+        unitPanel = GameObject.Find("UnitPanel");
         shelfPanel = GameObject.Find("ShelfPanel");
         warehousePanel = GameObject.Find("WarehousePanel");
     }
@@ -43,11 +43,10 @@ public class MouseController : MonoBehaviour
 
         if (downHit && upHit && downHit == upHit)
         {
-            if (downHit.transform.CompareTag("Customer"))
+            if (downHit.transform.CompareTag("Customer") || downHit.transform.CompareTag("Staff"))
             {
                 GameManager.instance.selectedUnit = downHit.transform.GetComponent<Unit>();
                 PanelSetActive(true, false, false);
-
             }
             else if(downHit.transform.CompareTag("Shelf"))
             {
@@ -72,7 +71,7 @@ public class MouseController : MonoBehaviour
 
     void PanelSetActive(bool _customerPanel, bool _shelfPanel, bool _warehousePanel)
     {
-        customerPanel.SetActive(_customerPanel);
+        unitPanel.SetActive(_customerPanel);
         shelfPanel.SetActive(_shelfPanel);
         warehousePanel.SetActive(_warehousePanel);
     }

@@ -9,13 +9,15 @@ public class Unit : MonoBehaviour //IPointerClickHandler //UI가 아니면 카메라에 
     protected   Shelf shelf;                //찾은 판매대
                 Vector2[] path;             //찾은 경로
                 int pathIndex;              //경로 인덱스, 경로 그리기용
-    protected   Vector2 respawn;            //탄생,소멸위치
 
-    protected   int buyCount = 5;           //구매횟수
-    protected   int money = 1000;           //소지금
-                int maxWaitTime = 3;        //대기시간
+    
+    protected   Vector2 respawn;            //탄생,소멸위치
+    public      int buyCount = 5;           //구매횟수
+    public      int money = 1000;           //소지금
                 float speed = 5;            //속도
-   
+
+    
+    protected   Type type;                  //유형
                 int invenSize = 12;
     public      int invenSizeAvailable { get; private set; } = ((int)consumables.PlasticBag);  //사용가능한인벤토리
     public      Item[] inventory { get; private set; }  //인벤토리
@@ -41,7 +43,7 @@ public class Unit : MonoBehaviour //IPointerClickHandler //UI가 아니면 카메라에 
 
     void Update()
     {
-        nameText.text = "buyCount: " + buyCount + "\nmoney : " + money;     //test
+
     }
 
     IEnumerator RefreshPath()
@@ -89,16 +91,19 @@ public class Unit : MonoBehaviour //IPointerClickHandler //UI가 아니면 카메라에 
             }
 
             //현재 target에 도착한 상태, 아래에 이 후 행동 지정
-            yield return StartCoroutine("CustomerRoutine");
+            if (type == Type.Customer)
+                yield return StartCoroutine("CustomerRoutine");
+            else
+                yield return StartCoroutine("StaffRoutine");
         }
     }
 
     
 
-    IEnumerator Waiting()
+    IEnumerator Waiting(float waitTime)
     {
         slider.gameObject.SetActive(true);
-        slider.maxValue = maxWaitTime;
+        slider.maxValue = waitTime;
         while (slider.value < slider.maxValue)
         {
             slider.value += Time.deltaTime;
@@ -161,8 +166,21 @@ public class Unit : MonoBehaviour //IPointerClickHandler //UI가 아니면 카메라에 
         else
             return false;
     }
-    
-    
+
+    protected bool IsInventoryEmpty()
+    {
+        int count = 0;
+        for (int i = 0; i < invenSizeAvailable; i++) 
+        {
+            if (inventory[i] == null)
+                ++count;
+        }
+
+        if (count >= invenSizeAvailable)
+            return true;
+        else
+            return false;
+    }
 
     public void OnDrawGizmos()
     {

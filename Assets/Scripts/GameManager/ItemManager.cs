@@ -24,8 +24,8 @@ public class ItemManager : MonoBehaviour
         {
             string spritePath = "Sprite/" + list[i]["name"];
             Sprite sprite = Resources.Load<Sprite>(spritePath); //리소스에서 Sprite 불러오기
-            itemNameDB.Add((string)list[i]["name"], new Item((string)list[i]["name"], (int)list[i]["uniqueKey"], (int)list[i]["price"], sprite));
-            itemUniqueKeyDB.Add((int)list[i]["uniqueKey"], new Item((string)list[i]["name"], (int)list[i]["uniqueKey"], (int)list[i]["price"], sprite));
+            itemNameDB.Add((string)list[i]["name"], new Item((string)list[i]["name"], (int)list[i]["uniqueKey"], (int)list[i]["price"], (int)list[i]["amountOfShelf"], (int)list[i]["amountOfWarehouse"], sprite));
+            itemUniqueKeyDB.Add((int)list[i]["uniqueKey"], new Item((string)list[i]["name"], (int)list[i]["uniqueKey"], (int)list[i]["price"], (int)list[i]["amountOfShelf"], (int)list[i]["amountOfWarehouse"], sprite));
         }
     }
 

@@ -1,6 +1,6 @@
 
 using System;
-using System.Reflection;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Random = UnityEngine.Random;
@@ -104,16 +104,43 @@ public class Warehouse : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         return position;
     }
 
-    public Vector2 GetWarehouseFrontPosition(int index = -1)
+    public Vector2 GetWarehouseFrontPosition(Vector2 currPosition)
     {
-        if (index < 0 || index >= frontSize) return frontPosition[Random.Range(0, frontSize)]; //frontSize보다 크다면 랜덤으로 위치전송
-        return frontPosition[index];
+
+        Vector2 targetPosition = frontPosition[Random.Range(0, frontSize)];
+        while (currPosition == targetPosition)
+        {
+            targetPosition = frontPosition[Random.Range(0, frontSize)];
+        }
+        return targetPosition;
+    }
+
+    public bool FindItemInWarehouse(Item itemToFind)
+    {
+        for(int i =0; i<inventory.Length; i++)
+        {
+            if (inventory[i].Equals(itemToFind))
+                return true;
+        }
+
+        return false;
+    }
+
+    public int FindItemIndexInInventory(Item itemToFind)
+    {
+        for (int i = 0; i < inventory.Length; i++)
+        {
+            if (inventory[i].Equals(itemToFind))
+                return i;
+        }
+
+        return -1;
     }
 
     //TEST
     void PutAllItemInInventory(int amount)  //DB에 있는 모든 Item 창고에 넣기
     {
-        int max = (ItemManager.instance.CountOfAllItem() < inventory.Length) ? ItemManager.instance.CountOfAllItem() : inventory.Length;    //아이템 개수와 창고칸수 비교하여 작은걸 max값으로
+        int max = (ItemManager.instance.CountOfAllItem() < maxInvenSize) ? ItemManager.instance.CountOfAllItem() : maxInvenSize;    //아이템 개수와 전체 창고칸수 비교하여 작은걸 max값으로
         for (int i = 0; i < max; i++)
         {
             inventory[i] = ItemManager.instance.GetItem(i);
