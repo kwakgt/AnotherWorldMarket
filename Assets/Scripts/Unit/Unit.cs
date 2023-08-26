@@ -10,7 +10,7 @@ public class Unit : MonoBehaviour //IPointerClickHandler //UI가 아니면 카메라에 
     Shelf shelf;                //찾은 판매대
     Vector2[] path;             //찾은 경로
     int pathIndex;              //경로 인덱스, 경로 그리기용
-    Vector2 respawn;            //탄생,소멸위치
+    protected Vector2 respawn;            //탄생,소멸위치
 
     int buyCount = 5;           //구매횟수
     int money = 1000;           //소지금
@@ -156,7 +156,7 @@ public class Unit : MonoBehaviour //IPointerClickHandler //UI가 아니면 카메라에 
         } while ((Vector2)transform.position == target);    //내위치가 타겟위치와 같으면 타겟 재세팅
     }
 
-    void GoHome()
+    public void GoHome()
     {
         target = respawn;
     }
