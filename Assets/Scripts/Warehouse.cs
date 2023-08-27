@@ -106,9 +106,18 @@ public class Warehouse : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 
     public Vector2 GetWarehouseFrontPosition(Vector2 currPosition)
     {
-
         Vector2 targetPosition = frontPosition[Random.Range(0, frontSize)];
-        while (currPosition == targetPosition)
+        bool contains = false;
+        for (int i = 0; i < frontSize; i++)
+        {
+            if (frontPosition[i] == currPosition)
+            {
+                contains = true;
+                break;
+            }
+        }
+
+        while (contains && currPosition == targetPosition)
         {
             targetPosition = frontPosition[Random.Range(0, frontSize)];
         }

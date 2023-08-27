@@ -20,6 +20,11 @@ public class WarehouseManager : MonoBehaviour
         return uniqueIndex++;
     }
 
+    public Warehouse RequestRandomWarehouse()
+    {
+        return warehouseList[Random.Range(0, warehouseList.Count)];
+    }
+
     public Warehouse FindItemInWarehouseList(Item itemToFind)
     {
         for (int i = 0; i < warehouseList.Count; i++)

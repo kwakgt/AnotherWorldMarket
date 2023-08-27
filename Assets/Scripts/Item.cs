@@ -19,22 +19,22 @@ public class Item : IEquatable<Item>
     //아이템 처음 생성 시 개수는 0이다. PlusAmount함수로 개수를 추가해야된다.
     public Item(string _name, int _uniqueKey, int _price, int _amountOfShelf, int _amountOfWarehouse, Sprite _sprite)  
     {
-        this.name = _name;
-        this.uniqueKey = _uniqueKey;
-        this.price = _price;
-        this.amountOfShelf = _amountOfShelf;
-        this.amountOfWarehouse = _amountOfWarehouse;
-        this.sprite = _sprite;
+        name = _name;
+        uniqueKey = _uniqueKey;
+        price = _price;
+        amountOfShelf = _amountOfShelf;
+        amountOfWarehouse = _amountOfWarehouse;
+        sprite = _sprite;
     }
 
     public Item(Item item)
     {
-        this.name = item.name;
-        this.uniqueKey = item.uniqueKey;
-        this.price = item.price;
-        this.amountOfShelf = item.amountOfShelf;
-        this.amountOfWarehouse = item.amountOfWarehouse;
-        this.sprite = item.sprite;
+        name = item.name;
+        uniqueKey = item.uniqueKey;
+        price = item.price;
+        amountOfShelf = item.amountOfShelf;
+        amountOfWarehouse = item.amountOfWarehouse;
+        sprite = item.sprite;
     }
 
     public bool MinusAmount(int _amount)
@@ -63,4 +63,26 @@ public class Item : IEquatable<Item>
         else
             return false;
     }
+
+    /*
+    public static bool operator ==(Item item1, Item item2)
+    {                                                       //연산자 오버로딩 함수는 public, static으로 선언되어야 한다. 반환타입은 아무거나 상관없다.
+        if (ReferenceEquals(item1, null))                   //==연산자 오버로딩 시 ==으로 NULL체크를 할 수 없어서 새로 정의해야함
+            return ReferenceEquals(item2, null);            //ReferenceEquals(a,b) 함수는 두 값의 참조값을 비교한다.
+        else if (ReferenceEquals(item2, null))
+            return false;
+
+        return item1.Equals(item2);
+    }
+
+    public static bool operator !=(Item item1, Item item2)
+    {
+        if (ReferenceEquals(item1, null))
+            return !ReferenceEquals(item2, null);
+        else if (ReferenceEquals(item2, null))
+            return true;
+
+        return !item1.Equals(item2);
+    }
+    */
 }

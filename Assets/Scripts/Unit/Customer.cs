@@ -75,7 +75,6 @@ public class Customer : Unit
         if (shelfItem.amount <= 0)                              //매대아이템 양이 0 이하이면
             shelf.EmptyItemSlot(shelfIndex);                    //매대아이템 비우기
 
-        Debug.Log("구매한 아이템 : " + myItem.name + " ,  구매량 : " + amountToBuy);
         return true;
     }
 
