@@ -41,11 +41,6 @@ public class Unit : MonoBehaviour //IPointerClickHandler //UI가 아니면 카메라에 
         StartCoroutine(RefreshPath());
     }
 
-    void Update()
-    {
-
-    }
-
     IEnumerator RefreshPath()
     {
         yield return null;      //GoMarket()함수가 Start()에서 처음 실행하는데 다른 클래스 초기화보다 먼저 시작하면 NULL참조에러 발생하므로 한 사이클 돌리고 실행

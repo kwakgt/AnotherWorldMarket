@@ -109,7 +109,7 @@ public class Staff : Unit
         yield return StartCoroutine("Waiting", checkingTime);
         Item shelfItem = shelf.FindItemInSlot(target);                                                      //옮길 아이템
         int shelfIndex = shelf.FindItemSlotIndex(target);                                                   //아이템 인덱스
-        int amountCarring = Mathf.Clamp(shelfItem.amountOfShelf - shelfItem.amount, 1, amountOfCarrying);   //옮길 수량
+        int amountCarring = Mathf.Clamp(shelfItem.amountOfShelf - shelfItem.amount, 0, amountOfCarrying);   //옮길 수량
         if (shelfItem == null)                                                                              //아이템이 없으면 다른 매대 찾기
         {
             GoMarket();
@@ -133,7 +133,7 @@ public class Staff : Unit
         {
             Debug.Log("아이템 넣기");
             int maxAmountCarring = Mathf.Min(amountOfCarrying, itemFound.amount);
-            int amount =Mathf.Clamp(checkingItems[workCount].amountCarring, 1, maxAmountCarring);
+            int amount =Mathf.Clamp(checkingItems[workCount].amountCarring, 0, maxAmountCarring);
             if (warehouse.FindItemInWarehouse(itemFound))               //찾은 아이템이 창고에 있다면
             {
                 PutItemInInventory(itemFound, itemIndex, amount); //인벤토리로 옮기기
@@ -150,7 +150,7 @@ public class Staff : Unit
         {
             Debug.Log("아이템 꺼내기");
             int maxAmountCarring = Mathf.Min(shelfItem.amountOfShelf - shelfItem.amount, amountOfCarrying);   //판매대에 넣을수 있는 양과 내 운반량중에 작은 값이 운반할 MAX양
-            int amount = Mathf.Clamp(inventory[workCount].amount, 1, maxAmountCarring);
+            int amount = Mathf.Clamp(inventory[workCount].amount, 0, maxAmountCarring);
             EjectItemInInventory(shelfItem, amount);
         }
         ++workCount;
@@ -168,7 +168,10 @@ public class Staff : Unit
             }
             else //창고에 같은 아이템이 없다면
             {
-                //TODO:: 빈칸에 넣기
+                if (warehouse.FirstEmptyIndexInInventory() != -1)       //빈공간을 찾아서
+                    EjectItemInInventory(warehouse.inventory[warehouse.FirstEmptyIndexInInventory()], inventory[workCount].amount); //빈공간에 아이템 넣기
+                else
+                    Debug.Log("창고가 꽉찼다");
             }
         }
 

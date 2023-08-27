@@ -124,6 +124,16 @@ public class Warehouse : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         return targetPosition;
     }
 
+    public int FirstEmptyIndexInInventory()
+    {
+        for(int i = 0; i < inventory.Length; i++)
+        {
+            if (inventory[i] == null)
+                return i;
+        }
+        return -1;
+    }
+
     public bool FindItemInWarehouse(Item itemToFind)
     {
         for(int i =0; i<inventory.Length; i++)
