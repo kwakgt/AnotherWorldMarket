@@ -128,11 +128,9 @@ public class Shelf : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
         return Array.IndexOf(ShelfFrontPosition, _shelfFrontPosition);
     }
 
-    public bool EmptyItemSlot(int index)
+    public void EmptyItemSlot(int index)
     {
-        if (ItemSlot[index].amount > 0) return false;
         ItemSlot[index] = null;
-        return true;
     }
 
     void PutItemInSlot(int index, int amount)

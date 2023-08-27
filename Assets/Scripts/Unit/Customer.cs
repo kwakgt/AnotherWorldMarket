@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Diagnostics;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 public class Customer : Unit
 {
@@ -12,19 +13,19 @@ public class Customer : Unit
     {
         base.Awake();
         type = Type.Customer;
-        MarketManager.instance.customerCount++; //고객수++
+        
     }
 
     protected override void Start()
     {
+        MarketManager.instance.customerCount++; //고객수++
         sw.Start();
         base.Start();
     }
 
     IEnumerator CustomerRoutine()
     {
-        if (shelf.FindItemInSlot(target) != null)           //매대에 물건이 있으면
-            yield return StartCoroutine("BuyingItem");      //매대에 물건 구매
+        yield return StartCoroutine("BuyingItem");      //매대에 물건 구매
 
         if (money <= 0 || buyCount <= 0 || IsInventoryFull())   //돈, 구매횟수가 없거나 인벤토리가 가득 찼으면
             GoHome();                                           //집에 간다.
@@ -40,13 +41,11 @@ public class Customer : Unit
 
     IEnumerator BuyingItem()
     {
-        if ((Vector2)transform.position == target)
+        Item shelfItem = shelf.FindItemInSlot(target);      //매대아이템 보기
+        yield return StartCoroutine("Waiting", maxWaitTime);
+        if (shelfItem != null)  //
         {
-            Item shelfItem = shelf.FindItemInSlot(target);      //매대아이템 보기
             int shelfIndex = shelf.FindItemSlotIndex(target);   //매대아이템 슬롯 인덱스
-
-            yield return StartCoroutine("Waiting", maxWaitTime);
-            if (shelfItem == null) yield break;     //대기시간동안 물건이 다 팔릴수도 있으므로 한번 더 검사
             if (!FindKeyByValue(shelfItem).Equals(-1))                 //내 인벤토리에 아이템이 존재한다면, FindKeyByValue: 아이템을 인벤에서 찾을 수 없으면 인덱스 -1을 반환함
             {
                 int key = FindKeyByValue(shelfItem);                    //인벤토리 키 찾기
@@ -60,9 +59,13 @@ public class Customer : Unit
                 if (BuyItem(myItem, shelfItem, shelfIndex, amountToBuy))     //구매량만큼 아이템 사기
                     inventory[invenIndex.RemoveFirst().value] = myItem;   //인벤토리에 생성한 아이템 넣기
             }
-            --buyCount;     //구매횟수 감소
-            yield return new WaitForSeconds(0.25f);             //과부하 방지용 대기시간
         }
+        else
+        {
+            Debug.Log("여기는 살게 없네....");
+        }
+        --buyCount;     //구매횟수 감소
+        yield return new WaitForSeconds(0.25f);           //과부하 방지용 대기시간
     }
 
 

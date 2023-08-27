@@ -110,8 +110,7 @@ public class Staff : Unit
         Item shelfItem = shelf.FindItemInSlot(target);                                                      //옮길 아이템
         if (shelfItem == null)                                                                              //아이템이 없으면 다른 매대 찾기
         {
-            GoMarket();
-            yield break;
+            shelfItem = ItemManager.instance.GetRandomItem();   //아이템이 없다면 새아이템으로 채워넣기
         }
         int shelfIndex = shelf.FindItemSlotIndex(target);                                                   //아이템 인덱스
         int amountCarring = Mathf.Clamp(shelfItem.amountOfShelf - shelfItem.amount, 0, amountOfCarrying);   //옮길 수량
@@ -143,11 +142,16 @@ public class Staff : Unit
     {
         yield return StartCoroutine("Waiting", workTime);
         Item shelfItem = checkingItems[workCount].shelf.ItemSlot[checkingItems[workCount].frontIndex];  //판매대 아이템
-        if (shelfItem.Equals(inventory[workCount]))   //판매대 아이템과 내 인벤토리 아이템이 같으면
+        if (shelfItem != null && shelfItem.Equals(inventory[workCount]))   //판매대 아이템과 내 인벤토리 아이템이 같으면
         {
             int maxAmountCarring = Mathf.Min(shelfItem.amountOfShelf - shelfItem.amount, amountOfCarrying);   //판매대에 넣을수 있는 양과 내 운반량중에 작은 값이 운반할 MAX양
             int amount = Mathf.Clamp(inventory[workCount].amount, 0, maxAmountCarring);
             EjectItemInInventory(shelfItem, amount);
+        }
+        else if(shelfItem == null)
+        {
+            Item newItem = new Item(inventory[workCount]);
+            EjectItemInInventory(newItem, inventory[workCount].amount);
         }
         ++workCount;
     }
