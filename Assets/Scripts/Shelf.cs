@@ -32,7 +32,7 @@ public class Shelf : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
         shelfHeight = 4;
         shelfWidth = 2;
         worldPosition = transform.position;
-        saleDir = Direction.Left;
+        saleDir = SetDirection();
         thisRenderer = GetComponent<SpriteRenderer>();
         frontRenderer = transform.GetChild(0).GetComponent<SpriteRenderer>();
         frontRenderer.color = Color.clear;
@@ -54,7 +54,6 @@ public class Shelf : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
         PutItemInSlot(1, 50);
         PutItemInSlot(2, 50);
         PutItemInSlot(3, 50);
-
     }
 
     private void Update()
@@ -263,6 +262,26 @@ public class Shelf : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
         int swap = shelfWidth;
         shelfWidth = shelfHeight;
         shelfHeight = swap;
+    }
+
+    Direction SetDirection() //개발중에 초기화를 위해 수동 방향 조정, 90,270도에서 높이와 너비가 바뀌기 때문에
+    {
+        Vector3 rotation = transform.rotation.eulerAngles;
+
+        if (rotation == Vector3.zero)
+            return Direction.Left;
+        else if (rotation == new Vector3(0, 0, 90))
+        {
+            SwapWidthAndHeight();
+            return Direction.Down;
+        }
+        else if (rotation == new Vector3(0, 0, 180))
+            return Direction.Right;
+        else
+        {
+            SwapWidthAndHeight();
+            return Direction.Up;
+        }
     }
 
     //pointerDrag : GameObject 호출

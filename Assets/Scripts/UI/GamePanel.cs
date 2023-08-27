@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
@@ -5,28 +6,33 @@ using UnityEngine.UI;
 public class GamePanel : MonoBehaviour
 {
     Transform timePanel;
-    Transform menuPanel;
-
-
     Slider fillTime; //시간 이미지
-
-    Image[] menuImage;
-
     int maxTime = 20;
+    
+    Transform menuPanel;
+    Image[] menuImage;
+    
+    Transform infoPanel;
+    TextMeshProUGUI[] infoText;
+
+
     void Awake()
     {
         timePanel = transform.GetChild(0);
         fillTime = timePanel.GetChild(0).GetComponent<Slider>();
 
-
         menuPanel = transform.GetChild(2);
         menuImage = menuPanel.GetComponentsInChildren<Image>();
+
+        infoPanel = transform.GetChild(3);
+        infoText = infoPanel.GetComponentsInChildren<TextMeshProUGUI>();
     }
 
     private void Update()
     {
         Clock();
         ChangeColorOfGameMode();
+        DisplayInfo();
     }
 
     void Clock()    //UI 시계
@@ -55,4 +61,11 @@ public class GamePanel : MonoBehaviour
         }
     }
 
+    void DisplayInfo()
+    {
+        infoText[0].text = MarketManager.instance.customerCount.ToString();
+        infoText[1].text = MarketManager.instance.customerCycleTime.ToString();
+        infoText[2].text = MarketManager.instance.totalMoney.ToString();
+        infoText[3].text = MarketManager.instance.deadCustomer.ToString();
+    }
 }

@@ -6,15 +6,25 @@ public class MarketManager : MonoBehaviour
 {
     public static MarketManager instance;
 
-    int totalMoney;
+
+    public int customerCount { get; set; }
+    public int customerTotalCycleTime { get; set; }
+    public int deadCustomer { get; set; }
+    public int totalMoney { get; set; }
+
+
 
     void Awake()
     {
         instance = this;   
     }
 
-    public void PlusTotalMoney(int money)
+    public int customerCycleTime
     {
-        totalMoney += money;
+        get 
+        {
+            if (deadCustomer == 0)  return 0;
+            return customerTotalCycleTime / deadCustomer; 
+        }
     }
 }

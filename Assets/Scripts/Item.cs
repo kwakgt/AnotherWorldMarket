@@ -1,6 +1,6 @@
 using System;
 using UnityEngine;
-
+using Object = System.Object;
 
 public class Item : IEquatable<Item>
 {
@@ -58,6 +58,9 @@ public class Item : IEquatable<Item>
 
     public bool Equals(Item item)
     {
+        if (ReferenceEquals(item, null))
+            return false;
+
         if (name.Equals(item.name) && uniqueKey.Equals(item.uniqueKey))
             return true;
         else

@@ -36,6 +36,11 @@ public class ShelfPanel : MonoBehaviour
                 invenImage[i].sprite = shelf.ItemSlot[i - 1].sprite;
                 invenImage[i].GetComponentInChildren<TextMeshProUGUI>().text = shelf.ItemSlot[i - 1].amount.ToString();
             }
+            else
+            {
+                invenImage[i].sprite = null;
+                invenImage[i].GetComponentInChildren<TextMeshProUGUI>().text = null;
+            }
         }
     }
 }

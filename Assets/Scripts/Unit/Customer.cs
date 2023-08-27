@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Diagnostics;
 using UnityEngine;
 
 public class Customer : Unit
@@ -6,14 +7,17 @@ public class Customer : Unit
     int amountOfPurchase = 3;
     int maxWaitTime = 3;        //대기시간
 
+    Stopwatch sw = new Stopwatch();
     protected override void Awake()
     {
         base.Awake();
         type = Type.Customer;
+        MarketManager.instance.customerCount++; //고객수++
     }
 
     protected override void Start()
     {
+        sw.Start();
         base.Start();
     }
 
@@ -28,7 +32,9 @@ public class Customer : Unit
             GoMarket();                                         //아니면 다른 매대 찾기
 
         if ((Vector2)transform.position == respawn)          //현재위치가 리스폰이라면 오브젝트 파괴
-            Destroy(this.gameObject);
+        {
+            DestroyThis();
+        }
         yield return new WaitForSeconds(0.25f);             //과부하 방지용 대기시간
     }
 
@@ -69,7 +75,8 @@ public class Customer : Unit
             money += shelfItem.price * amountToBuy;             //원상복구
             return false;
         }
-        EnablePriceText("+" + (shelfItem.price * amountToBuy).ToString());
+        EnablePriceText(shelfItem.price * amountToBuy);
+        MarketManager.instance.totalMoney += shelfItem.price * amountToBuy; //마켓매니저 소지금+
         myItem.PlusAmount(amountToBuy);                         //인벤토리의 아이템에 구매량만큼 추가
         shelfItem.MinusAmount(amountToBuy);                     //매대아이템에 구매량만큼 빼기
         if (shelfItem.amount <= 0)                              //매대아이템 양이 0 이하이면
@@ -78,8 +85,9 @@ public class Customer : Unit
         return true;
     }
 
-    void EnablePriceText(string text)
+    void EnablePriceText(int price)
     {
+        string text = "+" + price;
         priceText.text = text;
         priceText.gameObject.SetActive(true);
     }
@@ -88,5 +96,14 @@ public class Customer : Unit
     {
         int amount = Random.Range(1, amountOfPurchase + 1);
         return Mathf.Clamp(amount, 0, money / shelfItem.price);
+    }
+
+    void DestroyThis()
+    {
+        sw.Stop();
+        MarketManager.instance.customerTotalCycleTime += sw.Elapsed.Seconds; //사이클 시간+
+        MarketManager.instance.customerCount--;
+        MarketManager.instance.deadCustomer++;
+        Destroy(gameObject);
     }
 }

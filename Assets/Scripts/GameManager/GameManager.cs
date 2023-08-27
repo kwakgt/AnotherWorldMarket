@@ -11,7 +11,6 @@ public class GameManager : MonoBehaviour
     public Shelf selectedShelf;
     public Warehouse selectedWarehouse;
 
-
     void Awake()
     {
         instance = this;

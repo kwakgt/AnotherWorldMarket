@@ -108,16 +108,14 @@ public class Staff : Unit
     {
         yield return StartCoroutine("Waiting", checkingTime);
         Item shelfItem = shelf.FindItemInSlot(target);                                                      //옮길 아이템
-        int shelfIndex = shelf.FindItemSlotIndex(target);                                                   //아이템 인덱스
-        int amountCarring = Mathf.Clamp(shelfItem.amountOfShelf - shelfItem.amount, 0, amountOfCarrying);   //옮길 수량
         if (shelfItem == null)                                                                              //아이템이 없으면 다른 매대 찾기
         {
             GoMarket();
             yield break;
         }
-        
+        int shelfIndex = shelf.FindItemSlotIndex(target);                                                   //아이템 인덱스
+        int amountCarring = Mathf.Clamp(shelfItem.amountOfShelf - shelfItem.amount, 0, amountOfCarrying);   //옮길 수량
         checkingItems.Add(new CheckingItem(shelf, shelfIndex, shelfItem, amountCarring));       //확인리스트에 아이템 저장
-        Debug.Log(workCount + " , " + shelfItem.name + " , " + amountCarring);
         ++workCount;
     }
 
@@ -131,7 +129,6 @@ public class Staff : Unit
 
         if (itemFound != null)
         {
-            Debug.Log("아이템 넣기");
             int maxAmountCarring = Mathf.Min(amountOfCarrying, itemFound.amount);
             int amount =Mathf.Clamp(checkingItems[workCount].amountCarring, 0, maxAmountCarring);
             if (warehouse.FindItemInWarehouse(itemFound))               //찾은 아이템이 창고에 있다면
@@ -148,7 +145,6 @@ public class Staff : Unit
         Item shelfItem = checkingItems[workCount].shelf.ItemSlot[checkingItems[workCount].frontIndex];  //판매대 아이템
         if (shelfItem.Equals(inventory[workCount]))   //판매대 아이템과 내 인벤토리 아이템이 같으면
         {
-            Debug.Log("아이템 꺼내기");
             int maxAmountCarring = Mathf.Min(shelfItem.amountOfShelf - shelfItem.amount, amountOfCarrying);   //판매대에 넣을수 있는 양과 내 운반량중에 작은 값이 운반할 MAX양
             int amount = Mathf.Clamp(inventory[workCount].amount, 0, maxAmountCarring);
             EjectItemInInventory(shelfItem, amount);
@@ -191,7 +187,6 @@ public class Staff : Unit
 
     void EjectItemInInventory(Item shelfItem, int amount)
     {
-        Debug.Log("아이템 꺼내기");
         shelfItem.PlusAmount(amount);
         inventory[workCount].MinusAmount(amount);
         if(inventory[workCount].amount.Equals(0))
