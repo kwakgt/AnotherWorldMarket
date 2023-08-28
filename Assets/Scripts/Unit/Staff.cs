@@ -10,7 +10,7 @@ public class Staff : Unit
 
     Warehouse warehouse;
     WorkType workType;          //상태 플래그
-    List<CheckingItem> checkingItems = new List<CheckingItem>();    //확인품목리스트
+    List<CheckingItem> checkingItems = new List<CheckingItem>(); //아이템 재고 확인리스트
     
     int workCount;                  //작업의 진행횟수,작업인덱스,인벤인덱스
     float checkingTime = 0.5f;      //확인시간
@@ -28,11 +28,11 @@ public class Staff : Unit
 
     IEnumerator StaffRoutine()
     {
-
-        if (workType == WorkType.Checking)          //매대에 아이템 확인
+        //아이템 재고 확인중
+        if (workType == WorkType.Checking)
         {
             yield return StartCoroutine("Checking");
-            if (workCount >= invenSizeAvailable || checkingItems.Count >= invenSizeAvailable)   //작업 횟수가 사용가능한 인벤 개수와 같으면 창고로 가기(인벤토리 가득참)
+            if (workCount >= invenSizeAvailable)   //작업 횟수가 사용가능한 인벤 개수와 같으면 창고로 가기(인벤토리 가득참)
             {
                 workType = WorkType.Finding;
                 workCount = 0;
@@ -44,7 +44,8 @@ public class Staff : Unit
             }
 
         }
-        else if (workType == WorkType.Finding)       //창고에서 아이템 찾기
+        //창고에서 아이템 찾기
+        else if (workType == WorkType.Finding)
         {
             yield return StartCoroutine("Finding");
             if (workCount >= invenSizeAvailable)   //작업 횟수가 사용가능한 인벤 개수와 같으면 판매대로 가기(인벤토리 가득참)
@@ -58,14 +59,25 @@ public class Staff : Unit
                 GoWarehouse(checkingItems[workCount].shlefItem);
             }
         }
-        else if (workType == WorkType.Carrying)     //찾은 물건들 매대로 물건 옮기기
+        //창고에서 판매대로 아이템 옮기기
+        else if (workType == WorkType.Carrying)
         {
             yield return StartCoroutine("Carrying");
-            if (workCount >= invenSizeAvailable)   //작업 횟수가 사용가능한 인벤 개수와 같으면 다시 창고로 가기(인벤토리 비움)
+            if (workCount >= invenSizeAvailable)   //작업 횟수가 사용가능한 인벤 개수와 같으면 다시 창고로 가기
             {
-                workType = WorkType.Emptying;
-                workCount = 0;
-                GoWarehouse(checkingItems[workCount].shlefItem);
+                if (IsInventoryEmpty()) //만약 남은 아이템이 없고, 다시 판매대 확인하러 가기
+                {
+                    workType = WorkType.Checking;
+                    workCount = 0;
+                    checkingItems.Clear();
+                    GoMarket();
+                }
+                else                    //만약 남은 아이템이 있다면, 창고로 가서 아이템 비우기
+                {
+                    workType = WorkType.Emptying;
+                    workCount = 0;
+                    GoWarehouse(checkingItems[workCount].shlefItem);
+                }
             }
             else
             {
@@ -73,38 +85,30 @@ public class Staff : Unit
             }
 
         }
-        else if (workType == WorkType.Emptying)     //남은 아이템이 있으면 창고에 다시 넣기
+        //남은 아이템 창고로 옮기기
+        else if (workType == WorkType.Emptying)
         {
-            if(IsInventoryEmpty())  //만약 남은 아이템이 없고, 인벤토리가 비었다면 다시 판매대 확인하러 가기
+            yield return StartCoroutine("Emptying");
+            if (workCount >= invenSizeAvailable)   //작업 횟수가 사용가능한 인벤 개수와 같으면 판매대로 확인하러 가기(인벤토리 비움)
             {
                 workType = WorkType.Checking;
-                checkingItems.Clear();
                 workCount = 0;
+                checkingItems.Clear();
                 GoMarket();
             }
             else
             {
-                yield return StartCoroutine("Emptying");
-                if (workCount >= invenSizeAvailable)   //작업 횟수가 사용가능한 인벤 개수와 같으면 판매대로 확인하러 가기(인벤토리 비움)
-                {
-                    workType = WorkType.Checking;
-                    checkingItems.Clear();
-                    workCount = 0;
-                    GoMarket();
-                }
-                else
-                {
-                    //yield return StartCoroutine("Emptying"); 여기에 있으면 아래 workCount에서 인덱스 에러 발생함
-                    target = warehouse.GetWarehouseFrontPosition(target); //확인리스트의 판매대로 타겟지정
-                }
+                //yield return StartCoroutine("Emptying"); 여기에 있으면 아래 workCount에서 인덱스 에러 발생함
+                target = warehouse.GetWarehouseFrontPosition(target); //확인리스트의 판매대로 타겟지정
             }
+
         }
  
         //TODO:: 작업에 따라 추가
     }
 
 
-    IEnumerator Checking()
+    IEnumerator Checking()  //아이템 재고 확인
     {
         yield return StartCoroutine("Waiting", checkingTime);
         Item shelfItem = shelf.FindItemInSlot(target);                                                      //옮길 아이템
@@ -114,11 +118,13 @@ public class Staff : Unit
         }
         int shelfIndex = shelf.FindItemSlotIndex(target);                                                   //아이템 인덱스
         int amountCarring = Mathf.Clamp(shelfItem.amountOfShelf - shelfItem.amount, 0, amountOfCarrying);   //옮길 수량
+        if(shelfIndex == -1) shelfIndex = 0;    //만약 -1이면 아무 인덱스 넣기
         checkingItems.Add(new CheckingItem(shelf, shelfIndex, shelfItem, amountCarring));       //확인리스트에 아이템 저장
+        Debug.Log("슬롯인덱스 : " + shelfIndex +", 아이템 : " + shelfItem.name + " , 운반량 : "  + amountCarring);
         ++workCount;
     }
 
-    IEnumerator Finding()
+    IEnumerator Finding() //아이템 찾기(창고에서 내 인벤토리로 아이템 옮기기)
     {
         yield return StartCoroutine("Waiting", workTime);
         Item itemToFind = checkingItems[workCount].shlefItem;           //찾을 아이템
@@ -138,7 +144,7 @@ public class Staff : Unit
         ++workCount;
     }
 
-    IEnumerator Carrying()
+    IEnumerator Carrying() //아이템 운반(내 인벤토리에서 판매대로 아이템 옮기기)
     {
         yield return StartCoroutine("Waiting", workTime);
         Item shelfItem = checkingItems[workCount].shelf.ItemSlot[checkingItems[workCount].frontIndex];  //판매대 아이템
@@ -148,19 +154,19 @@ public class Staff : Unit
             int amount = Mathf.Clamp(inventory[workCount].amount, 0, maxAmountCarring);
             EjectItemInInventory(shelfItem, amount);
         }
-        else if(shelfItem == null)
+        else if(shelfItem == null)  //판매대에 아이템이 없다면
         {
-            Item newItem = new Item(inventory[workCount]);
-            EjectItemInInventory(newItem, inventory[workCount].amount);
+            Item newItem = new Item(inventory[workCount]);              //인벤 아이템을 복사해서
+            EjectItemInInventory(newItem, inventory[workCount].amount); //전부 판매대로 옮기기
         }
         ++workCount;
     }
 
-    IEnumerator Emptying()
+    IEnumerator Emptying()  //남은 아이템 다시 창고로 옮기기
     {
-        yield return StartCoroutine("Waiting", workTime);
         if (inventory[workCount] != null)
         {
+            yield return StartCoroutine("Waiting", workTime);
             int itemIndex = warehouse.FindItemIndexInInventory(inventory[workCount]);
             if(itemIndex != -1) //창고에 같은 아이템이 존재하면
             {
@@ -202,17 +208,18 @@ public class Staff : Unit
     void GoWarehouse(Item itemToFind)
     {
         warehouse = WarehouseManager.instance.FindItemInWarehouseList(itemToFind);
-        if (warehouse != null)
+        if (warehouse != null)  
         {
-            target = warehouse.GetWarehouseFrontPosition(target);
+            target = warehouse.GetWarehouseFrontPosition(target); //아이템이 있는 창고가 있다면 창고로 가기
             return;
         }
         else
-            target = WarehouseManager.instance.RequestRandomWarehouse().GetWarehouseFrontPosition(target);
+            target = WarehouseManager.instance.RequestRandomWarehouse().GetWarehouseFrontPosition(target); //없으면 랜덤창고로 가기
     }
 
    
 
+    //재고 확인 구조체
     public class CheckingItem
     {
         public Shelf shelf;

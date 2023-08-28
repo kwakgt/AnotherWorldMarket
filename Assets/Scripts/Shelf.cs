@@ -127,6 +127,7 @@ public class Shelf : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
 
     public int FindItemSlotIndex(Vector2 _shelfFrontPosition)
     {
+        //False 시 -1을 반환한다.
         return Array.IndexOf(ShelfFrontPosition, _shelfFrontPosition);
     }
 

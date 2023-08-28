@@ -108,7 +108,7 @@ public class Warehouse : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
     {
         Vector2 targetPosition = frontPosition[Random.Range(0, frontSize)];
         bool contains = false;
-        for (int i = 0; i < frontSize; i++)
+        for (int i = 0; i < frontSize; i++) //currPosition이 창고 입구에 포함되는지 확인
         {
             if (frontPosition[i] == currPosition)
             {
@@ -117,9 +117,9 @@ public class Warehouse : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
             }
         }
 
-        while (contains && currPosition == targetPosition)
+        while (contains && currPosition == targetPosition)              //currPosition이 입구에 포함되고 현재 위치와 입구위치가 같으면
         {
-            targetPosition = frontPosition[Random.Range(0, frontSize)];
+            targetPosition = frontPosition[Random.Range(0, frontSize)]; //다른 입구로 변경하기
         }
         return targetPosition;
     }

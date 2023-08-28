@@ -18,7 +18,7 @@ public class Unit : MonoBehaviour //IPointerClickHandler //UI가 아니면 카메라에 
 
     
     protected   Type type;                  //유형
-                int invenSize = 12;
+    protected   int invenSize = 12;
     public      int invenSizeAvailable { get; private set; } = ((int)consumables.PlasticBag);  //사용가능한인벤토리
     public      Item[] inventory { get; private set; }  //인벤토리
     protected   Heap<Index> invenIndex;     //Index.value가 inventory 인덱스
