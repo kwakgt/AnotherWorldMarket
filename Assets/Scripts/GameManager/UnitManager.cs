@@ -38,6 +38,6 @@ public class UnitManager : MonoBehaviour
 
     void CustomerGenerator()
     {
-        Instantiate(customerPrefab, respawn[Random.Range(0,respawn.Length)]);
+        Instantiate(customerPrefab, respawn[Random.Range(1,respawn.Length)]);
     }
 }

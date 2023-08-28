@@ -25,6 +25,7 @@ public class Shelf : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
     
     SpriteRenderer thisRenderer;                //이동중 색변경
     SpriteRenderer frontRenderer;               //이동중 색변경
+    Color firstColor;                           //변경 전 색
     
     void Awake()
     {
@@ -147,6 +148,7 @@ public class Shelf : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
         if (isMoving && GameManager.instance.gameMode == GameManager.GameMode.Builder)
         {
             //색변경
+            firstColor = thisRenderer.color;
             frontRenderer.color = Color.Lerp(Color.white, Color.green, 0.5f);
             thisRenderer.color = Color.Lerp(Color.white, Color.blue, 0.5f);
 
@@ -228,7 +230,7 @@ public class Shelf : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
 
                 //색 원상복구
                 frontRenderer.color = Color.clear;
-                thisRenderer.color = Color.white;
+                thisRenderer.color = firstColor;
             }
         }
     }
