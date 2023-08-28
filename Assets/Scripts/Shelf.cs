@@ -37,6 +37,7 @@ public class Shelf : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
         thisRenderer = GetComponent<SpriteRenderer>();
         frontRenderer = transform.GetChild(0).GetComponent<SpriteRenderer>();
         frontRenderer.color = Color.clear;
+        firstColor = thisRenderer.color;
         ItemSlot = new Item[shelfFrontSize];
     }
     
@@ -148,7 +149,6 @@ public class Shelf : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
         if (isMoving && GameManager.instance.gameMode == GameManager.GameMode.Builder)
         {
             //»öº¯°æ
-            firstColor = thisRenderer.color;
             frontRenderer.color = Color.Lerp(Color.white, Color.green, 0.5f);
             thisRenderer.color = Color.Lerp(Color.white, Color.blue, 0.5f);
 
