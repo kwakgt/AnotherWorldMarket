@@ -5,9 +5,8 @@ using System;
 
 public class Pathfinding : MonoBehaviour
 {
-
-    AstarGrid grid;
     static Pathfinding instance;
+    AstarGrid grid;
 
     void Awake()
     {

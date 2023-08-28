@@ -33,7 +33,12 @@ public class UnitPanel : MonoBehaviour
         Unit unit = GameManager.instance.selectedUnit;
         if (unit == null) return;   //선택된 유닛이 없으면 종료
 
-        infoText.text = "buyCount: " + unit.buyCount + "\nmoney : " + unit.money;     //test
+        //정보 패널
+        if (unit.CompareTag("Customer"))
+        {
+            Customer customer = (Customer)unit;
+            infoText.text = "shoppingCount: " + customer.shoppingCount + "\nmoney : " + customer.money;     //test
+        }
 
         //인벤토리 패널
         for (int i = 1; i < unit.invenSizeAvailable + 1; i++)    //1부터 시작하므로 범위에 +1해준다, 0은 부모 Image여서 제외

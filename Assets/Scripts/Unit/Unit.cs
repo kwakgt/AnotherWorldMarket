@@ -12,8 +12,7 @@ public class Unit : MonoBehaviour //IPointerClickHandler //UI가 아니면 카메라에 
 
     
     protected   Vector2 respawn;            //탄생,소멸위치
-    public      int buyCount = 5;           //구매횟수
-    public      int money = 1000;           //소지금
+
                 float speed = 5;            //속도
 
     
@@ -21,7 +20,7 @@ public class Unit : MonoBehaviour //IPointerClickHandler //UI가 아니면 카메라에 
     protected   int invenSize = 12;
     public      int invenSizeAvailable { get; private set; } = ((int)consumables.PlasticBag);  //사용가능한인벤토리
     public      Item[] inventory { get; private set; }  //인벤토리
-    protected   Heap<Index> invenIndex;     //Index.value가 inventory 인덱스
+    //protected   Heap<Index> invenIndex;     //Index.value가 inventory 인덱스
 
                 TextMeshProUGUI nameText;   //자식인덱스 0
     protected   TextMeshProUGUI priceText;  //자식인덱스 1;
@@ -33,7 +32,6 @@ public class Unit : MonoBehaviour //IPointerClickHandler //UI가 아니면 카메라에 
         nameText = transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>();
         priceText = transform.GetChild(0).GetChild(1).GetComponent<TextMeshProUGUI>();
         slider = transform.GetChild(0).GetChild(2).GetComponent<Slider>();
-        FullChagingHeapIndex();
     }
     protected virtual void Start()
     {
@@ -93,8 +91,6 @@ public class Unit : MonoBehaviour //IPointerClickHandler //UI가 아니면 카메라에 
         }
     }
 
-    
-
     IEnumerator Waiting(float waitTime)
     {
         slider.gameObject.SetActive(true);
@@ -110,11 +106,16 @@ public class Unit : MonoBehaviour //IPointerClickHandler //UI가 아니면 카메라에 
 
     protected void GoMarket(int index = -1)
     {
+        float time = 0f;
         do
         {
             shelf = ShelfManager.instance.RequestRandomShelf();
             if (shelf == null)
+            {
                 Debug.Log("마켓에 아무것도 없네");
+                time += Time.deltaTime;
+                if (time > 30f) Destroy(gameObject);    //판매대가 없으면 고객 30초 후에 유닛 삭제
+            }
             else
                 target = shelf.GetShelfFrontPosition(index);
         } while ((Vector2)transform.position == target);    //내위치가 타겟위치와 같으면 타겟 재세팅
@@ -124,18 +125,6 @@ public class Unit : MonoBehaviour //IPointerClickHandler //UI가 아니면 카메라에 
     {
         target = respawn;
     }
-
-    void FullChagingHeapIndex() //사용할 인벤토리 인덱스 넣기
-    {
-        invenIndex = new Heap<Index>(invenSize);
-        for (int i = 0; i < invenSize; i++)
-        {
-            Index value = new Index(i);
-            invenIndex.Add(value);
-        }
-    }
-
-    
 
     protected int FindKeyByValue(Item _item)
     {

@@ -21,7 +21,7 @@ public class Shelf : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
     Node[,] nodeOccupiedByShelf;                //매대가 차지하고 있는 노드들
     Vector2[] ShelfFrontPosition;               //판매위치 노드의 중심좌표
 
-    public Item[] ItemSlot;                     //매대 아이템 슬롯
+    public Item[] inventory;                     //매대 아이템 슬롯
     
     SpriteRenderer thisRenderer;                //이동중 색변경
     SpriteRenderer frontRenderer;               //이동중 색변경
@@ -38,7 +38,7 @@ public class Shelf : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
         frontRenderer = transform.GetChild(0).GetComponent<SpriteRenderer>();
         frontRenderer.color = Color.clear;
         firstColor = thisRenderer.color;
-        ItemSlot = new Item[shelfFrontSize];
+        inventory = new Item[shelfFrontSize];
     }
     
     void Start()
@@ -117,15 +117,16 @@ public class Shelf : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
         return ShelfFrontPosition[index];
     }
 
-    public Item FindItemInSlot(Vector2 _shelfFrontPosition)   //선반 앞 위치로 매대 슬롯 가져오기
+    public Item FindItemInInven(Vector2 _shelfFrontPosition)   //선반 앞 위치로 매대 슬롯 가져오기
     {
-        if (Array.IndexOf(ShelfFrontPosition, _shelfFrontPosition) >= 0)
-            return ItemSlot[Array.IndexOf(ShelfFrontPosition, _shelfFrontPosition)];
+        int index = FindItemInvenIndex(_shelfFrontPosition);
+        if (index > -1)
+            return inventory[index];
         else
             return null;
     }
 
-    public int FindItemSlotIndex(Vector2 _shelfFrontPosition)
+    public int FindItemInvenIndex(Vector2 _shelfFrontPosition)
     {
         //False 시 -1을 반환한다.
         return Array.IndexOf(ShelfFrontPosition, _shelfFrontPosition);
@@ -133,15 +134,15 @@ public class Shelf : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
 
     public void EmptyItemSlot(int index)
     {
-        ItemSlot[index] = null;
+        inventory[index] = null;
     }
 
     void PutItemInSlot(int index, int amount)
     {
-        if (ItemSlot[index] == null)
+        if (inventory[index] == null)
         {
-            ItemSlot[index] = ItemManager.instance.GetRandomItem();
-            ItemSlot[index].PlusAmount(amount); 
+            inventory[index] = ItemManager.instance.GetRandomItem();
+            inventory[index].PlusAmount(amount); 
         }
     }
 

@@ -12,12 +12,11 @@ public class AstarGrid : MonoBehaviour
     
     public LayerMask unwalkableMask;
     public float nodeRadius;
+    float nodeDiameter;
 
     public TerrainType[] walkableRegions;
     Dictionary<int, int> walkableRegionsDictionary = new Dictionary<int, int>();
     LayerMask walkableMask;
-
-    float nodeDiameter;
 
     int penaltyMin = int.MaxValue;
     int penaltyMax = int.MinValue;
@@ -195,7 +194,6 @@ public class AstarGrid : MonoBehaviour
             if (n != null)
             {
                 return n;
-
             }
         }
         return null;
@@ -208,7 +206,7 @@ public class AstarGrid : MonoBehaviour
             int verticalSearchX = i + centreX;
             int horizontalSearchY = i + centreY;
 
-            // top
+            // top, ¢Ø ¡è ¢Ö
             if (InBounds(verticalSearchX, centreY + radius))
             {
                 if (grid[verticalSearchX, centreY + radius].walkable)
@@ -217,7 +215,7 @@ public class AstarGrid : MonoBehaviour
                 }
             }
 
-            // bottom
+            // bottom,  ¢× ¡é ¢Ù
             if (InBounds(verticalSearchX, centreY - radius))
             {
                 if (grid[verticalSearchX, centreY - radius].walkable)
@@ -225,7 +223,7 @@ public class AstarGrid : MonoBehaviour
                     return grid[verticalSearchX, centreY - radius];
                 }
             }
-            // right
+            // right,   ¢Ù ¡æ ¢Ö
             if (InBounds(centreY + radius, horizontalSearchY))
             {
                 if (grid[centreX + radius, horizontalSearchY].walkable)
@@ -234,7 +232,7 @@ public class AstarGrid : MonoBehaviour
                 }
             }
 
-            // left
+            // left,    ¢Ø ¡ç ¢×
             if (InBounds(centreY - radius, horizontalSearchY))
             {
                 if (grid[centreX - radius, horizontalSearchY].walkable)

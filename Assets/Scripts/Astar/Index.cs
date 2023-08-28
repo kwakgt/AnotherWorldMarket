@@ -4,15 +4,20 @@ using UnityEngine;
 
 public class Index : IHeapItem<Index>
 {
-    public int value;
+    int value;
     int heapIndex;
-    
+
     public Index(int _value)
     {
         value = _value;
     }
 
-
+    public int Value
+    {
+        get { return value; }
+        set { this.value = value; }
+    }
+   
     public int HeapIndex
     {
         get

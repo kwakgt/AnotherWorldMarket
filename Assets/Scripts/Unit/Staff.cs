@@ -111,16 +111,15 @@ public class Staff : Unit
     IEnumerator Checking()  //아이템 재고 확인
     {
         yield return StartCoroutine("Waiting", checkingTime);
-        Item shelfItem = shelf.FindItemInSlot(target);                                                      //옮길 아이템
-        if (shelfItem == null)                                                                              //아이템이 없으면 다른 매대 찾기
+        int shelfIndex = shelf.FindItemInvenIndex(target);      //옮길 아이템 인덱스
+        if(shelfIndex == -1) shelfIndex = workCount;            //만약 -1이면 아무 인덱스 넣기
+        Item shelfItem = shelf.inventory[shelfIndex];           //옮길 아이템
+        if (shelfItem == null)                                  //아이템이 없으면 다른 매대 찾기
         {
             shelfItem = ItemManager.instance.GetRandomItem();   //아이템이 없다면 새아이템으로 채워넣기
         }
-        int shelfIndex = shelf.FindItemSlotIndex(target);                                                   //아이템 인덱스
         int amountCarring = Mathf.Clamp(shelfItem.amountOfShelf - shelfItem.amount, 0, amountOfCarrying);   //옮길 수량
-        if(shelfIndex == -1) shelfIndex = 0;    //만약 -1이면 아무 인덱스 넣기
         checkingItems.Add(new CheckingItem(shelf, shelfIndex, shelfItem, amountCarring));       //확인리스트에 아이템 저장
-        Debug.Log("슬롯인덱스 : " + shelfIndex +", 아이템 : " + shelfItem.name + " , 운반량 : "  + amountCarring);
         ++workCount;
     }
 
@@ -129,16 +128,18 @@ public class Staff : Unit
         yield return StartCoroutine("Waiting", workTime);
         Item itemToFind = checkingItems[workCount].shlefItem;           //찾을 아이템
         int itemIndex = warehouse.FindItemIndexInInventory(itemToFind); //찾은 아이템인덱스
-        if (itemIndex < 0) yield break;
-        Item itemFound = warehouse.inventory[itemIndex];                //찾은 아이템
-
-        if (itemFound != null)
+        if (itemIndex >= 0)                                             //찾을 아이템이 존재한다면,1중
         {
-            int maxAmountCarring = Mathf.Min(amountOfCarrying, itemFound.amount);
-            int amount =Mathf.Clamp(checkingItems[workCount].amountCarring, 0, maxAmountCarring);
-            if (warehouse.FindItemInWarehouse(itemFound))               //찾은 아이템이 창고에 있다면
+            Item itemFound = warehouse.inventory[itemIndex];            //찾은 아이템
+
+            if (itemFound != null) //2중
             {
-                PutItemInInventory(itemFound, itemIndex, amount); //인벤토리로 옮기기
+                int maxAmountCarring = Mathf.Min(amountOfCarrying, itemFound.amount);
+                int amount = Mathf.Clamp(checkingItems[workCount].amountCarring, 0, maxAmountCarring);
+                if (warehouse.FindItemInWarehouse(itemFound))               //찾은 아이템이 창고에 있다면, 3중
+                {
+                    PutItemInInventory(itemFound, itemIndex, amount);   //인벤토리로 옮기기
+                }
             }
         }
         ++workCount;
@@ -147,7 +148,7 @@ public class Staff : Unit
     IEnumerator Carrying() //아이템 운반(내 인벤토리에서 판매대로 아이템 옮기기)
     {
         yield return StartCoroutine("Waiting", workTime);
-        Item shelfItem = checkingItems[workCount].shelf.ItemSlot[checkingItems[workCount].frontIndex];  //판매대 아이템
+        Item shelfItem = checkingItems[workCount].shelf.inventory[checkingItems[workCount].frontIndex];  //판매대 아이템
         if (shelfItem != null && shelfItem.Equals(inventory[workCount]))   //판매대 아이템과 내 인벤토리 아이템이 같으면
         {
             int maxAmountCarring = Mathf.Min(shelfItem.amountOfShelf - shelfItem.amount, amountOfCarrying);   //판매대에 넣을수 있는 양과 내 운반량중에 작은 값이 운반할 MAX양
@@ -158,6 +159,7 @@ public class Staff : Unit
         {
             Item newItem = new Item(inventory[workCount]);              //인벤 아이템을 복사해서
             EjectItemInInventory(newItem, inventory[workCount].amount); //전부 판매대로 옮기기
+            checkingItems[workCount].shelf.inventory[checkingItems[workCount].frontIndex] = newItem;    //판매대에 아이템 넣기
         }
         ++workCount;
     }
@@ -168,19 +170,23 @@ public class Staff : Unit
         {
             yield return StartCoroutine("Waiting", workTime);
             int itemIndex = warehouse.FindItemIndexInInventory(inventory[workCount]);
-            if(itemIndex != -1) //창고에 같은 아이템이 존재하면
+            if(itemIndex > -1) //창고에 같은 아이템이 존재하면
             {
                 EjectItemInInventory(warehouse.inventory[itemIndex], inventory[workCount].amount);   //창고에 아이템 넣기
             }
             else //창고에 같은 아이템이 없다면
             {
-                if (warehouse.FirstEmptyIndexInInventory() != -1)       //빈공간을 찾아서
-                    EjectItemInInventory(warehouse.inventory[warehouse.FirstEmptyIndexInInventory()], inventory[workCount].amount); //빈공간에 아이템 넣기
+                int index = warehouse.FirstEmptyIndexInInventory();
+                if (index > -1)       //빈공간을 찾아서
+                {
+                    Item newItem = new Item(inventory[workCount]);
+                    EjectItemInInventory(newItem, inventory[workCount].amount); //빈공간에 아이템 넣기
+                    warehouse.inventory[index] = newItem;
+                }
                 else
                     Debug.Log("창고가 꽉찼다");
             }
         }
-
         ++workCount;
     }
 
@@ -191,13 +197,13 @@ public class Staff : Unit
         itemFound.MinusAmount(amount);
         if(itemFound.amount.Equals(0))
         {
-            warehouse.inventory[index] = null;
+            warehouse.EmptyInventory(index);
         }
     }
 
-    void EjectItemInInventory(Item shelfItem, int amount)
+    void EjectItemInInventory(Item ejectedItem, int amount)
     {
-        shelfItem.PlusAmount(amount);
+        ejectedItem.PlusAmount(amount);
         inventory[workCount].MinusAmount(amount);
         if(inventory[workCount].amount.Equals(0))
         {

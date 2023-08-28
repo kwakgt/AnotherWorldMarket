@@ -23,6 +23,7 @@ public class Warehouse : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 
     int maxInvenSize;                           //최대 인벤토리
     public Item[] inventory;                    //인벤토리 슬롯
+    Heap<Index> invenIdxs;                       //사용가능한 인벤 칸 번호(인덱스)
 
     SpriteRenderer frontRenderer;               //이동중 색변경
     SpriteRenderer thisRenderer;                //이동중 색변경
@@ -34,18 +35,24 @@ public class Warehouse : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         height = 4;
         width = 4;
         worldPosition = transform.position;
-        frontDir = Direction.Left;
+        frontDir = SetDirection();
+
         thisRenderer = GetComponent<SpriteRenderer>();
         frontRenderer = transform.GetChild(0).GetComponent<SpriteRenderer>();
         frontRenderer.color = Color.clear;
+        
         inventory = new Item[maxInvenSize];
+        invenIdxs = new Heap<Index>(maxInvenSize);
+        FillInventoryIndexFull();
     }
 
     void Start()
     {
+        index = WarehouseManager.instance.RequestWarehouseIndex();
+        
         nodeRadius = Nodefinding.instance.GetNodeRadius();
         nodeDiameter = nodeRadius * 2;
-        index = WarehouseManager.instance.RequestWarehouseIndex();
+        
         nodeOccupiedByWarehouse = SetNodeOccupiedByShelf(worldPosition, width, height);    //SetShelfFrontPosition(); 이전에 실행되야함,  순서중요!!!
         frontPosition = SetFrontPosition(nodeOccupiedByWarehouse);           //SetNodeOccupiedByShelf();가 먼저 실행되야함, nodeOccupiedByShelf값이 있어야 ShelfFrontPosition 계산 가능
 
@@ -126,12 +133,10 @@ public class Warehouse : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 
     public int FirstEmptyIndexInInventory()
     {
-        for(int i = 0; i < inventory.Length; i++)
-        {
-            if (inventory[i] == null)
-                return i;
-        }
-        return -1;
+        if (invenIdxs.Count == 0)
+            return -1;
+        else
+            return invenIdxs.RemoveFirst().Value;
     }
 
     public bool FindItemInWarehouse(Item itemToFind)
@@ -162,8 +167,45 @@ public class Warehouse : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         int max = (ItemManager.instance.CountOfAllItem() < maxInvenSize) ? ItemManager.instance.CountOfAllItem() : maxInvenSize;    //아이템 개수와 전체 창고칸수 비교하여 작은걸 max값으로
         for (int i = 0; i < max; i++)
         {
-            inventory[i] = ItemManager.instance.GetItem(i);
-            inventory[i].PlusAmount(amount);
+            int index = invenIdxs.RemoveFirst().Value;
+            inventory[index] = ItemManager.instance.GetItem(i);
+            inventory[index].PlusAmount(amount);
+        }
+    }
+
+    public void EmptyInventory(int index)
+    {
+        Index value = new Index(index);
+        invenIdxs.Add(value);
+        inventory[index] = null;
+    }
+
+    void FillInventoryIndexFull()
+    {
+        for (int i = 0; i < inventory.Length; i++)
+        {
+            Index index = new Index(i);
+            invenIdxs.Add(index);
+        }
+    }
+
+    Direction SetDirection() //개발중에 초기화를 위해 수동 방향 조정, 90,270도에서 높이와 너비가 바뀌기 때문에
+    {
+        Vector3 rotation = transform.rotation.eulerAngles;
+
+        if (rotation == Vector3.zero)
+            return Direction.Left;
+        else if (rotation == new Vector3(0, 0, 90))
+        {
+            SwapWidthAndHeight();
+            return Direction.Down;
+        }
+        else if (rotation == new Vector3(0, 0, 180))
+            return Direction.Right;
+        else
+        {
+            SwapWidthAndHeight();
+            return Direction.Up;
         }
     }
 

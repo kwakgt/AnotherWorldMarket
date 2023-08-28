@@ -1,5 +1,3 @@
-using UnityEngine;
-using System.Collections;
 using System;
 
 public class Heap<T> where T : IHeapItem<T> //T´Â IHeapItem ÀÎÅÍÆäÀÌ½º¸¦ °¡Á®¾ßÇÔ
@@ -115,9 +113,6 @@ public class Heap<T> where T : IHeapItem<T> //T´Â IHeapItem ÀÎÅÍÆäÀÌ½º¸¦ °¡Á®¾ßÇ
         itemA.HeapIndex = itemB.HeapIndex;
         itemB.HeapIndex = itemAIndex;
     }
-
-
-
 }
 
 public interface IHeapItem<T> : IComparable<T>
