@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using Object = System.Object;
 
 public class Item : IEquatable<Item>
 {
@@ -37,7 +36,7 @@ public class Item : IEquatable<Item>
         sprite = item.sprite;
     }
 
-    public bool MinusAmount(int _amount)
+    public bool MinusAmount(int _amount) //마이너스 성공여부 후 플러스
     {
         amount -= _amount;
         if (amount < 0)

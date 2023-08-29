@@ -84,11 +84,11 @@ public class Customer : Unit
             return false;
         }
         EnablePriceText(shelfItem.price * amountToBuy);
-        MarketManager.instance.totalMoney += shelfItem.price * amountToBuy; //마켓매니저 소지금+
-        myItem.PlusAmount(amountToBuy);                         //인벤토리의 아이템에 구매량만큼 추가
-        shelfItem.MinusAmount(amountToBuy);                     //매대아이템에 구매량만큼 빼기
+        MarketManager.instance.totalMoney += shelfItem.price * amountToBuy; //마켓매니저 매출액+
+        if(shelfItem.MinusAmount(amountToBuy))                  //매대아이템에 구매량만큼 빼기
+            myItem.PlusAmount(amountToBuy);                     //인벤토리의 아이템에 구매량만큼 추가
         if (shelfItem.amount <= 0)                              //매대아이템 양이 0 이하이면
-            shelf.EmptyInventory(shelfIndex);                    //매대아이템 비우기
+            shelf.EmptyInventory(shelfIndex);                   //매대아이템 비우기
 
         return true;
     }

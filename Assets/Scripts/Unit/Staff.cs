@@ -192,8 +192,8 @@ public class Staff : Unit
     void PutItemInInventory(Item itemFound, int index, int amount)
     {
         inventory[workCount] = new Item(itemFound);
-        inventory[workCount].PlusAmount(amount);
-        itemFound.MinusAmount(amount);
+        if(itemFound.MinusAmount(amount))
+            inventory[workCount].PlusAmount(amount);
         if(itemFound.amount.Equals(0))
         {
             warehouse.EmptyInventory(index);
@@ -202,8 +202,8 @@ public class Staff : Unit
 
     void EjectItemInInventory(Item ejectedItem, int amount)
     {
-        ejectedItem.PlusAmount(amount);
-        inventory[workCount].MinusAmount(amount);
+        if(inventory[workCount].MinusAmount(amount))
+            ejectedItem.PlusAmount(amount);
         if(inventory[workCount].amount.Equals(0))
         {
             inventory[workCount] = null;
