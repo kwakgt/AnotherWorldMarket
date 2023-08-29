@@ -39,14 +39,16 @@ public class UnitPanel : MonoBehaviour
             Customer customer = (Customer)unit;
             infoText.text = "shoppingCount: " + customer.shoppingCount + "\nmoney : " + customer.money;     //test
         }
+        else
+            infoText.text = null;
 
         //인벤토리 패널
         for (int i = 1; i < unit.invenSizeAvailable + 1; i++)    //1부터 시작하므로 범위에 +1해준다, 0은 부모 Image여서 제외
         {
-            if (unit.inventory[i - 1] != null)                  //unit 인벤트로니는 0부터
+            if (unit.GetItemInInven(i - 1) != null)                  //unit 인벤트로니는 0부터
             {
-                invenImage[i].sprite = unit.inventory[i - 1].sprite;
-                invenImage[i].GetComponentInChildren<TextMeshProUGUI>().text = unit.inventory[i - 1].amount.ToString();
+                invenImage[i].sprite = unit.GetItemInInven(i - 1).sprite;
+                invenImage[i].GetComponentInChildren<TextMeshProUGUI>().text = unit.GetItemInInven(i - 1).amount.ToString();
             }
             else
             {

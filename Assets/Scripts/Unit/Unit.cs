@@ -6,21 +6,19 @@ using UnityEngine.UI;
 public class Unit : MonoBehaviour //IPointerClickHandler //UI가 아니면 카메라에 Physics2DRaycater 컴포넌트 필요
 {
     public      Vector2 target;             //이동목표
-    protected   Shelf shelf;                //찾은 판매대
                 Vector2[] path;             //찾은 경로
                 int pathIndex;              //경로 인덱스, 경로 그리기용
+    protected   Shelf shelf;                //찾은 판매대
 
-    
-    protected   Vector2 respawn;            //탄생,소멸위치
 
                 float speed = 5;            //속도
-
-    
-    protected   Type type;                  //유형
-    protected   int invenSize = 12;
     public      int invenSizeAvailable { get; private set; } = ((int)consumables.PlasticBag);  //사용가능한인벤토리
-    public      Item[] inventory { get; private set; }  //인벤토리
-    //protected   Heap<Index> invenIndex;     //Index.value가 inventory 인덱스
+
+
+    protected   Item[] inventory;  //인벤토리
+                int maxInvenSize = 12;
+    protected   Vector2 respawn;            //탄생,소멸위치
+   
 
                 TextMeshProUGUI nameText;   //자식인덱스 0
     protected   TextMeshProUGUI priceText;  //자식인덱스 1;
@@ -28,7 +26,7 @@ public class Unit : MonoBehaviour //IPointerClickHandler //UI가 아니면 카메라에 
 
     protected virtual void Awake()
     {
-        inventory = new Item[invenSize];
+        inventory = new Item[maxInvenSize];
         nameText = transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>();
         priceText = transform.GetChild(0).GetChild(1).GetComponent<TextMeshProUGUI>();
         slider = transform.GetChild(0).GetChild(2).GetComponent<Slider>();
@@ -84,7 +82,7 @@ public class Unit : MonoBehaviour //IPointerClickHandler //UI가 아니면 카메라에 
             }
 
             //현재 target에 도착한 상태, 아래에 이 후 행동 지정
-            if (type == Type.Customer)
+            if (tag.Equals("Customer"))
                 yield return StartCoroutine("CustomerRoutine");
             else
                 yield return StartCoroutine("StaffRoutine");
@@ -117,7 +115,7 @@ public class Unit : MonoBehaviour //IPointerClickHandler //UI가 아니면 카메라에 
                 if (time > 30f) Destroy(gameObject);    //판매대가 없으면 고객 30초 후에 유닛 삭제
             }
             else
-                target = shelf.GetShelfFrontPosition(index);
+                target = shelf.GetFrontPosition(index);
         } while ((Vector2)transform.position == target);    //내위치가 타겟위치와 같으면 타겟 재세팅
     }
 
@@ -126,14 +124,19 @@ public class Unit : MonoBehaviour //IPointerClickHandler //UI가 아니면 카메라에 
         target = respawn;
     }
 
-    protected int FindKeyByValue(Item _item)
+    protected int FindItemIndexInInventory(Item itemToFind)
     {
         for(int i = 0; i < invenSizeAvailable; i++)
         {
-            if (inventory[i] != null && inventory[i].Equals(_item))
+            if (inventory[i] != null && inventory[i].Equals(itemToFind))
                 return i;
         }
         return -1;
+    }
+
+    public Item GetItemInInven(int  index)
+    {
+        return inventory[index];
     }
 
     protected bool IsInventoryFull()
@@ -199,5 +202,4 @@ public class Unit : MonoBehaviour //IPointerClickHandler //UI가 아니면 카메라에 
     }*/
 
     public enum consumables { TwoHands = 2, PlasticBag = 4, Basket = 8, Cart = 12 }
-    public enum Type { Customer, Staff}
 }

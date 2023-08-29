@@ -29,7 +29,7 @@ public class WarehouseManager : MonoBehaviour
     {
         for (int i = 0; i < warehouseList.Count; i++)
         {
-            if(warehouseList[i].FindItemInWarehouse(itemToFind))
+            if(warehouseList[i].FindItemIndexInInventory(itemToFind) > -1)
                 return warehouseList[i];
         }
         return null;

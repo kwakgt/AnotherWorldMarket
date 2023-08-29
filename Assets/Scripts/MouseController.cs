@@ -58,7 +58,11 @@ public class MouseController : MonoBehaviour
                 GameManager.instance.selectedWarehouse = downHit.transform.GetComponent<Warehouse>();
                 PanelSetActive(false, false, true);
             }
-            
+            else
+            {
+                GameManager.instance.selectedUnit = null;
+                PanelSetActive(false, false, false);
+            }
             //TODO::다른 태그 선택 클릭시 추가
         }
         else
@@ -66,6 +70,7 @@ public class MouseController : MonoBehaviour
             GameManager.instance.selectedUnit = null;
             PanelSetActive(false, false, false);
         }
+
     }
 
 

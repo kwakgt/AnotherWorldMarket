@@ -15,8 +15,6 @@ public class Customer : Unit
     protected override void Awake()
     {
         base.Awake();
-        type = Type.Customer;
-        
     }
 
     protected override void Start()
@@ -28,17 +26,18 @@ public class Customer : Unit
 
     IEnumerator CustomerRoutine()
     {
-        yield return StartCoroutine("BuyingItem");      //매대에 물건 구매
-
-        if (money <= 0 || shoppingCount <= 0 || IsInventoryFull())   //돈, 구매횟수가 없거나 인벤토리가 가득 찼으면
-            GoHome();                                           //집에 간다.
-        else
-            GoMarket();                                         //아니면 다른 매대 찾기
-
         if ((Vector2)transform.position == respawn)          //현재위치가 리스폰이라면 오브젝트 파괴
         {
             DestroyThis();
         }
+
+        yield return StartCoroutine("BuyingItem");          //매대에 물건 구매
+
+        if (money <= 0 || shoppingCount <= 0 || IsInventoryFull())   //돈, 쇼핑횟수가 없거나 인벤토리가 가득 찼으면
+            GoHome();                                           //집에 간다.
+        else
+            GoMarket();                                         //아니면 다른 매대 찾기
+
         yield return new WaitForSeconds(0.25f);             //과부하 방지용 대기시간
     }
 
@@ -48,18 +47,18 @@ public class Customer : Unit
         Item shelfItem = shelf.FindItemInInven(target);      //매대아이템 보기
         if (shelfItem != null)
         {
-            int shelfIndex = shelf.FindItemInvenIndex(target);   //매대아이템 슬롯 인덱스
-            if (!FindKeyByValue(shelfItem).Equals(-1))                 //내 인벤토리에 아이템이 존재한다면, FindKeyByValue: 아이템을 인벤에서 찾을 수 없으면 인덱스 -1을 반환함
+            int shelfIndex = shelf.FindIndexOfFrontPosition(target);            //매대아이템 슬롯 인덱스
+            if (!FindItemIndexInInventory(shelfItem).Equals(-1))                //내 인벤토리에 아이템이 존재한다면, FindKeyByValue: 아이템을 인벤에서 찾을 수 없으면 인덱스 -1을 반환함
             {
-                int key = FindKeyByValue(shelfItem);                        //인벤토리 키 찾기
-                int amountToBuy = PurchaseForFitPrice(shelfItem);           //랜덤으로 아이템 구매량 정하기
-                BuyItem(inventory[key], shelfItem, shelfIndex, amountToBuy);//구매량만큼 아이템 사서 인벤토리 아이템에 더하기
-            }
-            else                                                            //내 인벤토리에 아이템이 없다면
+                int key = FindItemIndexInInventory(shelfItem);                  //인벤토리 키 찾기
+                int amountToBuy = PurchaseForFitPrice(shelfItem);               //랜덤으로 아이템 구매량 정하기
+                BuyItem(inventory[key], shelfItem, shelfIndex, amountToBuy);    //구매량만큼 아이템 사서 인벤토리 아이템에 더하기
+            } 
+            else                                                                //내 인벤토리에 아이템이 없다면
             {
-                Item myItem = new Item(shelfItem);                          //아이템 새로 생성
-                int amountToBuy = PurchaseForFitPrice(shelfItem);        //랜덤으로 아이템 구매량 정하기
-                if (BuyItem(myItem, shelfItem, shelfIndex, amountToBuy))     //구매량만큼 아이템 사기
+                Item myItem = new Item(shelfItem);                              //아이템 새로 생성
+                int amountToBuy = PurchaseForFitPrice(shelfItem);               //랜덤으로 아이템 구매량 정하기
+                if (BuyItem(myItem, shelfItem, shelfIndex, amountToBuy))        //구매량만큼 아이템 사기
                 {
                     inventory[invenIdx] = myItem;   //인벤토리에 생성한 아이템 넣기
                     ++invenIdx; //인덱스++
@@ -89,7 +88,7 @@ public class Customer : Unit
         myItem.PlusAmount(amountToBuy);                         //인벤토리의 아이템에 구매량만큼 추가
         shelfItem.MinusAmount(amountToBuy);                     //매대아이템에 구매량만큼 빼기
         if (shelfItem.amount <= 0)                              //매대아이템 양이 0 이하이면
-            shelf.EmptyItemSlot(shelfIndex);                    //매대아이템 비우기
+            shelf.EmptyInventory(shelfIndex);                    //매대아이템 비우기
 
         return true;
     }

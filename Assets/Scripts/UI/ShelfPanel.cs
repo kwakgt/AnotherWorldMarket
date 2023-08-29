@@ -29,12 +29,12 @@ public class ShelfPanel : MonoBehaviour
         Shelf shelf = GameManager.instance.selectedShelf;
         if (shelf == null) return;   //선택된 유닛이 없으면 종료
 
-        for (int i = 1; i < shelf.inventory.Length + 1; i++)    //1부터 시작하므로 범위에 +1해준다, 0은 부모 Image여서 제외
+        for (int i = 1; i < shelf.maxInvenSize + 1; i++)    //1부터 시작하므로 범위에 +1해준다, 0은 부모 Image여서 제외
         {
-            if (shelf.inventory[i - 1] != null)                  //unit 인벤트로니는 0부터
+            if (shelf.GetItemInInven(i - 1) != null)                  //unit 인벤트로니는 0부터
             {
-                invenImage[i].sprite = shelf.inventory[i - 1].sprite;
-                invenImage[i].GetComponentInChildren<TextMeshProUGUI>().text = shelf.inventory[i - 1].amount.ToString();
+                invenImage[i].sprite = shelf.GetItemInInven(i - 1).sprite;
+                invenImage[i].GetComponentInChildren<TextMeshProUGUI>().text = shelf.GetItemInInven(i - 1).amount.ToString();
             }
             else
             {
