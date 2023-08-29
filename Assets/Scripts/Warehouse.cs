@@ -27,6 +27,7 @@ public class Warehouse : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 
     SpriteRenderer frontRenderer;               //이동중 색변경
     SpriteRenderer thisRenderer;                //이동중 색변경
+    Color firstColor; 
 
     void Awake()
     {
@@ -40,7 +41,8 @@ public class Warehouse : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         thisRenderer = GetComponent<SpriteRenderer>();
         frontRenderer = transform.GetChild(0).GetComponent<SpriteRenderer>();
         frontRenderer.color = Color.clear;
-        
+        firstColor = frontRenderer.color;
+
         inventory = new Item[maxInvenSize];
         invenIdxs = new Heap<Index>(maxInvenSize);
         FillInventoryIndexFull();
@@ -292,7 +294,7 @@ public class Warehouse : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 
                 //색 원상복구
                 frontRenderer.color = Color.clear;
-                thisRenderer.color = Color.white;
+                thisRenderer.color = firstColor;
             }
         }
     }

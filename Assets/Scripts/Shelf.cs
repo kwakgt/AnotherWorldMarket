@@ -7,13 +7,13 @@ using Random = UnityEngine.Random;
 public class Shelf : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler    //UI가 아니면 카메라에 Physics2DRaycater 컴포넌트 필요
 {
     public bool displayGridGizmos;
-    Vector2 worldPosition;                      //중심점 월드포인트
+    protected Vector2 worldPosition;                      //중심점 월드포인트
     bool isMoving;                              //이동 플래그
 
     int shelfIndex;                             //매대 고유번호
     int shelfFrontSize;                         //매대 판매위치 노드크기
-    int shelfWidth;                             //매대 노드너비
-    int shelfHeight;                            //매대 노드높이
+    protected int shelfWidth;                             //매대 노드너비
+    protected int shelfHeight;                            //매대 노드높이
     Direction saleDir;                          //현재 매대의 판매방향
 
     float nodeRadius;                           //노드 반지름
@@ -26,12 +26,13 @@ public class Shelf : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
     SpriteRenderer thisRenderer;                //이동중 색변경
     SpriteRenderer frontRenderer;               //이동중 색변경
     Color firstColor;                           //변경 전 색
-    
+
+    int countRotation;                          //회전수(건물 건설시 원상복구할때 쓰인다)
     void Awake()
     {
-        shelfFrontSize = 4;
-        shelfHeight = 4;
-        shelfWidth = 2;
+        shelfWidth = (int)transform.localScale.x;
+        shelfHeight = (int)transform.localScale.y;
+        shelfFrontSize = (int)MathF.Max(nodeDiameter, shelfHeight);
         worldPosition = transform.position;
         saleDir = SetDirection();
         thisRenderer = GetComponent<SpriteRenderer>();
@@ -164,15 +165,12 @@ public class Shelf : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
             //회전
             if (InputManager.instance.rKeyDown)
             {
-                Debug.Log("R눌림");
-                transform.Rotate(Vector3.forward, 90);                                      //90도 회전
-                ChangeSaleDirection();                                                      //판매방향 변경
-                SwapWidthAndHeight();                                                       //노드 가로,세로 크기변경
                 InputManager.instance.rKeyDown = false;
+                Rotate();
             }
 
             //설치
-            if(Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0))
             {
                 //이동중에 마우스 클릭하면 현재 위치에 설치시도
                 //설치 :: 설치할 위치에서 점유노드, 판매노드가 전부 walkable이면 설치
@@ -182,17 +180,17 @@ public class Shelf : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
                 Vector2[] frontPosition = SetShelfFrontPosition(occupiedNodes);                                              //현재 위치의 판매위치 계산
 
 
-                bool frontcheck = false;
+                bool frontWalkablecheck = false;
                 for (int i = 0; i < shelfFrontSize; i++)
                 {
                     Node checkFrontNode = Nodefinding.instance.RequestNode(frontPosition[i]);   //판매위치로 노드위치 계산
                     if(checkFrontNode != null && checkFrontNode.walkable)
                     {
-                        frontcheck = true;
+                        frontWalkablecheck = true;
                     }
                     else
                     {
-                        frontcheck = false;
+                        frontWalkablecheck = false;
                         break;
                     }
                 }
@@ -205,27 +203,34 @@ public class Shelf : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
                         Node checkOccupiedNode = occupiedNodes[x, y];
                         if (checkOccupiedNode != null && checkOccupiedNode.walkable)    //이동이 아닌 새로 설치할 때 점유노드가 없으므로 Null체크
                         {
+                            Debug.Log(checkOccupiedNode.walkable);
                             walkableCheck = true;
-                            checkOccupiedNode.walkable = false;                 //매대는 장애물이므로 walkable false로 변경
                         }
                         else
                         {
+                            Debug.Log(checkOccupiedNode.walkable);
                             walkableCheck = false;                      //노드가 없거나 하나라도 unwalkable일 시 설치 취소
                             break;
                         }
                     }
+
+                    if (!walkableCheck) break;  //false면 빠져나오기
                 }
 
-                if (walkableCheck && frontcheck)                      //노드가 전부 walkable이라면 설치시작
+                if (walkableCheck && frontWalkablecheck)                      //노드가 전부 walkable이라면 설치시작
                 {
                     worldPosition = transform.position;     //월드포지션 변경
                     nodeOccupiedByShelf = occupiedNodes;  //점유노드 변경
                     ShelfFrontPosition = frontPosition;     //판매위치 변경
+                    ChangeWalkebleNodeOccupiedbyshelf(false);
+                    countRotation = 0;
                     ShelfManager.instance.UpdateShelfDictionary(shelfIndex, this);  //변경된 정보 매니저에 업데이트
                 }
                 else
                 {
-                    transform.position = firstPosition;
+                    Rotate(countRotation);                      //회전 원상복구
+                    transform.position = firstPosition;         //위치 원상복구, 회전이 먼저 복구되어야함, 순서중요
+                    countRotation = 0;
                     ChangeWalkebleNodeOccupiedbyshelf(false);   //취소되면 처음에 walkable → true로 변경한 거 원상복구
                 }
                 isMoving = false;                       //설치 or 취소가 완료되면 이동완료
@@ -249,7 +254,19 @@ public class Shelf : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
         }
     }
 
-    void ChangeSaleDirection()
+    protected virtual void Rotate(int rewind = 3)
+    {
+        for (int i = 0; i < 4 - rewind; i++)
+        {
+            transform.Rotate(Vector3.forward, 90);                                      //90도 회전
+            ChangeFrontDirection();                                                     //판매방향변경
+            SwapWidthAndHeight();                                                       //노드 가로,세로 크기변경
+
+            countRotation = (countRotation + 1) % 4;                                    //회전수++
+        }
+    }
+
+    protected void ChangeFrontDirection()
     {
         if(saleDir == Direction.Up)
         {
@@ -259,7 +276,7 @@ public class Shelf : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
         saleDir += 1;
     }
 
-    void SwapWidthAndHeight()
+    protected void SwapWidthAndHeight()
     {
         int swap = shelfWidth;
         shelfWidth = shelfHeight;
