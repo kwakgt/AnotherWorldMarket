@@ -3,8 +3,9 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using Random = UnityEngine.Random;
 
-//리지디바디 Kinematic 설정을 해야 이동할 때 콜라이더도 같이 이동된다.
-public class Structure : MonoBehaviour,  IDragHandler    //UI가 아니면 카메라에 Physics2DRaycater 컴포넌트 필요
+//TimeScale = 0 일 때, 충돌감지 안됨
+//리지디바디 Kinematic 설정을 해야 이동할 때 콜라이더도 같이 이동된다. -> 다시 해보니 없어도 잘됨...뭐지..
+public class Structure : MonoBehaviour, IBeginDragHandler, IDragHandler  //UI가 아니면 카메라에 Physics2DRaycater 컴포넌트 필요
 {
     public      bool displayGridGizmos;
 
@@ -25,7 +26,6 @@ public class Structure : MonoBehaviour,  IDragHandler    //UI가 아니면 카메라에 
 
                 SpriteRenderer thisRenderer;           //이동중 색변경
                 SpriteRenderer frontRenderer;          //이동중 색변경
-                Color firstColor;                      //변경 전 색
 
     protected virtual void Awake()
     {
@@ -37,7 +37,6 @@ public class Structure : MonoBehaviour,  IDragHandler    //UI가 아니면 카메라에 
         thisRenderer = GetComponent<SpriteRenderer>();
         frontRenderer = transform.GetChild(0).GetComponent<SpriteRenderer>();
         frontRenderer.color = Color.clear;
-        firstColor = thisRenderer.color;
     }
 
     protected virtual void Start()
@@ -117,8 +116,8 @@ public class Structure : MonoBehaviour,  IDragHandler    //UI가 아니면 카메라에 
         if (isMoving && GameManager.instance.gameMode == GameManager.GameMode.Builder)
         {
             //색변경
-            frontRenderer.color = Color.Lerp(Color.white, Color.green, 0.5f);
-            thisRenderer.color = Color.Lerp(Color.white, Color.blue, 0.5f);
+            thisRenderer.color = new Color(0,0,100,100);
+            frontRenderer.color = Color.white;
 
             //이동, worldposition 변수가 아닌 transform 현재위치로 계산해야됨
             Vector2 firstPosition = worldPosition;
@@ -137,6 +136,7 @@ public class Structure : MonoBehaviour,  IDragHandler    //UI가 아니면 카메라에 
             //설치
             if (Input.GetMouseButtonDown(0))
             {
+                
                 //이동중에 마우스 클릭하면 현재 위치에 설치시도
                 //설치 :: 설치할 위치에서 점유노드, 판매노드가 전부 walkable이면 설치
                 //취소 :: 설치할 위치에서 점유노드, 판매노드 중에 unwalkable이 하나라도 있으면 취소
@@ -145,11 +145,11 @@ public class Structure : MonoBehaviour,  IDragHandler    //UI가 아니면 카메라에 
                 Vector2[] tempFrontPosition = SetFrontPosition(tempOccupiedNodes);                                              //현재 위치의 판매위치 계산
 
 
-                bool frontWalkablecheck = false;
+                bool frontWalkablecheck = false;    //설치할 front노드의 장애물 체크, 장애물이 있으면 false, 없으면 true
                 for (int i = 0; i < frontSize; i++)
                 {
                     Node checkFrontNode = Nodefinding.instance.RequestNode(tempFrontPosition[i]);   //판매위치로 노드위치 계산
-                    if (checkFrontNode != null && checkFrontNode.walkable)
+                    if (checkFrontNode != null && checkFrontNode.walkable)  //설치할 front 노드에 장애물이 없다면
                     {
                         frontWalkablecheck = true;
                     }
@@ -159,15 +159,28 @@ public class Structure : MonoBehaviour,  IDragHandler    //UI가 아니면 카메라에 
                         break;
                     }
                 }
-
-                bool walkableCheck = false;
+                
+                bool walkableCheck = false;     //설치할 점유노드의 장애물 체크, 장애물이 있으면 false, 없으면 true
+                bool frontCheck = true;         //설치할 점유노드가 다른 건물의 front 노드인지 체크, front노드이면 false, front노드가 아니면 true
                 for (int y = 0; y < height; y++)
                 {
                     for (int x = 0; x < width; x++)
                     {
                         Node checkOccupiedNode = tempOccupiedNodes[x, y];
+                        
+                        //노드마다 레이캐스트 하여 Front 걸러내기
+                        RaycastHit2D hit;
+                        hit = Physics2D.Raycast(checkOccupiedNode.worldPosition, Vector2.zero, 1, LayerMask.GetMask("Front"));  //이상하게 레이어 없이 감지하면 Front가 감지 안됨...RaycastAll로도 안됨..
+                        if (hit)
+                        {
+                            Debug.Log(" :: " + hit.collider.tag);
+                            frontCheck = false;
+                            break;
+                        }
+
                         if (checkOccupiedNode != null && checkOccupiedNode.walkable)    //이동이 아닌 새로 설치할 때 점유노드가 없으므로 Null체크
                         {
+                            
                             walkableCheck = true;
                         }
                         else
@@ -177,10 +190,10 @@ public class Structure : MonoBehaviour,  IDragHandler    //UI가 아니면 카메라에 
                         }
                     }
 
-                    if (!walkableCheck) break;  //false면 빠져나오기
+                    if (!walkableCheck || !frontCheck) break;  //false면 빠져나오기
                 }
 
-                if (walkableCheck && frontWalkablecheck)                      //노드가 전부 walkable이라면 설치시작
+                if (walkableCheck && frontWalkablecheck && frontCheck)                      //노드가 전부 walkable이고, 구조체 입구와 충돌이 없으면 설치
                 {
                     worldPosition = transform.position;     //월드포지션 변경
                     occupiedNodes = tempOccupiedNodes;      //점유노드 변경
@@ -203,8 +216,9 @@ public class Structure : MonoBehaviour,  IDragHandler    //UI가 아니면 카메라에 
                 isMoving = false;                       //설치 or 취소가 완료되면 이동완료
 
                 //색 원상복구
+                thisRenderer.color = Color.white;
                 frontRenderer.color = Color.clear;
-                thisRenderer.color = firstColor;
+
             }
         }
     }
@@ -250,7 +264,7 @@ public class Structure : MonoBehaviour,  IDragHandler    //UI가 아니면 카메라에 
         height = swap;
     }
 
-    public void OnDrag(PointerEventData eventData)
+    public void OnBeginDrag(PointerEventData eventData)
     {
         if (GameManager.instance.gameMode == GameManager.GameMode.Builder)
         {
@@ -258,6 +272,11 @@ public class Structure : MonoBehaviour,  IDragHandler    //UI가 아니면 카메라에 
             //드래그로 들어올려진 순간 현재 점유하고 있는 노드를 walkable로 변경
             ChangeWalkebleOfOccupiedNode(true);
         }
+    }
+
+    public void OnDrag(PointerEventData eventData)
+    {
+        
     }
 
     void OnDrawGizmos()
@@ -297,6 +316,8 @@ public class Structure : MonoBehaviour,  IDragHandler    //UI가 아니면 카메라에 
             return Direction.Up;
         }
     }
+
+    
 
     protected enum Direction { Left, Down, Right, Up }
 }
