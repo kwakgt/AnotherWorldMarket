@@ -7,25 +7,25 @@ using Random = UnityEngine.Random;
 //리지디바디 Kinematic 설정을 해야 이동할 때 콜라이더도 같이 이동된다. -> 다시 해보니 없어도 잘됨...뭐지..
 public class Structure : MonoBehaviour, IBeginDragHandler, IDragHandler  //UI가 아니면 카메라에 Physics2DRaycater 컴포넌트 필요
 {
-    public      bool displayGridGizmos;
+    public bool displayGridGizmos;
 
-    protected   Vector2 worldPosition;                 //중심점 월드포인트
-    protected   int uniIndex;                          //고유번호
-                bool isMoving;                         //이동 플래그
-                int countRotation;                     //회전수(건물 건설시 원상복구할때 쓰인다)
-    
-                float nodeRadius;                      //노드 반지름
-                float nodeDiameter;                    //노드 지름
-    protected   int width;                             //노드너비
-    protected   int height;                            //노드높이
-                Node[,] occupiedNodes;                 //점유하고 있는 노드
+    protected Vector2 worldPosition;                 //중심점 월드포인트
+    protected int uniIndex;                          //고유번호
+    bool isMoving;                         //이동 플래그
+    int countRotation;                     //회전수(건물 건설시 원상복구할때 쓰인다)
 
-    protected   int frontSize;                         //전방 크기
-                Direction frontDir;                    //전방 방향
-    protected   Vector2[] frontPositions;              //전방 위치
+    float nodeRadius;                      //노드 반지름
+    float nodeDiameter;                    //노드 지름
+    protected int width;                             //노드너비
+    protected int height;                            //노드높이
+    Node[,] occupiedNodes;                 //점유하고 있는 노드
 
-                SpriteRenderer thisRenderer;           //이동중 색변경
-                SpriteRenderer frontRenderer;          //이동중 색변경
+    protected int frontSize;                         //전방 크기
+    Direction frontDir;                    //전방 방향
+    protected Vector2[] frontPositions;              //전방 위치
+
+    SpriteRenderer thisRenderer;           //이동중 색변경
+    SpriteRenderer frontRenderer;          //이동중 색변경
 
     protected virtual void Awake()
     {
@@ -111,12 +111,12 @@ public class Structure : MonoBehaviour, IBeginDragHandler, IDragHandler  //UI가 
         return Array.IndexOf(frontPositions, _frontPosition);
     }
 
-    void OnMoving()     //판매대 이동,회전,설치
+    public void OnMoving()     //판매대 이동,회전,설치
     {
         if (isMoving && GameManager.instance.CompareTo(GameManager.GameMode.Builder))
         {
             //색변경
-            thisRenderer.color = new Color(0,0,100,100);
+            thisRenderer.color = new Color(0, 0, 100, 100);
             frontRenderer.color = Color.white;
 
             //이동, worldposition 변수가 아닌 transform 현재위치로 계산해야됨
@@ -136,7 +136,7 @@ public class Structure : MonoBehaviour, IBeginDragHandler, IDragHandler  //UI가 
             //설치
             if (Input.GetMouseButtonDown(0))
             {
-                
+
                 //이동중에 마우스 클릭하면 현재 위치에 설치시도
                 //설치 :: 설치할 위치에서 점유노드, 판매노드가 전부 walkable이면 설치
                 //취소 :: 설치할 위치에서 점유노드, 판매노드 중에 unwalkable이 하나라도 있으면 취소
@@ -159,7 +159,7 @@ public class Structure : MonoBehaviour, IBeginDragHandler, IDragHandler  //UI가 
                         break;
                     }
                 }
-                
+
                 bool walkableCheck = false;     //설치할 점유노드의 장애물 체크, 장애물이 있으면 false, 없으면 true
                 bool frontCheck = true;         //설치할 점유노드가 다른 건물의 front 노드인지 체크, front노드이면 false, front노드가 아니면 true
                 for (int y = 0; y < height; y++)
@@ -167,7 +167,7 @@ public class Structure : MonoBehaviour, IBeginDragHandler, IDragHandler  //UI가 
                     for (int x = 0; x < width; x++)
                     {
                         Node checkOccupiedNode = tempOccupiedNodes[x, y];
-                        
+
                         //노드마다 레이캐스트 하여 Front 걸러내기
                         RaycastHit2D hit;
                         hit = Physics2D.Raycast(checkOccupiedNode.worldPosition, Vector2.zero, 1, LayerMask.GetMask("Front"));  //이상하게 레이어 없이 감지하면 Front가 감지 안됨...RaycastAll로도 안됨..
@@ -179,7 +179,7 @@ public class Structure : MonoBehaviour, IBeginDragHandler, IDragHandler  //UI가 
 
                         if (checkOccupiedNode != null && checkOccupiedNode.walkable)    //이동이 아닌 새로 설치할 때 점유노드가 없으므로 Null체크
                         {
-                            
+
                             walkableCheck = true;
                         }
                         else
@@ -274,7 +274,7 @@ public class Structure : MonoBehaviour, IBeginDragHandler, IDragHandler  //UI가 
 
     public void OnDrag(PointerEventData eventData)
     {
-        
+
     }
 
     void OnDrawGizmos()
@@ -315,7 +315,11 @@ public class Structure : MonoBehaviour, IBeginDragHandler, IDragHandler  //UI가 
         }
     }
 
-    
+    public bool IsMoving
+    {
+        get { return isMoving; }
+        set { isMoving = value; }
+    }
 
     protected enum Direction { Left, Down, Right, Up }
 }

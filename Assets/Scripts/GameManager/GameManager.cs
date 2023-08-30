@@ -11,14 +11,16 @@ public class GameManager : MonoBehaviour
     public Shelf selectedShelf;
     public Warehouse selectedWarehouse;
 
+    GameObject constructionPanel;
     void Awake()
     {
         instance = this;
+        constructionPanel = GameObject.Find("ConstructionPanel");
     }
 
     void Update()
     {
-        ChangeMode();
+        ChangeMode_bKeyDown();
         PlayAndPause();
     }
 
@@ -33,33 +35,36 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    void ChangeMode()
+    void ChangeMode_bKeyDown()
     {
         if(InputManager.instance.bKeyDown)
         {
-            if (gameMode != GameMode.Builder)   ChangeBuliderMode();
-            else                                ChangeSellerMode();
-
-            if (gameMode == GameMode.Seller) Time.timeScale = 1f;   //모드가 판매모드이면 정상속도로 변경
             InputManager.instance.bKeyDown = false;
+            ChangeMode();
         }
 
         if (gameMode == GameMode.Builder) Time.timeScale = 0;   //건설모드이면 무조건 일시정지
     }
 
-    public void ChangeBuliderMode()   //메뉴버튼 사용
+    public void ChangeMode()   //메뉴버튼 사용
     {
-        gameMode = GameMode.Builder;
-    }
+        if (gameMode != GameMode.Builder)
+        {
+            gameMode = GameMode.Builder;
+            constructionPanel.SetActive(true);  //건설모드면 건설패널 열기
+        }
+        else
+        {
+            gameMode = GameMode.Seller;
+            constructionPanel.SetActive(false); //다른모드면 건설패널 닫기
+        }
 
-    public void ChangeSellerMode()    //메뉴버튼 사용
-    {
-        gameMode = GameMode.Seller;
+        if (gameMode == GameMode.Seller) Time.timeScale = 1f;   //모드가 판매모드이면 정상속도로 변경
     }
 
     public void ChangeGameSpeed(int controlKey = 3)   //스피드버튼 사용
     {
-        if (GameManager.instance.gameMode == GameManager.GameMode.Builder) return;
+        if (instance.gameMode == GameMode.Builder) return;
 
         switch (controlKey)
         {
