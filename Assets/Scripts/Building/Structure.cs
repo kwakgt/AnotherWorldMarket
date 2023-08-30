@@ -12,6 +12,7 @@ public class Structure : MonoBehaviour, IBeginDragHandler, IDragHandler  //UI가 
     protected Vector2 worldPosition;                 //중심점 월드포인트
     protected int uniIndex;                          //고유번호
     bool isMoving;                         //이동 플래그
+    bool isNewStructure;                        //새건물 플래그
     int countRotation;                     //회전수(건물 건설시 원상복구할때 쓰인다)
 
     float nodeRadius;                      //노드 반지름
@@ -199,11 +200,16 @@ public class Structure : MonoBehaviour, IBeginDragHandler, IDragHandler  //UI가 
                     frontPositions = tempFrontPosition;     //전방위치 변경
                     ChangeWalkebleOfOccupiedNode(false);
                     countRotation = 0;
+                    isNewStructure = false;
                     if (tag.Equals("Shelf"))
                     {
                         ShelfManager.instance.UpdateShelfDictionary(uniIndex, (Shelf)this);  //변경된 정보 매니저에 업데이트
                     }
                     //TODO:: 매니저에 업데이트 필요한 건물 추가
+                }
+                else if(isNewStructure)
+                {
+                    Destroy(gameObject);    //새 구조체인데 건설에 실패했으면 삭제
                 }
                 else
                 {
@@ -319,6 +325,12 @@ public class Structure : MonoBehaviour, IBeginDragHandler, IDragHandler  //UI가 
     {
         get { return isMoving; }
         set { isMoving = value; }
+    }
+
+    public bool IsNewStructure
+    {
+        get { return isNewStructure; }
+        set { isNewStructure = value; }
     }
 
     protected enum Direction { Left, Down, Right, Up }

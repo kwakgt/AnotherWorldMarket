@@ -48,6 +48,7 @@ public class ConstructionPanel : MonoBehaviour
         strucName = StructureName.Shelf;
         selected = Instantiate(shelfPrefab, shelfParent.transform).GetComponent<Shelf>();
         selected.IsMoving = true;
+        selected.IsNewStructure = true;
     }
 
     public void SelectedWarehouse() //Warehouse 버튼 클릭
@@ -55,6 +56,7 @@ public class ConstructionPanel : MonoBehaviour
         strucName = StructureName.Warehouse;
         selected = Instantiate(warehousePrefab, shelfParent.transform).GetComponent<Warehouse>();
         selected.IsMoving = true;
+        selected.IsNewStructure = true;
     }
 
     enum StructureName { None, Shelf, Warehouse}
