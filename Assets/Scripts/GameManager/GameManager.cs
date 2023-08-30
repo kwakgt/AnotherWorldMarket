@@ -5,7 +5,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
-    public GameMode gameMode { get; private set; } = GameMode.Seller;
+    GameMode gameMode = GameMode.Seller;
     
     public Unit selectedUnit;
     public Shelf selectedShelf;
@@ -69,6 +69,14 @@ public class GameManager : MonoBehaviour
             case 4: { Time.timeScale = 2f; break; }
             default: { Time.timeScale = 1f; break; }
         }
+    }
+
+    public bool CompareTo(GameMode _gameMode)
+    {
+        if(gameMode == _gameMode)
+            return true;
+        else
+            return false;
     }
     public enum GameMode { Seller, Builder }
 }

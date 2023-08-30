@@ -32,16 +32,16 @@ public class MouseController : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             Vector2 mousePosition = cam.ScreenToWorldPoint(Input.mousePosition);
-            downHit = Physics2D.Raycast(mousePosition, Vector2.zero);
+            downHit = Physics2D.Raycast(mousePosition, Vector2.zero);   //다운 시 Hit 저장
         }
 
         if (Input.GetMouseButtonUp(0))
         {
             Vector2 mousePosition = cam.ScreenToWorldPoint(Input.mousePosition);
-            upHit = Physics2D.Raycast(mousePosition, Vector2.zero);
+            upHit = Physics2D.Raycast(mousePosition, Vector2.zero);     //업 시 Hit 저장
         }
 
-        if (downHit && upHit && downHit == upHit)
+        if (downHit && upHit && downHit == upHit && !GameManager.instance.CompareTo(GameManager.GameMode.Builder))  //다운Hit, 업Hit 비교하여 같으면 클릭성공, 건설모드일 시 작동안함
         {
             if (downHit.transform.CompareTag("Customer") || downHit.transform.CompareTag("Staff"))
             {

@@ -8,6 +8,7 @@ public class WarehouseManager : MonoBehaviour
     //List
     //Remove시 뒤에 있는 요소들이 알아서 한칸씩 옮겨진다. 
     List<Warehouse> warehouseList = new List<Warehouse>();
+    
     int uniqueIndex;
 
     void Awake()

@@ -44,12 +44,12 @@ public class GamePanel : MonoBehaviour
 
     void ChangeColorOfGameMode() //게임모드에 따른 아이콘 색 변경
     {
-        if (GameManager.instance.gameMode == GameManager.GameMode.Seller) 
+        if (GameManager.instance.CompareTo(GameManager.GameMode.Seller))
         {
             menuImage[1].color = Color.green;
             menuImage[2].color = Color.white;
         }
-        else if (GameManager.instance.gameMode == GameManager.GameMode.Builder) 
+        else if (GameManager.instance.CompareTo(GameManager.GameMode.Builder))
         {
             menuImage[1].color = Color.white;
             menuImage[2].color = Color.green;

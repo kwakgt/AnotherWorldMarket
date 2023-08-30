@@ -113,7 +113,7 @@ public class Structure : MonoBehaviour, IBeginDragHandler, IDragHandler  //UI가 
 
     void OnMoving()     //판매대 이동,회전,설치
     {
-        if (isMoving && GameManager.instance.gameMode == GameManager.GameMode.Builder)
+        if (isMoving && GameManager.instance.CompareTo(GameManager.GameMode.Builder))
         {
             //색변경
             thisRenderer.color = new Color(0,0,100,100);
@@ -173,7 +173,6 @@ public class Structure : MonoBehaviour, IBeginDragHandler, IDragHandler  //UI가 
                         hit = Physics2D.Raycast(checkOccupiedNode.worldPosition, Vector2.zero, 1, LayerMask.GetMask("Front"));  //이상하게 레이어 없이 감지하면 Front가 감지 안됨...RaycastAll로도 안됨..
                         if (hit)
                         {
-                            Debug.Log(" :: " + hit.collider.tag);
                             frontCheck = false;
                             break;
                         }
@@ -242,8 +241,7 @@ public class Structure : MonoBehaviour, IBeginDragHandler, IDragHandler  //UI가 
             transform.Rotate(Vector3.forward, 90);                                      //90도 회전
             ChangeFrontDirection();                                                     //판매방향변경
             SwapWidthAndHeight();                                                       //노드 가로,세로 크기변경
-
-            countRotation = (countRotation + 1) % 4;                                    //회전수++
+            countRotation = (countRotation + 1) % 4;                 //회전수++
         }
     }
 
@@ -266,7 +264,7 @@ public class Structure : MonoBehaviour, IBeginDragHandler, IDragHandler  //UI가 
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        if (GameManager.instance.gameMode == GameManager.GameMode.Builder)
+        if (GameManager.instance.CompareTo(GameManager.GameMode.Builder))
         {
             isMoving = true;    //이동모드로 전환
             //드래그로 들어올려진 순간 현재 점유하고 있는 노드를 walkable로 변경
