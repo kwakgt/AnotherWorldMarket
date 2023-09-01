@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
     public Shelf selectedShelf;
     public Warehouse selectedWarehouse;
 
-    GameObject constructionPanel;
+    GameObject constructionPanel;   // 활성화/비활성화
     void Awake()
     {
         instance = this;
@@ -51,12 +51,12 @@ public class GameManager : MonoBehaviour
         if (gameMode != GameMode.Builder)
         {
             gameMode = GameMode.Builder;
-            constructionPanel.SetActive(true);  //건설모드면 건설패널 열기
+            constructionPanel.SetActive(true);
         }
         else
         {
             gameMode = GameMode.Seller;
-            constructionPanel.SetActive(false); //다른모드면 건설패널 닫기
+            constructionPanel.SetActive(false);
         }
 
         if (gameMode == GameMode.Seller) Time.timeScale = 1f;   //모드가 판매모드이면 정상속도로 변경

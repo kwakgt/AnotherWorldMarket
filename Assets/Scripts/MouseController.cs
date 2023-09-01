@@ -14,6 +14,7 @@ public class MouseController : MonoBehaviour
     GameObject unitPanel;
     GameObject shelfPanel;
     GameObject warehousePanel;
+
     void Awake()
     {
         cam = GetComponent<Camera>();
@@ -39,40 +40,42 @@ public class MouseController : MonoBehaviour
         {
             Vector2 mousePosition = cam.ScreenToWorldPoint(Input.mousePosition);
             upHit = Physics2D.Raycast(mousePosition, Vector2.zero);     //업 시 Hit 저장
-        }
 
-        if (downHit && upHit && downHit == upHit && !GameManager.instance.CompareTo(GameManager.GameMode.Builder))  //다운Hit, 업Hit 비교하여 같으면 클릭성공, 건설모드일 시 작동안함
-        {
-            if (downHit.transform.CompareTag("Customer") || downHit.transform.CompareTag("Staff"))
+
+            if (downHit && upHit && downHit == upHit && !GameManager.instance.CompareTo(GameManager.GameMode.Builder))  //다운Hit, 업Hit 비교하여 같으면 클릭성공, 건설모드일 시 작동안함
             {
-                GameManager.instance.selectedUnit = downHit.transform.GetComponent<Unit>();
-                PanelSetActive(true, false, false);
-            }
-            else if(downHit.transform.CompareTag("Shelf"))
-            {
-                GameManager.instance.selectedShelf = downHit.transform.GetComponent<Shelf>();
-                PanelSetActive(false, true, false);
-            }
-            else if (downHit.transform.CompareTag("Warehouse"))
-            {
-                GameManager.instance.selectedWarehouse = downHit.transform.GetComponent<Warehouse>();
-                PanelSetActive(false, false, true);
+                if (downHit.transform.CompareTag("Customer") || downHit.transform.CompareTag("Staff"))
+                {
+                    GameManager.instance.selectedUnit = downHit.transform.GetComponent<Unit>();
+                    PanelSetActive(true, false, false);
+                }
+                else if (downHit.transform.CompareTag("Shelf"))
+                {
+                    GameManager.instance.selectedShelf = downHit.transform.GetComponent<Shelf>();
+                    PanelSetActive(false, true, false);
+                }
+                else if (downHit.transform.CompareTag("Warehouse"))
+                {
+                    GameManager.instance.selectedWarehouse = downHit.transform.GetComponent<Warehouse>();
+                    PanelSetActive(false, false, true);
+                }
+                else
+                {
+                    GameManager.instance.selectedUnit = null;
+                    PanelSetActive(false, false, false);
+                }
+                //TODO::다른 태그 선택 클릭시 추가
             }
             else
             {
                 GameManager.instance.selectedUnit = null;
                 PanelSetActive(false, false, false);
             }
-            //TODO::다른 태그 선택 클릭시 추가
-        }
-        else
-        {
-            GameManager.instance.selectedUnit = null;
-            PanelSetActive(false, false, false);
         }
 
     }
 
+    
 
     void PanelSetActive(bool _customerPanel, bool _shelfPanel, bool _warehousePanel)
     {

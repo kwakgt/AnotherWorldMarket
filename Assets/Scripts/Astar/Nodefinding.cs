@@ -35,4 +35,14 @@ public class Nodefinding : MonoBehaviour
     {
         return grid.nodeRadius;
     }
+
+    public Vector2 GetGridWorldSize()
+    {
+        return grid.gridWorldSize;
+    }
+
+    public Vector2 GetGridWorldPosition()
+    {
+        return grid.transform.position;
+    }
 }

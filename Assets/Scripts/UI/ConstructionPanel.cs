@@ -15,7 +15,7 @@ public class ConstructionPanel : MonoBehaviour
 
     void Start()
     {
-        gameObject.SetActive(false); //GameManager에서 GameObject.Find함수 사용을 위해 Start에서 비활성화, 비활성화된 오브젝트는 Find함수에 감지 안됨.
+        gameObject.SetActive(false);    //GameManager에서 GameObject.Find함수 사용을 위해 Start에서 비활성화, 비활성화된 오브젝트는 Find함수에 감지 안됨.
     }
 
     void Update()
@@ -23,13 +23,13 @@ public class ConstructionPanel : MonoBehaviour
         StartConstruction();
     }
 
-    void StartConstruction()
+    void StartConstruction()    //건설모드에서 지을 건물 클릭시 수행
     {
         if(GameManager.instance.CompareTo(GameManager.GameMode.Builder) && selected != null && strucName != StructureName.None)
         {
-            selected.OnMoving();
+            selected.OnMoving();    //건물 선택 시 이동모드 진행
 
-            if (!selected.IsMoving)
+            if (!selected.IsMoving) //설치가 완료되면 변수 초기화
             {
                 strucName = StructureName.None;
                 selected = null;
@@ -42,13 +42,14 @@ public class ConstructionPanel : MonoBehaviour
         }
     }
 
-    //건축모드
+
+    //건축모드 버튼
     public void SelectedShelf() //Shelf 버튼 클릭
     {
         strucName = StructureName.Shelf;
         selected = Instantiate(shelfPrefab, shelfParent.transform).GetComponent<Shelf>();
-        selected.IsMoving = true;
-        selected.IsNewStructure = true;
+        selected.IsMoving = true;           //이동모드 시작
+        selected.IsNewStructure = true;     //새건물
     }
 
     public void SelectedWarehouse() //Warehouse 버튼 클릭
