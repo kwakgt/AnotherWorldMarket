@@ -22,10 +22,10 @@ public class Shelf : Structure
         ShelfManager.instance.AddShelfDictionary(uniIndex, this); //현재 매대를 매니저에 추가
 
         //TEST
-        PutRandomItemInInven(0, 50);
-        PutRandomItemInInven(1, 50);
-        PutRandomItemInInven(2, 50);
-        PutRandomItemInInven(3, 50);
+        //PutRandomItemInInven(0, 50);
+        //PutRandomItemInInven(1, 50);
+        //PutRandomItemInInven(2, 50);
+        //PutRandomItemInInven(3, 50);
     }
 
     public Item FindItemInInven(Vector2 _shelfFrontPosition)   //선반 앞 위치로 매대 슬롯 가져오기

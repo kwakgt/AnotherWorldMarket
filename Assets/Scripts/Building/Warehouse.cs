@@ -40,7 +40,7 @@ public class Warehouse : Structure
         }
     }
 
-    public Vector2 GetWarehouseFrontPosition(Vector2 currPosition)
+    public Vector2 GetRandomWarehouseFrontPosition(Vector2 currPosition)
     {
         Vector2 randomPosition = frontPositions[Random.Range(0, frontSize)];
         bool contains = false;
@@ -75,7 +75,6 @@ public class Warehouse : Structure
             if (inventory[i] != null && inventory[i].Equals(itemToFind))
                 return i;
         }
-
         return -1;
     }
 

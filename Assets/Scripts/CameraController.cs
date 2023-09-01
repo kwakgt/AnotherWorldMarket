@@ -32,11 +32,11 @@ public class CameraController : MonoBehaviour
     {
         SetHalfSize();
         ChangeSize();
-        MoveCamera();
+        Move();
         InBounds();
     }
 
-    void MoveCamera()
+    void Move()
     {
         if(Input.GetKey(KeyCode.A))
         {
@@ -93,8 +93,6 @@ public class CameraController : MonoBehaviour
         //  mapPostion.x + (mapSize.x / 2) : ∏  √÷øÏ¥‹ x
         //  mapPostion.y - (mapSize.y / 2) : ∏  √÷«œ¥‹ y
         //  mapPostion.y + (mapSize.y / 2) : ∏  √÷ªÛ¥‹ y
-        Debug.Log(x - cameraXY.x);
-        Debug.Log(x - (mapSize.x / 2));
         if (x - cameraXY.x < mapPostion.x - (mapSize.x / 2))
         {
             transform.position = new Vector3(mapPostion.x - (mapSize.x / 2) + cameraXY.x, y, -10);

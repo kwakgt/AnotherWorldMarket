@@ -56,7 +56,7 @@ public class AstarGrid : MonoBehaviour
                 Vector2 worldPoint = worldBottomLeft + Vector2.right * (x * nodeDiameter + nodeRadius) + Vector2.up * (y * nodeDiameter + nodeRadius);
                 bool walkable = !(Physics2D.OverlapCircle(worldPoint, nodeRadius, unwalkableMask)); // if no collider2D is returned by overlap circle, then this node is walkable
 
-                int movementPenalty = 10;    //노드 이동 가중치
+                int movementPenalty = 10;    //노드 이동 기본 가중치
 
                 Collider2D[] colliders = Physics2D.OverlapCircleAll(worldPoint, nodeRadius, walkableMask);  //Terraine 충돌체 가져오기
                 if (colliders.Length > 0)
@@ -69,7 +69,7 @@ public class AstarGrid : MonoBehaviour
         }
 
 
-        BlurPenaltyMap(3);
+        //BlurPenaltyMap(3);
     }
 
     void BlurPenaltyMap(int blurSize)   //가중치 블러처리

@@ -75,8 +75,6 @@ public class MouseController : MonoBehaviour
 
     }
 
-    
-
     void PanelSetActive(bool _customerPanel, bool _shelfPanel, bool _warehousePanel)
     {
         unitPanel.SetActive(_customerPanel);

@@ -98,7 +98,7 @@ public class Staff : Unit
             else
             {
                 //yield return StartCoroutine("Emptying"); 여기에 있으면 아래 workCount에서 인덱스 에러 발생함
-                target = warehouse.GetWarehouseFrontPosition(target); //확인리스트의 판매대로 타겟지정
+                target = warehouse.GetRandomWarehouseFrontPosition(target); //확인리스트의 판매대로 타겟지정
             }
 
         }
@@ -115,6 +115,7 @@ public class Staff : Unit
         Item shelfItem = shelf.GetItemInInven(shelfIndex);           //옮길 아이템
         if (shelfItem == null)                                  //아이템이 없으면 다른 매대 찾기
         {
+            //TODO:: 랜덤아이템이 아닌 창고에 있는 아이템으로 변경
             shelfItem = ItemManager.instance.GetRandomItem();   //아이템이 없다면 새아이템으로 채워넣기
         }
         int amountCarring = Mathf.Clamp(shelfItem.amountOfShelf - shelfItem.amount, 0, amountOfCarrying);   //옮길 수량
@@ -156,9 +157,16 @@ public class Staff : Unit
         }
         else if(shelfItem == null)  //판매대에 아이템이 없다면
         {
-            Item newItem = new Item(inventory[workCount]);              //인벤 아이템을 복사해서
-            EjectItemInInventory(newItem, inventory[workCount].amount); //전부 판매대로 옮기기
-            checkingItems[workCount].shelf.PutItemInInven(checkingItems[workCount].frontIndex, newItem);    //판매대에 아이템 넣기
+            if (inventory[workCount] != null)
+            {
+                Item newItem = new Item(inventory[workCount]);              //인벤 아이템을 복사해서
+                EjectItemInInventory(newItem, inventory[workCount].amount); //전부 판매대로 옮기기
+                checkingItems[workCount].shelf.PutItemInInven(checkingItems[workCount].frontIndex, newItem);    //판매대에 아이템 넣기
+            }
+            else
+            {
+                Debug.Log("창고에 " + checkingItems[workCount].shlefItem.name + "가 없네");
+            }
         }
         ++workCount;
     }
@@ -213,13 +221,16 @@ public class Staff : Unit
     void GoWarehouse(Item itemToFind)
     {
         warehouse = WarehouseManager.instance.FindItemInWarehouseList(itemToFind);
-        if (warehouse != null)  
+        if (warehouse != null)
         {
-            target = warehouse.GetWarehouseFrontPosition(target); //아이템이 있는 창고가 있다면 창고로 가기
+            target = warehouse.GetRandomWarehouseFrontPosition(target); //아이템이 있는 창고가 있다면 창고로 가기
             return;
         }
         else
-            target = WarehouseManager.instance.RequestRandomWarehouse().GetWarehouseFrontPosition(target); //없으면 랜덤창고로 가기
+        {
+            warehouse = WarehouseManager.instance.RequestRandomWarehouse();
+            target = warehouse.GetRandomWarehouseFrontPosition(target); //없으면 랜덤창고로 가기
+        }
     }
 
    

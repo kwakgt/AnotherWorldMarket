@@ -56,7 +56,7 @@ public class Pathfinding : MonoBehaviour
                 if (currentNode == targetNode)  //현재노드가 타겟노드와 같으면 경로찾기 완료
                 {
                     sw.Stop();
-                    print("Path found: " + sw.ElapsedMilliseconds + " ms");
+                    //print("Path found: " + sw.ElapsedMilliseconds + " ms");
                     pathSuccess = true;
                     break;
                 }

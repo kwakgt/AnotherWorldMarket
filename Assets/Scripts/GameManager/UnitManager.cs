@@ -40,4 +40,10 @@ public class UnitManager : MonoBehaviour
     {
         Instantiate(customerPrefab, respawn[Random.Range(1,respawn.Length)]);
     }
+
+    //TEST, 버튼사용
+    public void StaffGenerator()
+    {
+        Instantiate(staffPrefab, respawn[Random.Range(1, respawn.Length)]);
+    }
 }

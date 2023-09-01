@@ -48,8 +48,12 @@ public class WarehouseManager : MonoBehaviour
 
     public void UpdateWarehouseList(Warehouse warehouse)
     {
-        Warehouse house = warehouseList.Find(x => x == warehouse);  //리스트에서 조건에 맞는 값 찾기
-        house = warehouse;
+        //TODO:: 창고 인덱스 부여, 창고 인덱스로 Equals 함수 만들기
+        for (int i = 0; i < warehouseList.Count; i++)
+        {
+            if (warehouseList[i] == warehouse)
+                warehouseList[i] = warehouse;
+        }
     }
 
     

@@ -67,7 +67,7 @@ public class Customer : Unit
         }
         else
         {
-            Debug.Log("여기는 살게 없네....");
+            //Debug.Log("여기는 살게 없네....");
         }
         --shoppingCount;     //쇼핑횟수--
         yield return new WaitForSeconds(0.25f);           //과부하 방지용 대기시간
