@@ -169,6 +169,11 @@ public class Unit : MonoBehaviour //IPointerClickHandler //UI가 아니면 카메라에 
             return false;
     }
 
+    public void ChangeGridIndex(int _gridIndex)
+    {
+        gridIndex = _gridIndex;
+    }
+
     public void OnDrawGizmos()
     {
         if (path != null)

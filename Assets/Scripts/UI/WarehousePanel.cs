@@ -36,6 +36,11 @@ public class WarehousePanel : MonoBehaviour
                 invenImage[i].sprite = warehouse.GetItemInInven(i - 1).sprite;
                 invenImage[i].GetComponentInChildren<TextMeshProUGUI>().text = warehouse.GetItemInInven(i - 1).amount.ToString();
             }
+            else
+            {
+                invenImage[i].sprite = null;
+                invenImage[i].GetComponentInChildren<TextMeshProUGUI>().text = null;
+            }
         }
     }
 }
