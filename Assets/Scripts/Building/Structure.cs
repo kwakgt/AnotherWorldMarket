@@ -14,6 +14,7 @@ public class Structure : MonoBehaviour, IBeginDragHandler, IDragHandler  //UI가 
     bool isMoving;                         //이동 플래그
     bool isNewStructure;                        //새건물 플래그
     int countRotation;                     //회전수(건물 건설시 원상복구할때 쓰인다)
+    int gridIndex = 0;                         //현재 속해있는 그리드 인덱스
 
     float nodeRadius;                      //노드 반지름
     float nodeDiameter;                    //노드 지름
@@ -72,7 +73,7 @@ public class Structure : MonoBehaviour, IBeginDragHandler, IDragHandler  //UI가 
             }
         }
 
-        return Nodefinding.instance.RequestNodeArea(vector2s, sizeX, sizeY);    //월드 좌표를 노드로 변경
+        return Nodefinding.instance.RequestNodeArea(vector2s, sizeX, sizeY, gridIndex);    //월드 좌표를 노드로 변경
     }
     Vector2[] SetFrontPosition(Node[,] occupiedNodes)    //판매위치의 월드좌표(판매위치는 매대 앞)
     {
@@ -149,7 +150,7 @@ public class Structure : MonoBehaviour, IBeginDragHandler, IDragHandler  //UI가 
                 bool frontWalkablecheck = false;    //설치할 front노드의 장애물 체크, 장애물이 있으면 false, 없으면 true
                 for (int i = 0; i < frontSize; i++)
                 {
-                    Node checkFrontNode = Nodefinding.instance.RequestNode(tempFrontPosition[i]);   //판매위치로 노드위치 계산
+                    Node checkFrontNode = Nodefinding.instance.RequestNode(tempFrontPosition[i], gridIndex);   //판매위치로 노드위치 계산
                     if (checkFrontNode != null && checkFrontNode.walkable)  //설치할 front 노드에 장애물이 없다면
                     {
                         frontWalkablecheck = true;

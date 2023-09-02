@@ -14,12 +14,12 @@ public class Pathfinding : MonoBehaviour
         instance = this;
     }
 
-    public static Vector2[] RequestPath(Vector2 from, Vector2 to)
+    public static Vector2[] RequestPath(Vector2 from, Vector2 to, int gridIndex)
     {
-        return instance.FindPath(from, to);
+        return instance.FindPath(from, to, gridIndex);
     }
 
-    Vector2[] FindPath(Vector2 from, Vector2 to)
+    Vector2[] FindPath(Vector2 from, Vector2 to, int gridIndex)
     {
 
         Stopwatch sw = new Stopwatch();
@@ -28,23 +28,23 @@ public class Pathfinding : MonoBehaviour
         Vector2[] waypoints = new Vector2[0];
         bool pathSuccess = false;
 
-        Node startNode = grid.NodeFromWorldPoint(from);
-        Node targetNode = grid.NodeFromWorldPoint(to);
+        Node startNode = grid.NodeFromWorldPoint(from, gridIndex);
+        Node targetNode = grid.NodeFromWorldPoint(to, gridIndex);
         startNode.parent = startNode;
 
         if (!startNode.walkable)                                //스타트 노드가 이동불가 노드이면
         {
-            startNode = grid.ClosestWalkableNode(startNode);    //가장 가까운 이동가능 노드 찾기
+            startNode = grid.ClosestWalkableNode(startNode, gridIndex);    //가장 가까운 이동가능 노드 찾기
         }
         if (!targetNode.walkable)                               //타겟 노드가 이동불가 노드이면
         {
-            targetNode = grid.ClosestWalkableNode(targetNode);  //가장 가까운 이동가능 노드 찾기
+            targetNode = grid.ClosestWalkableNode(targetNode, gridIndex);  //가장 가까운 이동가능 노드 찾기
         }
 
         if (startNode.walkable && targetNode.walkable)
         {
 
-            Heap<Node> openSet = new Heap<Node>(grid.MaxSize);  //열린목록
+            Heap<Node> openSet = new Heap<Node>(grid.grids[gridIndex].MaxSize);  //열린목록
             HashSet<Node> closedSet = new HashSet<Node>();      //닫힌목록,HashSet은 해시(Hash)를 기반으로 값을 관리하므로 인덱스를 사용하여 값을 가져올 수 없음,중복된 값이 없음
             openSet.Add(startNode);
 
@@ -61,7 +61,7 @@ public class Pathfinding : MonoBehaviour
                     break;
                 }
 
-                foreach (Node neighbour in grid.GetNeighbours(currentNode))     //인접노드 순회
+                foreach (Node neighbour in grid.GetNeighbours(currentNode, gridIndex))     //인접노드 순회
                 {
                     if (!neighbour.walkable || closedSet.Contains(neighbour))   //인접노드가 장애물이거나 닫힌목록에 포함되어 있으면 건너뛰기
                     {

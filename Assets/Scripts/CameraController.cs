@@ -10,6 +10,7 @@ public class CameraController : MonoBehaviour
     int zoomSpeed = 15;
     float zoomMax = 20f;
     float zoomMin = 5f;
+    int gridIndex = 0;
 
     Vector2 mouseXY;        //마우스 X,Y 움직임 감지, -1이면 왼쪽/아래, 1이면 오른쪽/위
     Vector2 cameraXY;       //카메라 중심점으로부터의 X,Y거리
@@ -24,8 +25,8 @@ public class CameraController : MonoBehaviour
 
     void Start()
     {
-        mapSize = Nodefinding.instance.GetGridWorldSize();
-        mapPostion = Nodefinding.instance.GetGridWorldPosition();
+        mapSize = Nodefinding.instance.GetGridWorldSize(gridIndex);
+        mapPostion = Nodefinding.instance.GetGridCenterPosition(gridIndex);
     }
 
     void Update()
@@ -93,6 +94,8 @@ public class CameraController : MonoBehaviour
         //  mapPostion.x + (mapSize.x / 2) : 맵 최우단 x
         //  mapPostion.y - (mapSize.y / 2) : 맵 최하단 y
         //  mapPostion.y + (mapSize.y / 2) : 맵 최상단 y
+        
+        //상하좌우
         if (x - cameraXY.x < mapPostion.x - (mapSize.x / 2))
         {
             transform.position = new Vector3(mapPostion.x - (mapSize.x / 2) + cameraXY.x, y, -10);
@@ -109,5 +112,7 @@ public class CameraController : MonoBehaviour
         {
             transform.position = new Vector3(x, mapPostion.y + (mapSize.y / 2) - cameraXY.y, -10);
         }
+
+        //대각선
     }
 }

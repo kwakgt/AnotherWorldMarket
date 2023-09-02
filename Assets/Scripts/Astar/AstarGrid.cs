@@ -1,12 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Experimental.Rendering;
 
 public class AstarGrid : MonoBehaviour
 {
     public bool displayGridGizmos;
 
-    public Vector2 gridWorldSize;
+    public List<GridInfo> grids = new List<GridInfo>();
+    public List<Vector2> gridWorldSizes;
+    public List<GameObject> gridCenterPositions;
     int gridSizeX, gridSizeY;
     Node[,] grid;
     
@@ -24,8 +27,6 @@ public class AstarGrid : MonoBehaviour
     void Awake()
     {
         nodeDiameter = nodeRadius * 2;
-        gridSizeX = Mathf.RoundToInt(gridWorldSize.x / nodeDiameter);
-        gridSizeY = Mathf.RoundToInt(gridWorldSize.y / nodeDiameter);
 
         foreach (TerrainType region in walkableRegions)
         {
@@ -33,21 +34,23 @@ public class AstarGrid : MonoBehaviour
             walkableRegionsDictionary.Add((int)Mathf.Log(region.terrainMask.value, 2), region.terrainPenalty);  //레어이 번호, 패널티 가중치 저장
         }
 
-        CreateGrid();
-    }
-
-    public int MaxSize
-    {
-        get
+        for (int i = 0; i < gridWorldSizes.Count; i++)
         {
-            return gridSizeX * gridSizeY;
+            gridSizeX = Mathf.RoundToInt(gridWorldSizes[i].x / nodeDiameter);
+            gridSizeY = Mathf.RoundToInt(gridWorldSizes[i].y / nodeDiameter);
+            CreateGrid(i, gridWorldSizes[i], gridCenterPositions[i], gridSizeX, gridSizeY);
+
+            grids.Add(new GridInfo(i, gridWorldSizes[i], gridCenterPositions[i].transform.position, gridSizeX, gridSizeY, grid));
+            grid = null;
         }
     }
 
-    void CreateGrid()
+
+
+    void CreateGrid(int index, Vector2 gridWorldSize, GameObject gridPosition, int gridSizeX, int gridSizeY)
     {
         grid = new Node[gridSizeX, gridSizeY];
-        Vector2 worldBottomLeft = (Vector2)transform.position - Vector2.right * gridWorldSize.x / 2 - Vector2.up * gridWorldSize.y / 2;
+        Vector2 worldBottomLeft = (Vector2)gridPosition.transform.position - Vector2.right * gridWorldSize.x / 2 - Vector2.up * gridWorldSize.y / 2;
 
         for (int x = 0; x < gridSizeX; x++)
         {
@@ -136,7 +139,7 @@ public class AstarGrid : MonoBehaviour
 
     }
 
-    public List<Node> GetNeighbours(Node node, int depth = 1) //동서남북 대각선에 인접한 노드를 반환하는 함수
+    public List<Node> GetNeighbours(Node node, int gridIndex, int depth = 1) //동서남북 대각선에 인접한 노드를 반환하는 함수
     {
         List<Node> neighbours = new List<Node>();   //인접한 노드 목록
 
@@ -150,20 +153,20 @@ public class AstarGrid : MonoBehaviour
                 int checkX = node.gridX + x;
                 int checkY = node.gridY + y;
 
-                if (checkX >= 0 && checkX < gridSizeX && checkY >= 0 && checkY < gridSizeY)
+                if (checkX >= 0 && checkX < grids[gridIndex].gridSizeX && checkY >= 0 && checkY < grids[gridIndex].gridSizeY)
                 {
-                    if (!grid[node.gridX, checkY].walkable || !grid[checkX, node.gridY].walkable) continue; //코너를 돌 때 벽을 통과하지 않기위해 
+                    if (!grids[gridIndex].grid[node.gridX, checkY].walkable || !grids[gridIndex].grid[checkX, node.gridY].walkable) continue; //코너를 돌 때 벽을 통과하지 않기위해 
 
                     if (Mathf.Abs(x) == Mathf.Abs(y))    //대각선으로 막힌곳을 뚫을수 없게 하기 위해
                     {
-                        if ((grid[checkX, node.gridY].walkable || grid[node.gridX, checkY].walkable))   //대각선 노드와 인접한 두 노드가 장애물이면 대각선 이동을 할 수 없다.
+                        if ((grids[gridIndex].grid[checkX, node.gridY].walkable || grids[gridIndex].grid[node.gridX, checkY].walkable))   //대각선 노드와 인접한 두 노드가 장애물이면 대각선 이동을 할 수 없다.
                         {
-                            neighbours.Add(grid[checkX, checkY]);
+                            neighbours.Add(grids[gridIndex].grid[checkX, checkY]);
                         }
                     }
                     else
                     {
-                        neighbours.Add(grid[checkX, checkY]);
+                        neighbours.Add(grids[gridIndex].grid[checkX, checkY]);
                     }
                 }
             }
@@ -173,24 +176,24 @@ public class AstarGrid : MonoBehaviour
     }
 
 
-    public Node NodeFromWorldPoint(Vector2 worldPosition)   //월드좌표를 노드좌표로 변경
+    public Node NodeFromWorldPoint(Vector2 worldPosition, int gridIndex)   //월드좌표를 노드좌표로 변경
     {
-        float percentX = (worldPosition.x + gridWorldSize.x / 2) / gridWorldSize.x;
-        float percentY = (worldPosition.y + gridWorldSize.y / 2) / gridWorldSize.y;
+        float percentX = (worldPosition.x + grids[gridIndex].gridWorldSize.x / 2) / grids[gridIndex].gridWorldSize.x;
+        float percentY = (worldPosition.y + grids[gridIndex].gridWorldSize.y / 2) / grids[gridIndex].gridWorldSize.y;
         percentX = Mathf.Clamp01(percentX);
         percentY = Mathf.Clamp01(percentY);
 
         int x = Mathf.RoundToInt((gridSizeX - 1) * percentX);
         int y = Mathf.RoundToInt((gridSizeY - 1) * percentY);
-        return grid[x, y];
+        return grids[gridIndex].grid[x, y];
     }
 
-    public Node ClosestWalkableNode(Node node)  //가장 가까운 이동가능한 노드 찾기
+    public Node ClosestWalkableNode(Node node, int gridIndex)  //가장 가까운 이동가능한 노드 찾기
     {
-        int maxRadius = Mathf.Max(gridSizeX, gridSizeY) / 2;
+        int maxRadius = Mathf.Max(grids[gridIndex].gridSizeX, grids[gridIndex].gridSizeY) / 2;
         for (int i = 1; i < maxRadius; i++)
         {
-            Node n = FindWalkableInRadius(node.gridX, node.gridY, i);
+            Node n = FindWalkableInRadius(node.gridX, node.gridY, i, gridIndex);
             if (n != null)
             {
                 return n;
@@ -198,7 +201,7 @@ public class AstarGrid : MonoBehaviour
         }
         return null;
     }
-    Node FindWalkableInRadius(int centreX, int centreY, int radius) //radius거리 안에 이동가능한 노드 찾기
+    Node FindWalkableInRadius(int centreX, int centreY, int radius, int gridIndex) //radius거리 안에 이동가능한 노드 찾기
     {
 
         for (int i = -radius; i <= radius; i++)
@@ -207,37 +210,37 @@ public class AstarGrid : MonoBehaviour
             int horizontalSearchY = i + centreY;
 
             // top, ↖ ↑ ↗
-            if (InBounds(verticalSearchX, centreY + radius))
+            if (InBounds(verticalSearchX, centreY + radius, gridIndex))
             {
-                if (grid[verticalSearchX, centreY + radius].walkable)
+                if (grids[gridIndex].grid[verticalSearchX, centreY + radius].walkable)
                 {
-                    return grid[verticalSearchX, centreY + radius];
+                    return grids[gridIndex].grid[verticalSearchX, centreY + radius];
                 }
             }
 
             // bottom,  ↙ ↓ ↘
-            if (InBounds(verticalSearchX, centreY - radius))
+            if (InBounds(verticalSearchX, centreY - radius, gridIndex))
             {
-                if (grid[verticalSearchX, centreY - radius].walkable)
+                if (grids[gridIndex].grid[verticalSearchX, centreY - radius].walkable)
                 {
-                    return grid[verticalSearchX, centreY - radius];
+                    return grids[gridIndex].grid[verticalSearchX, centreY - radius];
                 }
             }
             // right,   ↘ → ↗
-            if (InBounds(centreY + radius, horizontalSearchY))
+            if (InBounds(centreY + radius, horizontalSearchY, gridIndex))
             {
-                if (grid[centreX + radius, horizontalSearchY].walkable)
+                if (grids[gridIndex].grid[centreX + radius, horizontalSearchY].walkable)
                 {
-                    return grid[centreX + radius, horizontalSearchY];
+                    return grids[gridIndex].grid[centreX + radius, horizontalSearchY];
                 }
             }
 
             // left,    ↖ ← ↙
-            if (InBounds(centreY - radius, horizontalSearchY))
+            if (InBounds(centreY - radius, horizontalSearchY, gridIndex))
             {
-                if (grid[centreX - radius, horizontalSearchY].walkable)
+                if (grids[gridIndex].grid[centreX - radius, horizontalSearchY].walkable)
                 {
-                    return grid[centreX - radius, horizontalSearchY];
+                    return grids[gridIndex].grid[centreX - radius, horizontalSearchY];
                 }
             }
 
@@ -247,23 +250,26 @@ public class AstarGrid : MonoBehaviour
 
     }
 
-    bool InBounds(int x, int y) //x좌표와 y좌표가 그리드 안에 있는지 확인
+    bool InBounds(int x, int y, int gridIndex) //x좌표와 y좌표가 그리드 안에 있는지 확인
     {
-        return x >= 0 && x < gridSizeX && y >= 0 && y < gridSizeY;
+        return x >= 0 && x < grids[gridIndex].gridSizeX && y >= 0 && y < grids[gridIndex].gridSizeY;
     }
 
     void OnDrawGizmos()
     {
-        Gizmos.DrawWireCube(transform.position, new Vector2(gridWorldSize.x, gridWorldSize.y));
-        if (grid != null && displayGridGizmos)
+        for (int i = 0; i < grids.Count; i++)
         {
-            foreach (Node n in grid)
+            Gizmos.DrawWireCube(transform.position, new Vector2(grids[i].gridWorldSize.x, grids[i].gridWorldSize.y));
+            if (grids != null && displayGridGizmos)
             {
-                //Lerp(a,b,t) : t는 0~1사이에 속해야하고, a와 b사이 값중에서 t의 보간비율만큼의 값을 반환. ex) Lerp(0,10,0.5f) = 5
-                //InverseLerp(a,b,value) : Lerp와 반대로 a와 b 사이의 value값을 통해 t(보간)값을 반환. a와 b를 넘은 값은 각각 0과 1을 반환. ex) InverseLerp(0,10,5) = 0.5f, InverseLerp(0,10,12) = 1f;
-                Gizmos.color = Color.Lerp(Color.white, Color.black, Mathf.InverseLerp(penaltyMin, penaltyMax, n.movementPenalty));
-                Gizmos.color = (n.walkable) ? Gizmos.color : Color.red;
-                Gizmos.DrawCube(n.worldPosition, Vector3.one * (nodeDiameter - .5f));
+                foreach (Node n in grids[i].grid)
+                {
+                    //Lerp(a,b,t) : t는 0~1사이에 속해야하고, a와 b사이 값중에서 t의 보간비율만큼의 값을 반환. ex) Lerp(0,10,0.5f) = 5
+                    //InverseLerp(a,b,value) : Lerp와 반대로 a와 b 사이의 value값을 통해 t(보간)값을 반환. a와 b를 넘은 값은 각각 0과 1을 반환. ex) InverseLerp(0,10,5) = 0.5f, InverseLerp(0,10,12) = 1f;
+                    Gizmos.color = Color.Lerp(Color.white, Color.black, Mathf.InverseLerp(penaltyMin, penaltyMax, n.movementPenalty));
+                    Gizmos.color = (n.walkable) ? Gizmos.color : Color.red;
+                    Gizmos.DrawCube(n.worldPosition, Vector3.one * (nodeDiameter - .5f));
+                }
             }
         }
     }
@@ -273,5 +279,32 @@ public class AstarGrid : MonoBehaviour
     {
         public LayerMask terrainMask;
         public int terrainPenalty;
+    }
+
+    public class GridInfo
+    {
+        public int gridIndex;
+        public Vector2 gridWorldSize;
+        public Vector2 centerPosition;
+        public int gridSizeX, gridSizeY;
+        public Node[,] grid;
+
+        public GridInfo(int _gridIndex, Vector2 _gridWorldSize, Vector2 _centerPosition, int _gridSizeX, int _gridSizeY, Node[,] _grid)
+        {
+            gridIndex = _gridIndex;
+            gridWorldSize = _gridWorldSize;
+            centerPosition = _centerPosition;
+            gridSizeX = _gridSizeX;
+            gridSizeY = _gridSizeY;
+            grid = _grid;
+        }
+
+        public int MaxSize
+        {
+            get
+            {
+                return gridSizeX * gridSizeY;
+            }
+        }
     }
 }
