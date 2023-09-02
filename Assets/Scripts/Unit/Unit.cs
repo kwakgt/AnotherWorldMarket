@@ -10,7 +10,7 @@ public class Unit : MonoBehaviour //IPointerClickHandler //UI가 아니면 카메라에 
                 int pathIndex;              //경로 인덱스, 경로 그리기용
     protected   Shelf shelf;                //찾은 판매대
 
-                int gridIndex = 0;          //현재 속해있는 그리드 인덱스
+                int gridIndex;              //현재 속해있는 그리드 인덱스
                 float speed = 5;            //속도
     public      int invenSizeAvailable { get; private set; } = ((int)consumables.PlasticBag);  //사용가능한인벤토리
 
@@ -33,6 +33,7 @@ public class Unit : MonoBehaviour //IPointerClickHandler //UI가 아니면 카메라에 
     }
     protected virtual void Start()
     {
+        gridIndex = Nodefinding.instance.GetGridIndex(transform.position);
         respawn = UnitManager.instance.GetRespawn();    //test
         StartCoroutine(RefreshPath());
     }

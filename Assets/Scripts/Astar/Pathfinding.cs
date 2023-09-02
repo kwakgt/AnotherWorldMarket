@@ -157,19 +157,4 @@ public class Pathfinding : MonoBehaviour
             return 14 * dstY + 10 * (dstX - dstY);  //dstY만큼 대각선이동, dstX - dstY만큼 가로이동
         return 14 * dstX + 10 * (dstY - dstX);      //dstX만큼 대각선이동, dstY - dstX만큼 세로이동
     }
-
-    public static void Teleport(Unit unit, Vector2 target)
-    {
-        for (int i = 0; i <instance.grid.grids.Count; i++)
-        {
-            if(target.x > instance.grid.grids[i].centerPosition.x - instance.grid.grids[i].gridSizeX && target.x < instance.grid.grids[i].centerPosition.x + instance.grid.grids[i].gridSizeX 
-                && target.y > instance.grid.grids[i].centerPosition.y - instance.grid.grids[i].gridSizeY && target.y < instance.grid.grids[i].centerPosition.y + instance.grid.grids[i].gridSizeY)
-            {
-                //TARGET이 해당 그리드 안에 있다면
-                unit.ChangeGridIndex(instance.grid.grids[i].gridIndex);
-            }
-        }
-
-        unit.transform.position = target;
-    }
 }

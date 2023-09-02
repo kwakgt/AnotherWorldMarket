@@ -17,7 +17,7 @@ public class UnitManager : MonoBehaviour
     void Awake()
     {
         instance = this;
-        respawn = transform.GetChild(0).gameObject.GetComponentsInChildren<Transform>();
+        respawn = transform.GetChild(1).GetComponentsInChildren<Transform>();
     }
 
     void Update()

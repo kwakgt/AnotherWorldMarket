@@ -14,7 +14,7 @@ public class Structure : MonoBehaviour, IBeginDragHandler, IDragHandler  //UI가 
     bool isMoving;                         //이동 플래그
     bool isNewStructure;                        //새건물 플래그
     int countRotation;                     //회전수(건물 건설시 원상복구할때 쓰인다)
-    int gridIndex = 0;                         //현재 속해있는 그리드 인덱스
+    int gridIndex;                         //현재 속해있는 그리드 인덱스
 
     float nodeRadius;                      //노드 반지름
     float nodeDiameter;                    //노드 지름
@@ -44,6 +44,7 @@ public class Structure : MonoBehaviour, IBeginDragHandler, IDragHandler  //UI가 
     protected virtual void Start()
     {
         nodeRadius = Nodefinding.instance.GetNodeRadius();
+        gridIndex = Nodefinding.instance.GetGridIndex(transform.position);
         nodeDiameter = nodeRadius * 2;
         occupiedNodes = SetOccupiedNodes(worldPosition, width, height);    //SetFrontPosition(); 이전에 실행되야함,  순서중요!!!
         frontPositions = SetFrontPosition(occupiedNodes);

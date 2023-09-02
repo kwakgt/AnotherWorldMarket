@@ -5,6 +5,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
+    public Structure[] portals;
     GameMode gameMode = GameMode.Seller;
     
     public Unit selectedUnit;
@@ -15,6 +16,7 @@ public class GameManager : MonoBehaviour
     void Awake()
     {
         instance = this;
+        portals = transform.GetChild(0).GetComponentsInChildren<Structure>();
         constructionPanel = GameObject.Find("ConstructionPanel");
     }
 

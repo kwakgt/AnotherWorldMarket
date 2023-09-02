@@ -45,4 +45,18 @@ public class Nodefinding : MonoBehaviour
     {
         return grid.grids[gridIndex].centerPosition;
     }
+
+    public int GetGridIndex(Vector2 target)
+    {
+        for (int i = 0; i < grid.grids.Count; i++)
+        {
+            if (target.x > grid.grids[i].centerPosition.x - grid.grids[i].gridSizeX && target.x < grid.grids[i].centerPosition.x + grid.grids[i].gridSizeX
+                && target.y > grid.grids[i].centerPosition.y - grid.grids[i].gridSizeY && target.y < grid.grids[i].centerPosition.y + grid.grids[i].gridSizeY)
+            {
+                //TARGET이 해당 그리드 안에 있다면
+                return grid.grids[i].gridIndex;
+            }
+        }
+        return -1;
+    }
 }
