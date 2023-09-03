@@ -5,24 +5,24 @@ using UnityEngine.UI;
 
 public class Unit : MonoBehaviour //IPointerClickHandler //UI가 아니면 카메라에 Physics2DRaycater 컴포넌트 필요
 {
-    public      Vector2 target;             //이동목표
-                Vector2[] path;             //찾은 경로
-                int pathIndex;              //경로 인덱스, 경로 그리기용
-    protected   Shelf shelf;                //찾은 판매대
+    public Vector2 target;             //이동목표
+    Vector2[] path;             //찾은 경로
+    int pathIndex;              //경로 인덱스, 경로 그리기용
+    protected Shelf shelf;                //찾은 판매대
 
-                int gridIndex;              //현재 속해있는 그리드 인덱스
-                float speed = 5;            //속도
-    public      int invenSizeAvailable { get; private set; } = ((int)consumables.PlasticBag);  //사용가능한인벤토리
+    float speed = 5;            //속도
+    public int gridIndex { get; private set; }              //현재 속해있는 그리드 인덱스
+    public int invenSizeAvailable { get; private set; } = ((int)consumables.PlasticBag);  //사용가능한인벤토리
 
 
-    protected   Item[] inventory;  //인벤토리
-                int maxInvenSize = 12;
-    protected   Vector2 respawn;            //탄생,소멸위치
-   
+    protected Item[] inventory;  //인벤토리
+    int maxInvenSize = 12;
+    protected Vector2 respawn;            //탄생,소멸위치
 
-                TextMeshProUGUI nameText;   //자식인덱스 0
-    protected   TextMeshProUGUI priceText;  //자식인덱스 1;
-                Slider slider;              //자식인덱스 2;
+
+    TextMeshProUGUI nameText;   //자식인덱스 0
+    protected TextMeshProUGUI priceText;  //자식인덱스 1;
+    Slider slider;              //자식인덱스 2;
 
     protected virtual void Awake()
     {
@@ -89,7 +89,6 @@ public class Unit : MonoBehaviour //IPointerClickHandler //UI가 아니면 카메라에 
                 yield return StartCoroutine("StaffRoutine");
         }
     }
-
     IEnumerator Waiting(float waitTime)
     {
         slider.gameObject.SetActive(true);
@@ -102,7 +101,6 @@ public class Unit : MonoBehaviour //IPointerClickHandler //UI가 아니면 카메라에 
         slider.gameObject.SetActive(false);
         slider.value = 0;
     }
-
     protected void GoMarket(int index = -1)
     {
         float time = 0f;
@@ -120,7 +118,35 @@ public class Unit : MonoBehaviour //IPointerClickHandler //UI가 아니면 카메라에 
         } while ((Vector2)transform.position == target);    //내위치가 타겟위치와 같으면 타겟 재세팅
     }
 
-    public void GoHome()
+    protected void GoPortal()
+    {
+        if (gridIndex == 0)
+            target = GameManager.instance.portals[0].GetFrontPosition();
+        else if (gridIndex == 1)
+            target = GameManager.instance.portals[1].GetFrontPosition();
+    }
+
+    protected void Teleport()
+    {
+        if(gridIndex == 0)
+        {
+            if(GameManager.instance.portals[0].FindIndexOfFrontPosition(transform.position) > -1)
+            {
+                transform.position = GameManager.instance.portals[1].GetFrontPosition();
+                gridIndex = 1;
+            }
+        }
+        else if(gridIndex == 1)
+        {
+            if (GameManager.instance.portals[1].FindIndexOfFrontPosition(transform.position) > -1)
+            {
+                transform.position = GameManager.instance.portals[0].GetFrontPosition();
+                gridIndex = 0;
+            }
+        }
+    }
+
+    protected void GoHome()
     {
         target = respawn;
     }
@@ -168,11 +194,6 @@ public class Unit : MonoBehaviour //IPointerClickHandler //UI가 아니면 카메라에 
             return true;
         else
             return false;
-    }
-
-    public void ChangeGridIndex(int _gridIndex)
-    {
-        gridIndex = _gridIndex;
     }
 
     public void OnDrawGizmos()

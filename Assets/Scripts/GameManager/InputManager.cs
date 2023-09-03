@@ -10,6 +10,7 @@ public class InputManager : MonoBehaviour
     public bool iKeyDown { get; set; }
     public bool rKeyDown { get; set; }
     public bool spaceKeyDown { get; set; }
+    public bool tabKeyDown { get; set; }
 
 
     //마우스
@@ -42,16 +43,19 @@ public class InputManager : MonoBehaviour
             bKeyDown = true;
         }
 
-        if(Input.GetKeyDown(KeyCode.I))
+        if (Input.GetKeyDown(KeyCode.I))
         {
             iKeyDown = true;
         }
 
-        if( Input.GetKeyDown(KeyCode.Space)) 
+        if (Input.GetKeyDown(KeyCode.Space))
         { 
             spaceKeyDown = true;
         }
-
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            tabKeyDown = true;
+        }
         //TODO:: 단축키 추가
     }
 

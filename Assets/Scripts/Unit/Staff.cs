@@ -9,7 +9,8 @@ public class Staff : Unit
     int workTime = 1;
 
     Warehouse warehouse;
-    WorkType workType;          //상태 플래그
+    WorkType workType;              //현재 작업상태
+    WorkType nextWorkType;          //텔레포트 다음 작업상태
     List<CheckingItem> checkingItems = new List<CheckingItem>(); //아이템 재고 확인리스트
     
     int workCount;                  //작업의 진행횟수,작업인덱스,인벤인덱스
@@ -33,9 +34,10 @@ public class Staff : Unit
             yield return StartCoroutine("Checking");
             if (workCount >= invenSizeAvailable)   //작업 횟수가 사용가능한 인벤 개수와 같으면 창고로 가기(인벤토리 가득참)
             {
-                workType = WorkType.Finding;
+                workType = WorkType.Teleporting;
+                nextWorkType = WorkType.Finding;
                 workCount = 0;
-                GoWarehouse(checkingItems[workCount].shlefItem);
+                GoPortal();
             }
             else
             {
@@ -49,9 +51,10 @@ public class Staff : Unit
             yield return StartCoroutine("Finding");
             if (workCount >= invenSizeAvailable)   //작업 횟수가 사용가능한 인벤 개수와 같으면 판매대로 가기(인벤토리 가득참)
             {
-                workType = WorkType.Carrying;
+                workType = WorkType.Teleporting;
+                nextWorkType = WorkType.Carrying;
                 workCount = 0;
-                target = checkingItems[workCount].shelf.GetFrontPosition(checkingItems[workCount].frontIndex); //첫번째 확인리스트의 판매대로 타겟지정
+                GoPortal();
             }
             else
             {
@@ -73,9 +76,10 @@ public class Staff : Unit
                 }
                 else                    //만약 남은 아이템이 있다면, 창고로 가서 아이템 비우기
                 {
-                    workType = WorkType.Emptying;
+                    workType = WorkType.Teleporting;
+                    nextWorkType = WorkType.Emptying;
                     workCount = 0;
-                    GoWarehouse(checkingItems[workCount].shlefItem);
+                    GoPortal(); 
                 }
             }
             else
@@ -90,10 +94,11 @@ public class Staff : Unit
             yield return StartCoroutine("Emptying");
             if (workCount >= invenSizeAvailable)   //작업 횟수가 사용가능한 인벤 개수와 같으면 판매대로 확인하러 가기(인벤토리 비움)
             {
-                workType = WorkType.Checking;
+                workType = WorkType.Teleporting;
+                nextWorkType = WorkType.Checking;
                 workCount = 0;
                 checkingItems.Clear();
-                GoMarket();
+                GoPortal();
             }
             else
             {
@@ -101,6 +106,32 @@ public class Staff : Unit
                 target = warehouse.GetRandomWarehouseFrontPosition(target); //확인리스트의 판매대로 타겟지정
             }
 
+        }
+        //포탈 텔레포트
+        else if(workType == WorkType.Teleporting)
+        {
+            yield return null;
+            Teleport();
+            if(nextWorkType == WorkType.Checking)
+            {
+                workType = nextWorkType;
+                GoMarket();
+            }
+            else if(nextWorkType == WorkType.Finding)
+            {
+                workType = nextWorkType;
+                GoWarehouse(checkingItems[workCount].shlefItem);
+            }
+            else if(nextWorkType == WorkType.Carrying)
+            {
+                workType = nextWorkType;
+                target = checkingItems[workCount].shelf.GetFrontPosition(checkingItems[workCount].frontIndex); //첫번째 확인리스트의 판매대로 타겟지정
+            }
+            else if(nextWorkType == WorkType.Emptying)
+            {
+                workType = nextWorkType;
+                GoWarehouse(checkingItems[workCount].shlefItem);
+            }
         }
  
         //TODO:: 작업에 따라 추가
@@ -252,7 +283,7 @@ public class Staff : Unit
         }
     }
 
-    enum WorkType { Checking, Finding, Carrying, Emptying }
+    enum WorkType { Checking, Finding, Carrying, Emptying, Teleporting }
 }
 
 

@@ -43,8 +43,8 @@ public class Structure : MonoBehaviour, IBeginDragHandler, IDragHandler  //UI가 
 
     protected virtual void Start()
     {
-        nodeRadius = Nodefinding.instance.GetNodeRadius();
         gridIndex = Nodefinding.instance.GetGridIndex(transform.position);
+        nodeRadius = Nodefinding.instance.GetNodeRadius();
         nodeDiameter = nodeRadius * 2;
         occupiedNodes = SetOccupiedNodes(worldPosition, width, height);    //SetFrontPosition(); 이전에 실행되야함,  순서중요!!!
         frontPositions = SetFrontPosition(occupiedNodes);
@@ -76,6 +76,7 @@ public class Structure : MonoBehaviour, IBeginDragHandler, IDragHandler  //UI가 
 
         return Nodefinding.instance.RequestNodeArea(vector2s, sizeX, sizeY, gridIndex);    //월드 좌표를 노드로 변경
     }
+
     Vector2[] SetFrontPosition(Node[,] occupiedNodes)    //판매위치의 월드좌표(판매위치는 매대 앞)
     {
         Vector2[] position = new Vector2[frontSize];
@@ -145,6 +146,8 @@ public class Structure : MonoBehaviour, IBeginDragHandler, IDragHandler  //UI가 
                 //취소 :: 설치할 위치에서 점유노드, 판매노드 중에 unwalkable이 하나라도 있으면 취소
 
                 Node[,] tempOccupiedNodes = SetOccupiedNodes(transform.position, width, height); //현재 위치의 점유노드 계산
+                Debug.Log(transform.position);
+                Debug.Log(tempOccupiedNodes[0, 0].worldPosition);
                 Vector2[] tempFrontPosition = SetFrontPosition(tempOccupiedNodes);                                              //현재 위치의 판매위치 계산
 
 
@@ -182,7 +185,6 @@ public class Structure : MonoBehaviour, IBeginDragHandler, IDragHandler  //UI가 
 
                         if (checkOccupiedNode != null && checkOccupiedNode.walkable)    //이동이 아닌 새로 설치할 때 점유노드가 없으므로 Null체크
                         {
-
                             walkableCheck = true;
                         }
                         else
@@ -200,7 +202,7 @@ public class Structure : MonoBehaviour, IBeginDragHandler, IDragHandler  //UI가 
                     worldPosition = transform.position;     //월드포지션 변경
                     occupiedNodes = tempOccupiedNodes;      //점유노드 변경
                     frontPositions = tempFrontPosition;     //전방위치 변경
-                    ChangeWalkebleOfOccupiedNode(false);
+                    ChangeWalkableOfOccupiedNode(false);
                     countRotation = 0;
                     isNewStructure = false;
                     if (tag.Equals("Shelf"))
@@ -218,7 +220,7 @@ public class Structure : MonoBehaviour, IBeginDragHandler, IDragHandler  //UI가 
                     Rotate(countRotation);                      //회전 원상복구
                     transform.position = firstPosition;         //위치 원상복구, 회전이 먼저 복구되어야함, 순서중요
                     countRotation = 0;
-                    ChangeWalkebleOfOccupiedNode(false);   //취소되면 처음에 walkable → true로 변경한 거 원상복구
+                    ChangeWalkableOfOccupiedNode(false);   //취소되면 처음에 walkable → true로 변경한 거 원상복구
                 }
                 isMoving = false;                       //설치 or 취소가 완료되면 이동완료
 
@@ -230,7 +232,7 @@ public class Structure : MonoBehaviour, IBeginDragHandler, IDragHandler  //UI가 
         }
     }
 
-    void ChangeWalkebleOfOccupiedNode(bool walkable) //노드들의 walkable 변경
+    void ChangeWalkableOfOccupiedNode(bool walkable) //노드들의 walkable 변경
     {
         for (int y = 0; y < height; y++)
         {
@@ -276,7 +278,7 @@ public class Structure : MonoBehaviour, IBeginDragHandler, IDragHandler  //UI가 
         {
             isMoving = true;    //이동모드로 전환
             //드래그로 들어올려진 순간 현재 점유하고 있는 노드를 walkable로 변경
-            ChangeWalkebleOfOccupiedNode(true);
+            ChangeWalkableOfOccupiedNode(true);
         }
     }
 

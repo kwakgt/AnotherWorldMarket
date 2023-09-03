@@ -178,13 +178,13 @@ public class AstarGrid : MonoBehaviour
 
     public Node NodeFromWorldPoint(Vector2 worldPosition, int gridIndex)   //월드좌표를 노드좌표로 변경
     {
-        float percentX = (worldPosition.x + grids[gridIndex].gridWorldSize.x / 2) / grids[gridIndex].gridWorldSize.x;
-        float percentY = (worldPosition.y + grids[gridIndex].gridWorldSize.y / 2) / grids[gridIndex].gridWorldSize.y;
+        float percentX = ((worldPosition.x - grids[gridIndex].centerPosition.x) + grids[gridIndex].gridWorldSize.x / 2) / grids[gridIndex].gridWorldSize.x;
+        float percentY = ((worldPosition.y - grids[gridIndex].centerPosition.y) + grids[gridIndex].gridWorldSize.y / 2) / grids[gridIndex].gridWorldSize.y;
         percentX = Mathf.Clamp01(percentX);
         percentY = Mathf.Clamp01(percentY);
 
-        int x = Mathf.RoundToInt((gridSizeX - 1) * percentX);
-        int y = Mathf.RoundToInt((gridSizeY - 1) * percentY);
+        int x = Mathf.RoundToInt((grids[gridIndex].gridSizeX - 1) * percentX);
+        int y = Mathf.RoundToInt((grids[gridIndex].gridSizeY - 1) * percentY);
         return grids[gridIndex].grid[x, y];
     }
 

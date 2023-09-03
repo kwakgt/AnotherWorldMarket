@@ -10,7 +10,8 @@ public class CameraController : MonoBehaviour
     int zoomSpeed = 15;
     float zoomMax = 20f;
     float zoomMin = 5f;
-    int gridIndex = 0;
+    int gridIndex;
+    
 
     Vector2 mouseXY;        //마우스 X,Y 움직임 감지, -1이면 왼쪽/아래, 1이면 오른쪽/위
     Vector2 cameraXY;       //카메라 중심점으로부터의 X,Y거리
@@ -34,6 +35,7 @@ public class CameraController : MonoBehaviour
         SetHalfSize();
         ChangeSize();
         Move();
+        Teleport();
         InBounds();
     }
 
@@ -61,6 +63,11 @@ public class CameraController : MonoBehaviour
             mouseXY.y = InputManager.instance.mouseY;
             transform.Translate(-mouseXY * moveSpeed * Time.unscaledDeltaTime * 5);
         }
+        if (GameManager.instance.selectedUnit != null)
+        {
+            ChangeIndex(GameManager.instance.selectedUnit.gridIndex);
+            transform.position = GameManager.instance.selectedUnit.transform.position + new Vector3(0, 0, -10);
+        }
     }
 
     void ChangeSize()
@@ -75,6 +82,31 @@ public class CameraController : MonoBehaviour
         //widtgh : height = Screen.width : Screen.height
         cameraXY.y = cam.orthographicSize;
         cameraXY.x = cameraXY.y * Screen.width / Screen.height;
+    }
+
+    void Teleport()
+    {
+        if(InputManager.instance.tabKeyDown)
+        {
+            InputManager.instance.tabKeyDown = false;
+            if(gridIndex == 0)
+            {
+                ChangeIndex(1);
+                transform.position = (Vector3)Nodefinding.instance.GetGridCenterPosition(gridIndex) + new Vector3(0,0,-10);
+            }
+            else if(gridIndex == 1)
+            {
+                ChangeIndex(0);
+                transform.position = (Vector3)Nodefinding.instance.GetGridCenterPosition(gridIndex) + new Vector3(0, 0, -10);
+            }
+        }
+    }
+
+    void ChangeIndex(int _gridIndex)
+    {
+        gridIndex = _gridIndex;
+        mapSize = Nodefinding.instance.GetGridWorldSize(_gridIndex);
+        mapPostion = Nodefinding.instance.GetGridCenterPosition(_gridIndex);
     }
 
     void InBounds()
