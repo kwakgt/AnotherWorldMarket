@@ -16,7 +16,7 @@ public class CameraController : MonoBehaviour
     Vector2 mouseXY;        //마우스 X,Y 움직임 감지, -1이면 왼쪽/아래, 1이면 오른쪽/위
     Vector2 cameraXY;       //카메라 중심점으로부터의 X,Y거리
     Vector2 mapSize;        //그리드 크기, 맵 크기와 그리드 크기는 같다
-    Vector2 mapPostion;     //그리드 월드포지션
+    Vector2 mapPosition;     //그리드 월드포지션
     void Awake()
     {
         mouseXY = new Vector2();
@@ -27,7 +27,7 @@ public class CameraController : MonoBehaviour
     void Start()
     {
         mapSize = Nodefinding.instance.GetGridWorldSize(gridIndex);
-        mapPostion = Nodefinding.instance.GetGridCenterPosition(gridIndex);
+        mapPosition = Nodefinding.instance.GetGridCenterPosition(gridIndex);
     }
 
     void Update()
@@ -106,7 +106,7 @@ public class CameraController : MonoBehaviour
     {
         gridIndex = _gridIndex;
         mapSize = Nodefinding.instance.GetGridWorldSize(_gridIndex);
-        mapPostion = Nodefinding.instance.GetGridCenterPosition(_gridIndex);
+        mapPosition = Nodefinding.instance.GetGridCenterPosition(_gridIndex);
     }
 
     void InBounds()
@@ -128,21 +128,21 @@ public class CameraController : MonoBehaviour
         //  mapPostion.y + (mapSize.y / 2) : 맵 최상단 y
         
         //상하좌우
-        if (x - cameraXY.x < mapPostion.x - (mapSize.x / 2))
+        if (x - cameraXY.x < mapPosition.x - (mapSize.x / 2))
         {
-            transform.position = new Vector3(mapPostion.x - (mapSize.x / 2) + cameraXY.x, y, -10);
+            transform.position = new Vector3(mapPosition.x - (mapSize.x / 2) + cameraXY.x, y, -10);
         }
-        if (x + cameraXY.x > mapPostion.x + (mapSize.x / 2))
+        if (x + cameraXY.x > mapPosition.x + (mapSize.x / 2))
         {
-            transform.position = new Vector3(mapPostion.x + (mapSize.x / 2) - cameraXY.x, y, -10);
+            transform.position = new Vector3(mapPosition.x + (mapSize.x / 2) - cameraXY.x, y, -10);
         }
-        if (y - cameraXY.y < mapPostion.y - (mapSize.y / 2))
+        if (y - cameraXY.y < mapPosition.y - (mapSize.y / 2))
         {
-            transform.position = new Vector3(x, mapPostion.y - (mapSize.y / 2) + cameraXY.y, -10);
+            transform.position = new Vector3(x, mapPosition.y - (mapSize.y / 2) + cameraXY.y, -10);
         }
-        if (y + cameraXY.y > mapPostion.y + (mapSize.y / 2))
+        if (y + cameraXY.y > mapPosition.y + (mapSize.y / 2))
         {
-            transform.position = new Vector3(x, mapPostion.y + (mapSize.y / 2) - cameraXY.y, -10);
+            transform.position = new Vector3(x, mapPosition.y + (mapSize.y / 2) - cameraXY.y, -10);
         }
 
         //대각선
