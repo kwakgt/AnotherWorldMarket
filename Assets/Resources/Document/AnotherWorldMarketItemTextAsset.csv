@@ -1,0 +1,12 @@
+name,nameEN,uniqueKey,price,amountOfShelf,amountOfWarehouse
+통나무,Log,0,10,0,2000
+광석,Ore,1,10,0,2000
+목재,Wood,2,13,0,2000
+철,Steel,3,20,0,2000
+구리,Copper,4,15,0,2000
+석재,Stone,5,13,0,2000
+빅버고기,BigborMeat,6,7,10,2000
+빅버가죽,BigborLeather,7,10,20,2000
+피라사바,Pirasaba,8,1,300,2000
+초사과,Vinaple,9,3,30,2000
+생강무,Ragisher,10,5,30,2000

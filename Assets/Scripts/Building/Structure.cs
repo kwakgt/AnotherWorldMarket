@@ -325,6 +325,7 @@ public class Structure : MonoBehaviour, IBeginDragHandler, IDragHandler  //UI가 
         }
     }
 
+    //건설패널에서 사용
     public bool IsMoving
     {
         get { return isMoving; }

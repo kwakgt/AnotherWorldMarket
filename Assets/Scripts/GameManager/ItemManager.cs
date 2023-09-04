@@ -16,11 +16,11 @@ public class ItemManager : MonoBehaviour
     void ReadItemDBToCSV()
     {
         var list = new List<Dictionary<string, object>>();
-        list = CSVReader.Read("AnotherWorldMarketItemTextAsset");
+        list = CSVReader.Read("Document/AnotherWorldMarketItemTextAsset");
 
         for(int i = 0; i < list.Count; i++)
         {
-            string spritePath = "Sprite/" + list[i]["name"];
+            string spritePath = "Sprite/Item/" + list[i]["nameEN"];
             Sprite sprite = Resources.Load<Sprite>(spritePath); //리소스에서 Sprite 불러오기
             itemNameDB.Add((string)list[i]["name"], new Item((string)list[i]["name"], (int)list[i]["uniqueKey"], (int)list[i]["price"], (int)list[i]["amountOfShelf"], (int)list[i]["amountOfWarehouse"], sprite));
             itemUniqueKeyDB.Add((int)list[i]["uniqueKey"], new Item((string)list[i]["name"], (int)list[i]["uniqueKey"], (int)list[i]["price"], (int)list[i]["amountOfShelf"], (int)list[i]["amountOfWarehouse"], sprite));
@@ -50,10 +50,17 @@ public class ItemManager : MonoBehaviour
     public Item GetRandomItem()
     {
         Item item;
-        if (itemUniqueKeyDB.TryGetValue(Random.Range(0, itemUniqueKeyDB.Count), out item))
-            return new Item(item);
-        else
-            return null;
+        while (true)
+        {
+            if (itemUniqueKeyDB.TryGetValue(Random.Range(0, itemUniqueKeyDB.Count), out item))
+            {
+                if (item.amountOfShelf == 0)
+                    continue;
+                return new Item(item);
+            }
+            else
+                return null;
+        }
     }
 
     public int CountOfAllItem()     //아이템 총 개수
