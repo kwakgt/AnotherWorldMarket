@@ -7,7 +7,7 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
     public Structure[] portals;
     GameMode gameMode = GameMode.Seller;
-    
+
     public Unit selectedUnit;
     public Shelf selectedShelf;
     public Warehouse selectedWarehouse;
@@ -28,10 +28,10 @@ public class GameManager : MonoBehaviour
 
     void PlayAndPause()
     {
-        if(InputManager.instance.spaceKeyDown)
+        if (InputManager.instance.spaceKeyDown)
         {
-            if (Time.timeScale != 1f)   Time.timeScale = 1f;
-            else                        Time.timeScale = 0f;
+            if (Time.timeScale != 1f) Time.timeScale = 1f;
+            else Time.timeScale = 0f;
 
             InputManager.instance.spaceKeyDown = false;
         }
@@ -39,7 +39,7 @@ public class GameManager : MonoBehaviour
 
     void ChangeMode_bKeyDown()
     {
-        if(InputManager.instance.bKeyDown)
+        if (InputManager.instance.bKeyDown)
         {
             InputManager.instance.bKeyDown = false;
             ChangeMode();
@@ -80,7 +80,7 @@ public class GameManager : MonoBehaviour
 
     public bool CompareTo(GameMode _gameMode)
     {
-        if(gameMode == _gameMode)
+        if (gameMode == _gameMode)
             return true;
         else
             return false;

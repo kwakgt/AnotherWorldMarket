@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class UnitManager : MonoBehaviour
 {
@@ -38,7 +39,10 @@ public class UnitManager : MonoBehaviour
 
     void CustomerGenerator()
     {
-        Instantiate(customerPrefab, respawn[Random.Range(1,respawn.Length)]);
+        if (SceneManager.sceneCount == 1)
+        {
+            Instantiate(customerPrefab, respawn[Random.Range(1, respawn.Length)]);
+        }
     }
 
     //TEST, 버튼사용

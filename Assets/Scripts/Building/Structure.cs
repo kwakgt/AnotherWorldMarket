@@ -48,6 +48,9 @@ public class Structure : MonoBehaviour, IBeginDragHandler, IDragHandler  //UI가 
         nodeDiameter = nodeRadius * 2;
         occupiedNodes = SetOccupiedNodes(worldPosition, width, height);    //SetFrontPosition(); 이전에 실행되야함,  순서중요!!!
         frontPositions = SetFrontPosition(occupiedNodes);
+
+        //Test
+        DataManager.Instance.UpdateData(gameObject);
     }
 
     private void Update()

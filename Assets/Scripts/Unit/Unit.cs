@@ -3,6 +3,8 @@ using System.Collections;
 using TMPro;
 using UnityEngine.UI;
 
+
+
 public class Unit : MonoBehaviour //IPointerClickHandler //UI가 아니면 카메라에 Physics2DRaycater 컴포넌트 필요
 {
     public Vector2 target;             //이동목표
@@ -36,6 +38,9 @@ public class Unit : MonoBehaviour //IPointerClickHandler //UI가 아니면 카메라에 
         gridIndex = Nodefinding.instance.GetGridIndex(transform.position);
         respawn = UnitManager.instance.GetRespawn();    //test
         StartCoroutine(RefreshPath());
+
+        //Test
+        DataManager.Instance.UpdateData(gameObject);
     }
 
     IEnumerator RefreshPath()

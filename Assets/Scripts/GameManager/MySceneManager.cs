@@ -35,7 +35,7 @@ public class MySceneManager : MonoBehaviour
     {
         StartCoroutine("LoadScene", "AnotherWorldMarket");
     }
-
+    
     IEnumerator LoadScene(string sceneName)
     {
         //LoadSceneMode.Single : 현재 씬의 오브젝트들을 모두 Destroy하고 새롭게 씬을 로드, Default
@@ -47,6 +47,7 @@ public class MySceneManager : MonoBehaviour
         //bool isDone : 해당 동작(씬)이 준비되었는지의 여부, true면 씬 준비 완료
         //float progress : 작업의 진행 정도를 0과 1사이의 값으로 확인 가능, 이 변수를 이용해서 "로딩 바" 구현 가능
         //int priority : 멀티씬을 로드할 때 씬 호출하는 순서
+        
         AsyncOperation asyncOper = SceneManager.LoadSceneAsync(sceneName);
     
         while (!asyncOper.isDone)
