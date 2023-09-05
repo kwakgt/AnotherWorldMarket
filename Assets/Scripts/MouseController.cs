@@ -30,12 +30,11 @@ public class MouseController : MonoBehaviour
 
     void Selection()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButton(0))
         {
             Vector2 mousePosition = cam.ScreenToWorldPoint(Input.mousePosition);
             downHit = Physics2D.Raycast(mousePosition, Vector2.zero);   //다운 시 Hit 저장
         }
-
         if (Input.GetMouseButtonUp(0))
         {
             Vector2 mousePosition = cam.ScreenToWorldPoint(Input.mousePosition);
@@ -72,7 +71,7 @@ public class MouseController : MonoBehaviour
                 PanelSetActive(false, false, false);
             }
         }
-
+        
     }
     
     void PanelSetActive(bool _customerPanel, bool _shelfPanel, bool _warehousePanel)

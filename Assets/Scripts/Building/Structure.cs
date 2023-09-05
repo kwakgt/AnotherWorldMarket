@@ -149,8 +149,6 @@ public class Structure : MonoBehaviour, IBeginDragHandler, IDragHandler  //UI가 
                 //취소 :: 설치할 위치에서 점유노드, 판매노드 중에 unwalkable이 하나라도 있으면 취소
 
                 Node[,] tempOccupiedNodes = SetOccupiedNodes(transform.position, width, height); //현재 위치의 점유노드 계산
-                Debug.Log(transform.position);
-                Debug.Log(tempOccupiedNodes[0, 0].worldPosition);
                 Vector2[] tempFrontPosition = SetFrontPosition(tempOccupiedNodes);                                              //현재 위치의 판매위치 계산
 
 
