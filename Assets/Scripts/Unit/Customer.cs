@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Diagnostics;
 using UnityEngine;
-using Debug = UnityEngine.Debug;
 
 public class Customer : Unit
 {

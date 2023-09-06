@@ -1,3 +1,4 @@
+using System;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -6,6 +7,7 @@ using UnityEngine.UIElements;
 public class CameraController : MonoBehaviour
 {
     Camera cam;
+    Camera minimap;
     int moveSpeed = 30;
     int zoomSpeed = 15;
     float zoomMax = 20f;
@@ -22,6 +24,7 @@ public class CameraController : MonoBehaviour
         mouseXY = new Vector2();
         cameraXY = new Vector2();
         cam = GetComponent<Camera>();
+        minimap = GameObject.Find("MinimapCamera").GetComponent<Camera>();
     }
 
     void Start()
@@ -93,11 +96,13 @@ public class CameraController : MonoBehaviour
             {
                 ChangeIndex(1);
                 transform.position = (Vector3)Nodefinding.instance.GetGridCenterPosition(gridIndex) + new Vector3(0,0,-10);
+                minimap.transform.position = transform.position;
             }
             else if(gridIndex == 1)
             {
                 ChangeIndex(0);
                 transform.position = (Vector3)Nodefinding.instance.GetGridCenterPosition(gridIndex) + new Vector3(0, 0, -10);
+                minimap.transform.position = transform.position;
             }
         }
     }

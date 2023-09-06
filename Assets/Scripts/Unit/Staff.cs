@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using UnityEngine;
+using EnumManager;
 
 public class Staff : Unit
 {
@@ -283,7 +283,7 @@ public class Staff : Unit
         }
     }
 
-    enum WorkType { Checking, Finding, Carrying, Emptying, Teleporting }
+    
 }
 
 

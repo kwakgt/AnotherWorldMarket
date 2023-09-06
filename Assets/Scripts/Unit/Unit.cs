@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 using TMPro;
 using UnityEngine.UI;
-
+using EnumManager;
 
 
 public class Unit : MonoBehaviour //IPointerClickHandler //UI가 아니면 카메라에 Physics2DRaycater 컴포넌트 필요
@@ -233,5 +233,5 @@ public class Unit : MonoBehaviour //IPointerClickHandler //UI가 아니면 카메라에 
         Debug.Log(GameManager.instance.selectedUnit);
     }*/
 
-    public enum consumables { TwoHands = 2, PlasticBag = 4, Basket = 8, Cart = 12 }
+    
 }

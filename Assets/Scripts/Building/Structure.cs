@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using EnumManager;
 using Random = UnityEngine.Random;
 
 //TimeScale = 0 일 때, 충돌감지 안됨
@@ -339,5 +340,5 @@ public class Structure : MonoBehaviour, IBeginDragHandler, IDragHandler  //UI가 
         set { isNewStructure = value; }
     }
 
-    protected enum Direction { Left, Down, Right, Up }
+    
 }

@@ -61,6 +61,4 @@ public class Shelf : Structure
             inventory[index].PlusAmount(amount); 
         }
     }
-
-    enum Type { SmallShelf, MediumShelf, LargeShelf }
 }
