@@ -6,13 +6,18 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
     public Structure[] portals;
-    GameMode gameMode = GameMode.Seller;
 
     public Unit selectedUnit;
     public Shelf selectedShelf;
     public Warehouse selectedWarehouse;
 
-    GameObject constructionPanel;   // 활성화/비활성화
+    GameObject constructionPanel;           //활성화/비활성화
+    GameMode gameMode = GameMode.Seller;    //현재 게임모드
+    float preTimeScale = 1f;                 //이전 속도
+
+
+    public int day { get; set; } = 1;           //현재일수
+    public int hour { get; set; }           //현재시간
     void Awake()
     {
         instance = this;
@@ -30,10 +35,15 @@ public class GameManager : MonoBehaviour
     {
         if (InputManager.instance.spaceKeyDown)
         {
-            if (Time.timeScale != 1f) Time.timeScale = 1f;
-            else Time.timeScale = 0f;
-
             InputManager.instance.spaceKeyDown = false;
+            if (Time.timeScale > 0)
+            {
+                ChangeGameSpeed(0);
+            }
+            else
+            {
+                ChangeGameSpeed(preTimeScale);
+            }
         }
     }
 
@@ -44,8 +54,6 @@ public class GameManager : MonoBehaviour
             InputManager.instance.bKeyDown = false;
             ChangeMode();
         }
-
-        if (gameMode == GameMode.Builder) Time.timeScale = 0;   //건설모드이면 무조건 일시정지
     }
 
     public void ChangeMode()   //메뉴버튼 사용
@@ -53,27 +61,34 @@ public class GameManager : MonoBehaviour
         if (gameMode != GameMode.Builder)
         {
             gameMode = GameMode.Builder;
+            ChangeGameSpeed(0);
             constructionPanel.SetActive(true);
         }
         else
         {
             gameMode = GameMode.Seller;
+            ChangeGameSpeed(preTimeScale);
             constructionPanel.SetActive(false);
         }
-
-        if (gameMode == GameMode.Seller) Time.timeScale = 1f;   //모드가 판매모드이면 정상속도로 변경
     }
 
-    public void ChangeGameSpeed(int controlKey = 3)   //스피드버튼 사용
+    public void ChangeGameSpeed(float timeScale = 1)   //스피드버튼 사용
     {
-        if (instance.gameMode == GameMode.Builder) return;
+        if (Time.timeScale != 0)
+            preTimeScale = Time.timeScale;  //preTimeScale에 0값 제외
 
-        switch (controlKey)
+        if (instance.gameMode == GameMode.Builder)  //건설모드 시 속도는 무조건 0
         {
-            case 1: { Time.timeScale = 0.5f; break; }
-            case 2: { Time.timeScale = 0; break; }
-            case 3: { Time.timeScale = 1f; break; }
-            case 4: { Time.timeScale = 2f; break; }
+            Time.timeScale = 0f; 
+            return;
+        }
+
+        switch (timeScale)
+        {
+            case 0: { Time.timeScale = 0f; break; }
+            case 1: { Time.timeScale = 1f; break; }
+            case 2: { Time.timeScale = 2f; break; }
+            case 3: { Time.timeScale = 3f; break; }
             default: { Time.timeScale = 1f; break; }
         }
     }
