@@ -1,5 +1,6 @@
 using UnityEngine;
 using EnumManager;
+using System.Collections.Generic;
 
 public class UnitStat : MonoBehaviour
 {
@@ -15,13 +16,29 @@ public class UnitStat : MonoBehaviour
     int hunting;
     int fishing;
 
+
+    public void SetStat(Tribe tribe)
+    {
+        Dictionary<Tribe, Dictionary<StatBind, int>> stat = UnitManager.instance.tribe;
+        purchase = Random.Range(stat[tribe][StatBind.PurchaseMin], stat[tribe][StatBind.PurchaseMax] + 1);
+        carrying = Random.Range(stat[tribe][StatBind.CarryingMin], stat[tribe][StatBind.CarryingMax] + 1);
+        felling = Random.Range(stat[tribe][StatBind.FellingMin], stat[tribe][StatBind.FellingMax] + 1);
+        mining = Random.Range(stat[tribe][StatBind.MiningMin], stat[tribe][StatBind.MiningMax] + 1);
+        collecting = Random.Range(stat[tribe][StatBind.CollectingMin], stat[tribe][StatBind.CollectingMax] + 1);
+        hunting = Random.Range(stat[tribe][StatBind.HuntingMin], stat[tribe][StatBind.HuntingMax] + 1);
+        fishing = Random.Range(stat[tribe][StatBind.FishingMin], stat[tribe][StatBind.FishingMax] + 1);
+
+        //TODO:: 작업추가
+    }
+
     /// <summary>
     /// 구매대기시간
     /// </summary>
     /// <returns>구매대기시간 리턴</returns>
-    public int GetPurchaseTime()
+    public float GetPurchaseTime()
     {
-        return Mathf.RoundToInt(Mathf.Lerp(10,1,purchase / 100));
+        print(purchase + " :: " + Mathf.Lerp(10, 1, purchase / 100f));
+        return Mathf.Lerp(10, 1, purchase / 100f);
     }
 
     /// <summary>
@@ -38,12 +55,12 @@ public class UnitStat : MonoBehaviour
     /// </summary>
     /// <param name="command"> 현재 작업</param>
     /// <returns>해당 작업의 작업시간을 리턴</returns>
-    public int GetWorkingTime(WorkType command)
+    public float GetWorkingTime(WorkType command)
     {
         //작업시간,대기시간
         int work = ReplaceFromWorkTypeToInt(command);
         if (work == 0) return 0;
-        return Mathf.RoundToInt(Mathf.Lerp(30, 1, work / 100));
+        return Mathf.Lerp(30, 1, work / 100f);
     }
 
     /// <summary>
@@ -56,7 +73,7 @@ public class UnitStat : MonoBehaviour
         //작업량
         int work = ReplaceFromWorkTypeToInt(command);
         if (work == 0) return 0;
-        return Mathf.RoundToInt(Mathf.Lerp(1, 50, work / 100));
+        return Mathf.RoundToInt(Mathf.Lerp(1, 50, work / 100f));
     }
 
     int ReplaceFromWorkTypeToInt(WorkType command)
@@ -75,7 +92,6 @@ public class UnitStat : MonoBehaviour
 
         };
     }
-
 
     ////작업시간
     //int carryingTime;

@@ -7,8 +7,6 @@ public class Customer : Unit
 {
     public int money = 1000;               //소지금
     public int shoppingCount = 5;          //쇼핑횟수
-    int maxAmountOfPurchase = 3;    //구매량
-    int maxWaitTime = 3;            //대기시간
 
     int invenIdx;                   //구매횟수,인벤인덱스
     Stopwatch sw = new Stopwatch();
@@ -44,7 +42,7 @@ public class Customer : Unit
 
     IEnumerator BuyingItem()
     {
-        yield return StartCoroutine("Waiting", maxWaitTime);
+        yield return StartCoroutine("Waiting", stat.GetPurchaseTime());
         Item shelfItem = shelf.FindItemInInven(target);      //매대아이템 보기
         if (shelfItem != null)
         {
@@ -103,7 +101,7 @@ public class Customer : Unit
 
     int PurchaseForFitPrice(Item shelfItem)  //현재 소지금에 맞게 물건을 구입, 구매수량 정하는 함수
     {
-        int amount = Random.Range(1, maxAmountOfPurchase + 1);
+        int amount = stat.GetPurchaseAmount();
         return Mathf.Clamp(amount, 0, money / shelfItem.price);
     }
 

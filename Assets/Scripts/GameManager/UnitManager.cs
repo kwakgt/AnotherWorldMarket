@@ -10,7 +10,7 @@ public class UnitManager : MonoBehaviour
 {
     public static UnitManager instance;
 
-    public Dictionary<Tribe, Dictionary<StatBind, int>> tribe;
+    public Dictionary<Tribe, Dictionary<StatBind, int>> tribe { get; private set; }
 
     public GameObject customerPrefab;
     public GameObject staffPrefab;

@@ -2404,7 +2404,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 473404472}
         m_TargetAssemblyTypeName: UnitManager, Assembly-CSharp
         m_MethodName: StaffGenerator
         m_Mode: 1

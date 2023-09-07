@@ -5,9 +5,6 @@ using EnumManager;
 
 public class Staff : Unit
 {
-    int amountOfCarrying = 20;  //한번에 운반가능한 최대개수
-    int workTime = 1;
-
     //command와 workType 변수로 상태 패턴 구현
     WorkType workType;              //현재 작업 상태
     WorkType nextWorkType;          //텔레포트 다음 작업 상태(창고를 가기 위해 포탈을 타야하므로 텔레포트 후 다음 작업을 저장해야된다)
@@ -245,14 +242,14 @@ public class Staff : Unit
             //TODO:: 랜덤아이템이 아닌 창고에 있는 아이템으로 변경
             shelfItem = ItemManager.instance.GetRandomItem();   //아이템이 없다면 새아이템으로 채워넣기
         }
-        int amountCarring = Mathf.Clamp(shelfItem.amountOfShelf - shelfItem.amount, 0, amountOfCarrying);   //옮길 수량
+        int amountCarring = Mathf.Clamp(shelfItem.amountOfShelf - shelfItem.amount, 0, stat.GetWorkingAmount(command));   //옮길 수량
         checkingItems.Add(new CheckingItem(shelf, shelfIndex, shelfItem, amountCarring));       //확인리스트에 아이템 저장
         ++workCount;
     }
 
     IEnumerator Finding() //아이템 찾기(창고에서 내 인벤토리로 아이템 옮기기)
     {
-        yield return StartCoroutine("Waiting", workTime);
+        yield return StartCoroutine("Waiting", checkingTime);
         Item itemToFind = checkingItems[workCount].shlefItem;           //찾을 아이템
         int itemIndex = warehouse.FindItemIndexInInventory(itemToFind); //찾은 아이템인덱스
         if (itemIndex > -1)                                             //찾을 아이템이 존재한다면,1중
@@ -261,7 +258,7 @@ public class Staff : Unit
 
             if (itemFound != null) //2중
             {
-                int maxAmountCarring = Mathf.Min(amountOfCarrying, itemFound.amount);
+                int maxAmountCarring = Mathf.Min(stat.GetWorkingAmount(command), itemFound.amount);
                 int amount = Mathf.Clamp(checkingItems[workCount].amountCarring, 0, maxAmountCarring);
                 if (warehouse.FindItemIndexInInventory(itemFound) > -1)               //찾은 아이템이 창고에 있다면, 3중
                 {
@@ -274,11 +271,11 @@ public class Staff : Unit
 
     IEnumerator Carrying() //아이템 운반(내 인벤토리에서 판매대로 아이템 옮기기)
     {
-        yield return StartCoroutine("Waiting", workTime);
+        yield return StartCoroutine("Waiting", stat.GetWorkingTime(command));
         Item shelfItem = checkingItems[workCount].shelf.GetItemInInven(checkingItems[workCount].frontIndex);  //판매대 아이템
         if (shelfItem != null && shelfItem.Equals(inventory[workCount]))   //판매대 아이템과 내 인벤토리 아이템이 같으면
         {
-            int maxAmountCarring = Mathf.Min(shelfItem.amountOfShelf - shelfItem.amount, amountOfCarrying);   //판매대에 넣을수 있는 양과 내 운반량중에 작은 값이 운반할 MAX양
+            int maxAmountCarring = Mathf.Min(shelfItem.amountOfShelf - shelfItem.amount, stat.GetWorkingAmount(command));   //판매대에 넣을수 있는 양과 내 운반량중에 작은 값이 운반할 MAX양
             int amount = Mathf.Clamp(inventory[workCount].amount, 0, maxAmountCarring);
             EjectItemInInventory(shelfItem, amount);
         }
@@ -302,7 +299,7 @@ public class Staff : Unit
     {
         if (inventory[workCount] != null)
         {
-            yield return StartCoroutine("Waiting", workTime);
+            yield return StartCoroutine("Waiting", checkingTime);
             int itemIndex = warehouse.FindItemIndexInInventory(inventory[workCount]);
             if(itemIndex > -1) //창고에 같은 아이템이 존재하면
             {

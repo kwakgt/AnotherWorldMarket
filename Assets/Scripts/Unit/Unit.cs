@@ -3,7 +3,8 @@ using System.Collections;
 using TMPro;
 using UnityEngine.UI;
 using EnumManager;
-
+using System;
+using Random = UnityEngine.Random;
 
 public class Unit : MonoBehaviour //IPointerClickHandler //UI가 아니면 카메라에 Physics2DRaycater 컴포넌트 필요
 {
@@ -18,6 +19,7 @@ public class Unit : MonoBehaviour //IPointerClickHandler //UI가 아니면 카메라에 
 
 
     //고정변수
+    Tribe tribe;
     public UnitStat stat;
     public UnitType type;
     protected Item[] inventory;  //인벤토리
@@ -31,6 +33,7 @@ public class Unit : MonoBehaviour //IPointerClickHandler //UI가 아니면 카메라에 
 
     protected virtual void Awake()
     {
+        tribe = Tribe.Human; //기본 휴먼
         stat = GetComponent<UnitStat>();
         inventory = new Item[maxInvenSize];
         
@@ -41,6 +44,7 @@ public class Unit : MonoBehaviour //IPointerClickHandler //UI가 아니면 카메라에 
     }
     protected virtual void Start()
     {
+        stat.SetStat(tribe);
         gridIndex = Nodefinding.instance.GetGridIndex(transform.position);
         respawn = UnitManager.instance.GetRespawn();    //test
         StartCoroutine(RefreshPath());
