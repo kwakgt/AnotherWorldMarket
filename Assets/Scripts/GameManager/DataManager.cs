@@ -1,3 +1,4 @@
+using EnumManager;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -57,6 +58,7 @@ public class DataManager : MonoBehaviour
         {
             UnitData uniData = new UnitData();
             uniData.position = _gameObject.transform.position;
+            uniData.unitType = _gameObject.GetComponent<Unit>().type;
             //TODO:: 속성 추가
 
 
@@ -74,24 +76,31 @@ public class DataManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 최종 저장될 Data, 저장할 데이타를 전부 하나로 바운딩
+    /// </summary>
     [Serializable]
     public class DataList
     {
         public List<UnitData> unitDataList = new List<UnitData>();
         public List<StructureData> structureDataList = new List<StructureData>();
+
+        //TODO:: 매니저 데이타 저장
     }
 
     [Serializable]
     public class UnitData
     {
-        public Vector3 position;
+        //값이 아닌 참조형식(Class)은 InstanceID가 저장된다.
+        public Vector3 position;    //Vector 저장가능
+        public UnitType unitType;   //Enum은 Int로 저장됨
         //TODO:: 속성 추가
     }
 
     [Serializable]
     public class StructureData
     {
-        public Vector2 position;
+        public Vector3 position;
         //TODO:: 속성 추가
     }
 }

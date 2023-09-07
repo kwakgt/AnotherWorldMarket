@@ -27,21 +27,23 @@ public class ItemManager : MonoBehaviour
         }
     }
 
-    public Item GetItem(string name)
+    public Item GetItem(string name, int amount = 0)
     {
         if (itemNameDB.ContainsKey(name))
         {
             Item item = new Item(itemNameDB[name]);
+            item.PlusAmount(amount);
             return item;
         }
         else return null;
     }
 
-    public Item GetItem(int uniqueKey)
+    public Item GetItem(int uniqueKey, int amount = 0)
     {
         if (itemUniqueKeyDB.ContainsKey(uniqueKey))
         {
             Item item = new Item(itemUniqueKeyDB[uniqueKey]);
+            item.PlusAmount(amount);
             return item;
         }
         else return null;

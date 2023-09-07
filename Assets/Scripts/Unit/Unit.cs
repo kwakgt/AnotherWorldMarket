@@ -17,6 +17,9 @@ public class Unit : MonoBehaviour //IPointerClickHandler //UI가 아니면 카메라에 
     public int invenSizeAvailable { get; private set; } = ((int)consumables.PlasticBag);  //사용가능한인벤토리
 
 
+    //고정변수
+    public UnitStat stat;
+    public UnitType type;
     protected Item[] inventory;  //인벤토리
     int maxInvenSize = 12;
     protected Vector2 respawn;            //탄생,소멸위치
@@ -28,7 +31,10 @@ public class Unit : MonoBehaviour //IPointerClickHandler //UI가 아니면 카메라에 
 
     protected virtual void Awake()
     {
+        stat = GetComponent<UnitStat>();
         inventory = new Item[maxInvenSize];
+        
+        //transform.GetChild(0)은 Canvas
         nameText = transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>();
         priceText = transform.GetChild(0).GetChild(1).GetComponent<TextMeshProUGUI>();
         slider = transform.GetChild(0).GetChild(2).GetComponent<Slider>();
@@ -88,9 +94,9 @@ public class Unit : MonoBehaviour //IPointerClickHandler //UI가 아니면 카메라에 
             }
 
             //현재 target에 도착한 상태, 아래에 이 후 행동 지정
-            if (tag.Equals("Customer"))
+            if (type == UnitType.Customer)
                 yield return StartCoroutine("CustomerRoutine");
-            else
+            else if (type == UnitType.Staff)
                 yield return StartCoroutine("StaffRoutine");
         }
     }
@@ -129,6 +135,11 @@ public class Unit : MonoBehaviour //IPointerClickHandler //UI가 아니면 카메라에 
             target = GameManager.instance.portals[0].GetFrontPosition();
         else if (gridIndex == 1)
             target = GameManager.instance.portals[1].GetFrontPosition();
+    }
+
+    protected void GoExternalPortal()
+    {
+        target = GameManager.instance.portals[2].GetFrontPosition();
     }
 
     protected void Teleport()

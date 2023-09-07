@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Diagnostics;
 using UnityEngine;
+using EnumManager;
 
 public class Customer : Unit
 {
@@ -14,6 +15,7 @@ public class Customer : Unit
     protected override void Awake()
     {
         base.Awake();
+        type = UnitType.Customer;
     }
 
     protected override void Start()
