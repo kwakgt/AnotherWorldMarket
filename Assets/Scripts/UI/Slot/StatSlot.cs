@@ -35,10 +35,10 @@ public class StatSlot : MonoBehaviour
     {
         if (staff != null)
         {
-            //TODO:: 작업이미지 추가
+            workImage.sprite = SpriteIconManager.instance.GetWorkIcon(workType);
             stat.text = staff.stat.ReplaceFromWorkTypeToInt(workType).ToString();
         }
 
-        //staff == null 이면 StaffManagementSlot이 파괴된다.
+        //staff == null 이면 StaffManagementSlot이 파괴되거나 disable
     }
 }

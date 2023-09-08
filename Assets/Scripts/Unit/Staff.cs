@@ -41,6 +41,12 @@ public class Staff : Unit
         nextWorkType = _nextWorkType;
     }
 
+    public WorkType GetWorkState(bool commandOrworktype)
+    {
+        if (commandOrworktype) return command;
+        else return workType;
+    }
+
     public void ReceiveCommander(WorkType type) //버튼사용
     {
         if (command == type) return; //명령이 현재 명령과 같으면 무시

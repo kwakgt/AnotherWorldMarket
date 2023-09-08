@@ -45,8 +45,6 @@ public class UnitManager : MonoBehaviour
             CustomerGenerator();
             respawnTime = 0;
         }
-
-        print(staffList.Count);
     }
 
     /// <summary>

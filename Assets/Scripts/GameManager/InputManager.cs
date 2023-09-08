@@ -7,6 +7,7 @@ public class InputManager : MonoBehaviour
 
     //Å°º¸µå
     public bool bKeyDown { get; set; }
+    public bool fKeyDown { get; set; }
     public bool iKeyDown { get; set; }
     public bool rKeyDown { get; set; }
     public bool spaceKeyDown { get; set; }
@@ -24,30 +25,28 @@ public class InputManager : MonoBehaviour
 
     void Update()
     {
-        SetMouseMovement();
         SetInputKey();
+        SetMouseMovement();
     }
-
-
 
     void SetInputKey()
     {
-  
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            rKeyDown = true;
-        }
-
         if (Input.GetKeyDown(KeyCode.B))
         {
             bKeyDown = true;
         }
-
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            fKeyDown = true;
+        }
         if (Input.GetKeyDown(KeyCode.I))
         {
             iKeyDown = true;
         }
-
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            rKeyDown = true;
+        }
         if (Input.GetKeyDown(KeyCode.Space))
         { 
             spaceKeyDown = true;

@@ -15,8 +15,7 @@ public class ItemManager : MonoBehaviour
 
     void ReadItemDBToCSV()
     {
-        var list = new List<Dictionary<string, object>>();
-        list = CSVReader.Read("Document/AnotherWorldMarketItemTextAsset");
+        var list = CSVReader.Read("Document/AnotherWorldMarketItemTextAsset");
 
         for(int i = 0; i < list.Count; i++)
         {

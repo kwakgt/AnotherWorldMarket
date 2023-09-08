@@ -4,11 +4,10 @@ using System.Collections.Generic;
 
 public class UnitStat : MonoBehaviour
 {
-    //고객수치
+    //고객스탯
     int purchase;           //구매수치
 
-    //스탭수치
-    //작업수치
+    //스탭스탯
     int carrying;
     int felling;
     int mining;
@@ -86,7 +85,7 @@ public class UnitStat : MonoBehaviour
             WorkType.Collecting => collecting,
             WorkType.Hunting => hunting,
             WorkType.Fishing => fishing,
-            WorkType => -1
+            WorkType => 0
 
             //TODO:: 작업 추가
 

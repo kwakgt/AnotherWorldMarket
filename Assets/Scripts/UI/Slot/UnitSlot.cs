@@ -1,3 +1,4 @@
+using EnumManager;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -32,9 +33,10 @@ public class UnitSlot : MonoBehaviour
     {
         if(staff != null)
         {
-            //TODO:: 얼굴이미지, 작업이미지 추가
+            //TODO:: 얼굴이미지 추가
             workGauge.maxValue = staff.slider.maxValue;
             workGauge.value = staff.slider.value;
+            workImage.sprite = SpriteIconManager.instance.GetWorkIcon(staff.GetWorkState(false));
         }
 
         //staff == null 이면 StaffManagementSlot이 파괴된다.
