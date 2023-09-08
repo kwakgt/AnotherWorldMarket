@@ -339,6 +339,4 @@ public class Structure : MonoBehaviour, IBeginDragHandler, IDragHandler  //UI°¡ 
         get { return isNewStructure; }
         set { isNewStructure = value; }
     }
-
-    
 }

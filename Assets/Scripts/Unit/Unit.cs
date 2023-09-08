@@ -4,9 +4,8 @@ using TMPro;
 using UnityEngine.UI;
 using EnumManager;
 using System;
-using Random = UnityEngine.Random;
 
-public class Unit : MonoBehaviour //IPointerClickHandler //UI가 아니면 카메라에 Physics2DRaycater 컴포넌트 필요
+public class Unit : MonoBehaviour   //IPointerClickHandler //UI가 아니면 카메라에 Physics2DRaycater 컴포넌트 필요
 {
     public Vector2 target;             //이동목표
     Vector2[] path;             //찾은 경로
@@ -19,7 +18,7 @@ public class Unit : MonoBehaviour //IPointerClickHandler //UI가 아니면 카메라에 
 
 
     //고정변수
-    Tribe tribe;
+    Tribe tribe;    //종족
     public UnitStat stat;
     public UnitType type;
     protected Item[] inventory;  //인벤토리
@@ -29,7 +28,7 @@ public class Unit : MonoBehaviour //IPointerClickHandler //UI가 아니면 카메라에 
 
     TextMeshProUGUI nameText;   //자식인덱스 0
     protected TextMeshProUGUI priceText;  //자식인덱스 1;
-    Slider slider;              //자식인덱스 2;
+    public Slider slider { get; private set; }              //자식인덱스 2;
 
     protected virtual void Awake()
     {
@@ -44,7 +43,7 @@ public class Unit : MonoBehaviour //IPointerClickHandler //UI가 아니면 카메라에 
     }
     protected virtual void Start()
     {
-        stat.SetStat(tribe);
+        stat.SetStat(tribe);    //종족에 따른 스탯값 랜덤 초기화
         gridIndex = Nodefinding.instance.GetGridIndex(transform.position);
         respawn = UnitManager.instance.GetRespawn();    //test
         StartCoroutine(RefreshPath());
@@ -248,5 +247,5 @@ public class Unit : MonoBehaviour //IPointerClickHandler //UI가 아니면 카메라에 
         Debug.Log(GameManager.instance.selectedUnit);
     }*/
 
-    
+
 }

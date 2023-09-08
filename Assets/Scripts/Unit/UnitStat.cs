@@ -37,7 +37,6 @@ public class UnitStat : MonoBehaviour
     /// <returns>구매대기시간 리턴</returns>
     public float GetPurchaseTime()
     {
-        print(purchase + " :: " + Mathf.Lerp(10, 1, purchase / 100f));
         return Mathf.Lerp(10, 1, purchase / 100f);
     }
 
@@ -76,10 +75,11 @@ public class UnitStat : MonoBehaviour
         return Mathf.RoundToInt(Mathf.Lerp(1, 50, work / 100f));
     }
 
-    int ReplaceFromWorkTypeToInt(WorkType command)
+    public int ReplaceFromWorkTypeToInt(WorkType command)
     {
         return command switch
         {
+            WorkType.Purchase => purchase,
             WorkType.Carrying => carrying,
             WorkType.Felling => felling,
             WorkType.Mining => mining,

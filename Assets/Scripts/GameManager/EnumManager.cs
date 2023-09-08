@@ -27,7 +27,7 @@ namespace EnumManager
     /// <summary>
     /// 직원의 행동명령
     /// </summary>
-    public enum WorkType { Checking, Finding, Carrying, Emptying, Teleporting, Felling, Mining, Collecting, Hunting, Fishing }
+    public enum WorkType { Purchase, Checking, Finding, Carrying, Emptying, Teleporting, Felling, Mining, Collecting, Hunting, Fishing }
 
     /// <summary>
     /// 고객,직원 유닛 구분용

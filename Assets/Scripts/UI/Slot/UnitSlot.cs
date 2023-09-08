@@ -1,17 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 public class UnitSlot : MonoBehaviour
 {
     Staff staff;
-    Image faceImage;
-    Image workImage;
-    TextMeshProUGUI unitName;
-    Slider workGauge;
+    public Image faceImage;
+    public Image workImage;
+    public TextMeshProUGUI unitName;
+    public Slider workGauge;
 
     void Awake()
     {
@@ -23,7 +20,7 @@ public class UnitSlot : MonoBehaviour
 
     void Update()
     {
-
+        Display();
     }
 
     public void SetStaff(Staff _staff)
@@ -31,5 +28,15 @@ public class UnitSlot : MonoBehaviour
         staff = _staff;
     }
 
+    void Display()
+    {
+        if(staff != null)
+        {
+            //TODO:: 얼굴이미지, 작업이미지 추가
+            workGauge.maxValue = staff.slider.maxValue;
+            workGauge.value = staff.slider.value;
+        }
 
+        //staff == null 이면 StaffManagementSlot이 파괴된다.
+    }
 }

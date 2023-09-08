@@ -14,8 +14,9 @@ public class Staff : Unit
     Warehouse warehouse;
     List<CheckingItem> checkingItems = new List<CheckingItem>(); //아이템 재고 확인리스트
 
-    int workCount;                  //작업의 진행횟수,작업인덱스,인벤인덱스
-    float checkingTime = 0.5f;      //확인시간
+    public int uniIndex { get; private set; }   //고유번호
+    int workCount;                              //작업의 진행횟수,작업인덱스,인벤인덱스
+    float checkingTime = 0.5f;                  //확인시간
     protected override void Awake()
     {
         base.Awake();
@@ -28,6 +29,8 @@ public class Staff : Unit
     protected override void Start()
     {
         base.Start();
+        uniIndex = UnitManager.instance.GetUniqueIndex();
+        UnitManager.instance.AddStaff(this);
     }
 
     void WorkStateMachine(WorkType _command, WorkType _workType, WorkType _receivedCommand, WorkType _nextWorkType)
@@ -38,8 +41,10 @@ public class Staff : Unit
         nextWorkType = _nextWorkType;
     }
 
-    public void ReceiveCommander(WorkType type)
+    public void ReceiveCommander(WorkType type) //버튼사용
     {
+        if (command == type) return; //명령이 현재 명령과 같으면 무시
+
         workCount = 0;  //명령이 변경되면 무조건 0으로 초기화;
         if (gridIndex == 0)
         {
@@ -80,6 +85,10 @@ public class Staff : Unit
         else if (command == WorkType.Carrying)
         {
             yield return StartCoroutine(CarryingRoutine());
+        }
+        else if (command == WorkType.Hunting)
+        {
+            
         }
 
         //TODO:: 작업에 따라 추가
@@ -357,7 +366,11 @@ public class Staff : Unit
         }
     }
 
-   
+    //정렬용,버튼
+    void CompareTo(Unit other, WorkType sort = WorkType.Emptying)
+    {
+        //TODO:: 스탯별로 정렬 
+    }
 
     //재고 확인 구조체
     public class CheckingItem
