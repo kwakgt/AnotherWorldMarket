@@ -53,7 +53,7 @@ public class Item : IEquatable<Item>
         amount += _amount;
         return true;
     }
-    
+
 
     public bool Equals(Item item)
     {

@@ -71,7 +71,6 @@ public class MouseController : MonoBehaviour
                 PanelSetActive(false, false, false);
             }
         }
-        
     }
     
     void PanelSetActive(bool _customerPanel, bool _shelfPanel, bool _warehousePanel)

@@ -3,30 +3,32 @@ using System.Collections.Generic;
 using UnityEngine;
 using EnumManager;
 using System;
+using UnityEditorInternal.Profiling.Memory.Experimental;
+using Random = UnityEngine.Random;
 
 public class DimensionManager : MonoBehaviour
 {
     public static DimensionManager instance;
 
     //차원에 있는 직원 리스트
-    Dictionary<Dimention, List<Staff>> dimention;
+    Dictionary<Dimension, List<Staff>> dimensions;
     //차원에서 얻을 수 있는 자원(작업타입에 따른 분류 저장).  ex) Hungting : 빅터고기,빅터가죽. Fishing : 피라사바 
-    Dictionary<Dimention, Dictionary<WorkType, List<Item>>> items;
+    Dictionary<Dimension, Dictionary<WorkType, List<Item>>> items;
 
     void Awake()
     {
         instance = this;
 
         //차원의 직원리스트 초기화
-        dimention = new Dictionary<Dimention, List<Staff>>();
-        foreach(Dimention name in Enum.GetValues(typeof(Dimention)))
+        dimensions = new Dictionary<Dimension, List<Staff>>();
+        foreach(Dimension name in Enum.GetValues(typeof(Dimension)))
         {
-            dimention.Add(name, new List<Staff>());
+            dimensions.Add(name, new List<Staff>());
         }
 
         //차원의 자원리스트 초기화
-        items = new Dictionary<Dimention, Dictionary<WorkType, List<Item>>>();
-        foreach(Dimention name in Enum.GetValues(typeof(Dimention)))
+        items = new Dictionary<Dimension, Dictionary<WorkType, List<Item>>>();
+        foreach(Dimension name in Enum.GetValues(typeof(Dimension)))
         {
             items.Add(name, new Dictionary<WorkType, List<Item>>());
             
@@ -40,6 +42,11 @@ public class DimensionManager : MonoBehaviour
         }
 
         //자원리스트에 아이템 저장
+        
+    }
+
+    void Start()
+    {
         InitDimentionItem();
     }
 
@@ -48,35 +55,48 @@ public class DimensionManager : MonoBehaviour
         //Astaria
         {
             //Felling
-            items[Dimention.Astaria][WorkType.Felling].Add(ItemManager.instance.GetItem("통나무", 1000));
+            items[Dimension.Astaria][WorkType.Felling].Add(ItemManager.instance.GetItem("통나무", 1000));
             //Mining
-            items[Dimention.Astaria][WorkType.Mining].Add(ItemManager.instance.GetItem("광석", 1000));
+            items[Dimension.Astaria][WorkType.Mining].Add(ItemManager.instance.GetItem("광석", 1000));
             //Collecting
-            items[Dimention.Astaria][WorkType.Collecting].Add(ItemManager.instance.GetItem("초사과", 1000));
-            items[Dimention.Astaria][WorkType.Collecting].Add(ItemManager.instance.GetItem("생강무", 1000));
+            items[Dimension.Astaria][WorkType.Collecting].Add(ItemManager.instance.GetItem("초사과", 1000));
+            items[Dimension.Astaria][WorkType.Collecting].Add(ItemManager.instance.GetItem("생강무", 1000));
             //Hunting
-            items[Dimention.Astaria][WorkType.Hunting].Add(ItemManager.instance.GetItem("빅버고기", 1000));
-            items[Dimention.Astaria][WorkType.Hunting].Add(ItemManager.instance.GetItem("빅버가죽", 1000));
+            items[Dimension.Astaria][WorkType.Hunting].Add(ItemManager.instance.GetItem("빅버고기", 1000));
+            items[Dimension.Astaria][WorkType.Hunting].Add(ItemManager.instance.GetItem("빅버가죽", 1000));
             //Fishing
-            items[Dimention.Astaria][WorkType.Fishing].Add(ItemManager.instance.GetItem("파라사바", 1000));
+            items[Dimension.Astaria][WorkType.Fishing].Add(ItemManager.instance.GetItem("피라사바", 1000));
+
+            //TODO::차원 아이템 추가
         }
+
+        //TODO:: 차원 추가
     }
 
 
 
-    void EnterDimention(Dimention enter, Staff staff)
+    public void EnterDimention(Dimension enter, Staff staff)
     {
-        dimention[enter].Add(staff);
+        dimensions[enter].Add(staff);
     }
 
-    void ExitDimention(Dimention exit, Staff staff)
+    void ExitDimention(Dimension exit, Staff staff)
     {
-        dimention[exit].Remove(staff);
+        dimensions[exit].Remove(staff);
     }
 
-    void ShiftDimention(Dimention from, Dimention to, Staff staff)
+    void ShiftDimention(Dimension from, Dimension to, Staff staff)
     {
-        dimention[from].Remove(staff);
-        dimention[to].Add(staff);
+        dimensions[from].Remove(staff);
+        dimensions[to].Add(staff);
+    }
+
+
+    public Item GetItem(Dimension dimention, WorkType workType)
+    {
+        List<Item> list = items[dimention][workType];
+        if (list == null || list.Count <= 0) return null;   //아이템 목록이 없으면 NULL;
+        
+        return list[Random.Range(0, list.Count)];   //TODO:: 리스트에 있는 아이템마다 채집확률설정
     }
 }

@@ -26,9 +26,9 @@ public class Unit : MonoBehaviour   //IPointerClickHandler //UI°¡ ¾Æ´Ï¸é Ä«¸Þ¶ó¿
     protected Vector2 respawn;            //Åº»ý,¼Ò¸êÀ§Ä¡
 
 
-    TextMeshProUGUI nameText;   //ÀÚ½ÄÀÎµ¦½º 0
-    protected TextMeshProUGUI priceText;  //ÀÚ½ÄÀÎµ¦½º 1;
-    public Slider slider { get; private set; }              //ÀÚ½ÄÀÎµ¦½º 2;
+    TextMeshProUGUI nameText;                                 //ÀÚ½ÄÀÎµ¦½º 0
+    protected TextMeshProUGUI priceText;                      //ÀÚ½ÄÀÎµ¦½º 1;
+    public Slider slider { get; protected set; }              //ÀÚ½ÄÀÎµ¦½º 2;
 
     protected virtual void Awake()
     {
@@ -103,7 +103,7 @@ public class Unit : MonoBehaviour   //IPointerClickHandler //UI°¡ ¾Æ´Ï¸é Ä«¸Þ¶ó¿
                 yield return StartCoroutine("StaffRoutine");
         }
     }
-    IEnumerator Waiting(float waitTime)
+    protected IEnumerator Waiting(float waitTime)
     {
         slider.gameObject.SetActive(true);
         slider.maxValue = waitTime;
@@ -132,17 +132,9 @@ public class Unit : MonoBehaviour   //IPointerClickHandler //UI°¡ ¾Æ´Ï¸é Ä«¸Þ¶ó¿
         } while ((Vector2)transform.position == target);    //³»À§Ä¡°¡ Å¸°ÙÀ§Ä¡¿Í °°À¸¸é Å¸°Ù Àç¼¼ÆÃ
     }
 
-    protected void GoPortal()
+    protected void GoHome()
     {
-        if (gridIndex == 0)
-            target = GameManager.instance.portals[0].GetFrontPosition();
-        else if (gridIndex == 1)
-            target = GameManager.instance.portals[1].GetFrontPosition();
-    }
-
-    protected void GoExternalPortal()
-    {
-        target = GameManager.instance.portals[2].GetFrontPosition();
+        target = respawn;
     }
 
     protected void Teleport()
@@ -163,11 +155,6 @@ public class Unit : MonoBehaviour   //IPointerClickHandler //UI°¡ ¾Æ´Ï¸é Ä«¸Þ¶ó¿
                 gridIndex = 0;
             }
         }
-    }
-
-    protected void GoHome()
-    {
-        target = respawn;
     }
 
     protected int FindItemIndexInInventory(Item itemToFind)

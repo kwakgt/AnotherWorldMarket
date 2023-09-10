@@ -1,5 +1,6 @@
+using System;
 using UnityEngine;
-
+using Random = UnityEngine.Random;
 
 public class Warehouse : Structure
 {
@@ -25,7 +26,7 @@ public class Warehouse : Structure
 
         //TEST
         WarehouseManager.instance.AddWarehouseList(this);
-        PutAllItemInInventory(1000);  //모든 아이템 창고에 넣기  
+        PutAllItemInInventory(2000);  //모든 아이템 창고에 넣기  
     }
 
     //TEST
@@ -62,26 +63,54 @@ public class Warehouse : Structure
 
     public int FirstEmptyIndexInInventory()
     {
-        if (invenIdxs.Count == 0)
-            return -1;
-        else
-            return invenIdxs.RemoveFirst().Value;
+        if (IsEmptyInInventory())   return invenIdxs.RemoveFirst().Value;
+        else                        return -1;
     }
 
-    public int FindItemIndexInInventory(Item itemToFind)
+    public bool IsEmptyInInventory()
     {
-        for (int i = 0; i < inventory.Length; i++)
+        if (invenIdxs.Count > 0)    return true;
+        else                        return false;
+    }
+
+    public int FindItemIndexInInventory(Item itemToFind, bool putItemInWarehouse = false)
+    {
+        if (putItemInWarehouse)
         {
-            if (inventory[i] != null && inventory[i].Equals(itemToFind))
-                return i;
+            for (int i = 0; i < inventory.Length; i++)
+            {
+                if (inventory[i] != null && inventory[i].Equals(itemToFind) && inventory[i].amount < inventory[i].amountOfWarehouse)
+                    return i;
+            }
+        }
+        else
+        {
+            for (int i = 0; i < inventory.Length; i++)
+            {
+                if (inventory[i] != null && inventory[i].Equals(itemToFind))
+                    return i;
+            }
         }
         return -1;
     }
 
-    public Item GetItemInInven(int index)
+    public Item GetItemInInven(int index = -1)
     {
+        if(index == -1)
+        {
+            Item random;
+            while (true)
+            {
+                random = inventory[Random.Range(0, inventory.Length)];
+                if (random != null && random.amountOfShelf > 0)
+                {
+                    return random;
+                }
+            }
+        }
+
         return inventory[index];
-    }
+    }   
 
     public void PutItemInInven(int index, Item newItem)
     {

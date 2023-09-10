@@ -24,7 +24,7 @@ public class MenuButtonPanel : MonoBehaviour
         }
     }
 
-    //스탭관리패널 On/OFF
+    //스탭관리패널 On/Off
     public void OnOffStaffManagermentPanel() //버튼용
     {
         if (staffManagermentPanel.activeSelf)

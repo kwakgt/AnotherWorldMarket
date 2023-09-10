@@ -36,6 +36,23 @@ public class WarehouseManager : MonoBehaviour
         return null;
     }
 
+    public Warehouse FindEmptyWarehouse()
+    {
+        foreach(Warehouse warehouse in warehouseList)
+        {
+            if (warehouse.IsEmptyInInventory())
+                return warehouse;
+        }
+
+        return null;
+    }
+
+    public Item GetItemInRandomWarehouse()
+    {
+        //판매대에 아이템이 없으면 체크 작업 때 null 대신 무작위 아이템을 넣기위한 함수 
+        return warehouseList[Random.Range(0, warehouseList.Count)].GetItemInInven();
+    }
+
     public void AddWarehouseList(Warehouse warehouse)
     {
         warehouseList.Add(warehouse);

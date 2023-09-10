@@ -35,7 +35,6 @@ public class StaffManagementPanel : MonoBehaviour
 
     void SetStaffList()
     {
-        print(UnitManager.instance.name);
         for (int i = 0; i < UnitManager.instance.staffList.Count; i++)
         {
             if(i < staffSlots.Count) //슬롯이 남아있다면

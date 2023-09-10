@@ -17,7 +17,6 @@ public class PriceText : MonoBehaviour
 
     void OnEnable()
     { 
-        StopCoroutine(MoveUpText());
         StartCoroutine(MoveUpText());
     }
 

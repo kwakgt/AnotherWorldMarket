@@ -1,5 +1,4 @@
 using EnumManager;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,7 +13,7 @@ public class SpriteIconManager : MonoBehaviour
     {
         instance = this;
 
-        SetworkIconDictionary();
+        SetWorkIconDictionary();
     }
 
     public Sprite GetWorkIcon(WorkType workType)
@@ -23,7 +22,7 @@ public class SpriteIconManager : MonoBehaviour
         else return workIconDict[WorkType.Checking];
     }
 
-    void SetworkIconDictionary()
+    void SetWorkIconDictionary()
     {
         string spritePath = "Sprite/WorkIcon/";
         workIconDict.Add(WorkType.Checking, Resources.Load<Sprite>(spritePath + "Checking"));

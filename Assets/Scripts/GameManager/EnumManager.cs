@@ -22,7 +22,7 @@ namespace EnumManager
     /// <summary>
     /// 차원명
     /// </summary>
-    public enum Dimention { Astaria, Animaia, Manujhar, Navarore, Hyloth, Voltroth, Genierth, Dreatera, Devlearn, Holysacria }
+    public enum Dimension { Astaria, Animaia, Manujhar, Navarore, Hyloth, Voltroth, Genierth, Dreatera, Devlearn, Holysacria }
 
     /// <summary>
     /// 직원의 행동명령

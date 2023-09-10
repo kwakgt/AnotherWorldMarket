@@ -12,17 +12,23 @@ public class StatSlot : MonoBehaviour
 
 
     Image workImage;
+    Button workButton;
     TextMeshProUGUI stat;
 
     void Awake()
     {
         workImage = transform.GetChild(0).GetComponent<Image>();
+        workButton = transform.GetChild(0).GetComponent<Button>();
         stat = transform.GetChild(1).GetComponent<TextMeshProUGUI>();
     }
 
     void Update()
     {
         Display();
+
+        //추가할 함수에 인수가 존재하면 델리게이트 또는 람다식을 사용한다.
+        //버튼 클릭시 작동
+        workButton.onClick.AddListener(() => staff.ReceiveCommand(workType));
     }
 
     public void SetStaff(Staff _staff, WorkType _workType)
