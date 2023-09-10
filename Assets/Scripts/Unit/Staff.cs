@@ -13,7 +13,9 @@ public class Staff : Unit
     WorkType nextWorkType;          //텔레포트 다음 작업 상태(창고를 가기 위해 포탈을 타야하므로 텔레포트 후 다음 작업을 저장해야된다)
     WorkType command;               //현재 명령 상태 (명령 수행 전에 아이템을 비우기 위해 Work.Emptying을 수행 후 실제로 받은 명령 저장)
     WorkType receivedCommand;       //실제로 받은 명령(Work.Emptying을 수행해야하므로 실제 받은 명령 따로 저장해야된다.)
-    
+
+    Dimension dimension;
+
     Warehouse warehouse;
     List<CheckingItem> checkingItems = new List<CheckingItem>(); //아이템 재고 확인리스트
 
@@ -30,6 +32,7 @@ public class Staff : Unit
         type = UnitType.Staff;
         command = WorkType.Carrying;
         workType = WorkType.Checking;
+        dimension = Dimension.Astaria;
     }
 
     protected override void Start()
@@ -406,8 +409,8 @@ public class Staff : Unit
 
     IEnumerator DimensionWork() //벌목,채광,채집,사냥,낚시
     {
-        yield return WaitingCoroutine(Waiting(stat.GetWorkingTime(command)));
         DimensionManager.instance.EnterDimention(Dimension.Astaria, this);  //디멘션 입장
+        yield return WaitingCoroutine(Waiting(stat.GetWorkingTime(command)));
         Item collect = DimensionManager.instance.GetItem(Dimension.Astaria, command);   //아이템 가져오기
         if (collect != null && collect.amount != 0)
         {
