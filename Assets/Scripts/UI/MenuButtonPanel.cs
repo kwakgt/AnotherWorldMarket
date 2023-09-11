@@ -6,6 +6,7 @@ public class MenuButtonPanel : MonoBehaviour
 {
     //스탭관리패널
     GameObject staffManagermentPanel;
+    GameObject dimensionPanel;
     
     //TODO:: 메뉴 추가
 
@@ -13,6 +14,7 @@ public class MenuButtonPanel : MonoBehaviour
     void Awake()
     {
         staffManagermentPanel = GameObject.Find("StaffManagementPanel");
+        dimensionPanel = GameObject.Find("DimensionPanel");
     }
 
     void Update()
@@ -21,6 +23,11 @@ public class MenuButtonPanel : MonoBehaviour
         {
             InputManager.instance.fKeyDown = false;
             OnOffStaffManagermentPanel();
+        }
+        else if(InputManager.instance.eKeyDown)
+        {
+            InputManager.instance.eKeyDown = false;
+            OnOffDimensionPanel();
         }
     }
 
@@ -31,5 +38,14 @@ public class MenuButtonPanel : MonoBehaviour
             staffManagermentPanel.SetActive(false);
         else
             staffManagermentPanel.SetActive(true);
+    }
+
+    //차원패널 On/Off
+    public void OnOffDimensionPanel() //버튼용
+    {
+        if(dimensionPanel.activeSelf)
+            dimensionPanel.SetActive(false);
+        else
+            dimensionPanel.SetActive(true);
     }
 }

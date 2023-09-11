@@ -41,5 +41,7 @@ public class StaffManagementSlot : MonoBehaviour
     {
         //드롭다운에서 선택된 차원으로 이동
         staff.ShiftDimension(Enum.Parse<Dimension>(dropdown.options[dropdown.value].text));
+        //차원이동시 차원작업만 수행햐야됨, 기본으로 채광선택
+        staff.ReceiveCommand(WorkType.Mining); 
     }
 }

@@ -7,6 +7,7 @@ public class InputManager : MonoBehaviour
 
     //Å°º¸µå
     public bool bKeyDown { get; set; }
+    public bool eKeyDown { get; set; }
     public bool fKeyDown { get; set; }
     public bool iKeyDown { get; set; }
     public bool rKeyDown { get; set; }
@@ -34,6 +35,10 @@ public class InputManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.B))
         {
             bKeyDown = true;
+        }
+        if(Input.GetKeyUp(KeyCode.E))
+        {
+            eKeyDown = true;
         }
         if (Input.GetKeyDown(KeyCode.F))
         {

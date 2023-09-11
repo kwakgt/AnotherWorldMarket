@@ -163,10 +163,8 @@ public class Staff : Unit
     Coroutine WaitingCoroutine(IEnumerator routine) //코루틴 저장/실행/중지
     {
         if (waiting != null)
-        {
             StopCoroutine(waiting);
-            slider.value = 0;
-        }
+        slider.value = 0;
         waiting = StartCoroutine(routine);
         return waiting;
     }
@@ -411,7 +409,7 @@ public class Staff : Unit
     IEnumerator DimensionWork() //벌목,채광,채집,사냥,낚시
     {
         yield return WaitingCoroutine(Waiting(stat.GetWorkingTime(command)));
-        Item collect = DimensionManager.instance.GetItem(Dimension.Astaria, command);   //아이템 가져오기
+        Item collect = DimensionManager.instance.GetItem(dimension, command);   //아이템 가져오기
         if (collect != null && collect.amount != 0)
         {
             int amount = Mathf.Clamp(collect.amount, 1, stat.GetWorkingAmount(command));
