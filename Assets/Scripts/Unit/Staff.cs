@@ -40,6 +40,7 @@ public class Staff : Unit
         base.Start();
         uniIndex = UnitManager.instance.GetUniqueIndex();
         UnitManager.instance.AddStaff(this);
+        DimensionManager.instance.EnterDimension(dimension, this);
     }
 
     void WorkStateMachine(WorkType _command, WorkType _workType, WorkType _receivedCommand, WorkType _nextWorkType) //작업상태머신
@@ -409,7 +410,6 @@ public class Staff : Unit
 
     IEnumerator DimensionWork() //벌목,채광,채집,사냥,낚시
     {
-        DimensionManager.instance.EnterDimention(Dimension.Astaria, this);  //디멘션 입장
         yield return WaitingCoroutine(Waiting(stat.GetWorkingTime(command)));
         Item collect = DimensionManager.instance.GetItem(Dimension.Astaria, command);   //아이템 가져오기
         if (collect != null && collect.amount != 0)
@@ -418,6 +418,13 @@ public class Staff : Unit
             PutItemInInventory(collect, amount);
         }
         ++workCount;
+    }
+
+    public void ShiftDimension(Dimension _dimension)
+    {
+        if (dimension == _dimension) return;
+        DimensionManager.instance.ShiftDimension(dimension, _dimension, this);
+        dimension = _dimension;
     }
 
     void PutItemInInventory(Item itemFound, int amount, int index = -1) //아이템을 내 인벤에 넣기, 창고가 아니면 index에 -1
@@ -470,8 +477,6 @@ public class Staff : Unit
         } while (target == _target);
         
     }
-
-    
 
     //재고 확인 구조체
     public class CheckingItem

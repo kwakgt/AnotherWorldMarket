@@ -1,23 +1,26 @@
 using UnityEngine;
 using EnumManager;
-using UnityEngine.UI;
 using System;
+using TMPro;
 
 public class StaffManagementSlot : MonoBehaviour
 {
+    Staff staff;
     UnitSlot unitSlot;
     StatSlot[] statSlots;
-    Dropdown dropdown;
+    TMP_Dropdown dropdown;
 
     void Awake()
     {
         unitSlot = GetComponentInChildren<UnitSlot>();
         statSlots = GetComponentsInChildren<StatSlot>();
-        dropdown = GetComponentInChildren<Dropdown>();
+        dropdown = GetComponentInChildren<TMP_Dropdown>();
     }
 
-    public void SetStaff(Staff staff)
+    public void SetStaff(Staff _staff)
     {
+        staff = _staff;
+
         unitSlot.SetStaff(staff);
 
         statSlots[0].SetStaff(staff, WorkType.Purchase);
@@ -29,10 +32,14 @@ public class StaffManagementSlot : MonoBehaviour
         statSlots[6].SetStaff(staff, WorkType.Fishing);
         //TODO:: 스탯 추가
 
+        //드롭다운에서 선택된 차원으로 이동
+
+        
     }
 
-    void Dropdown()
+    public void OnChangeValue() //드롭다운 이벤트
     {
-        Dimension a = Enum.Parse<Dimension>(dropdown.options[dropdown.value].text);
+        //드롭다운에서 선택된 차원으로 이동
+        staff.ShiftDimension(Enum.Parse<Dimension>(dropdown.options[dropdown.value].text));
     }
 }
