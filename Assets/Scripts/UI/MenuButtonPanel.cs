@@ -6,6 +6,8 @@ public class MenuButtonPanel : MonoBehaviour
 {
     //스탭관리패널
     GameObject staffManagermentPanel;
+
+    //차원패널
     GameObject dimensionPanel;
     
     //TODO:: 메뉴 추가

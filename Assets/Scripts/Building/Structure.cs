@@ -121,7 +121,7 @@ public class Structure : MonoBehaviour, IBeginDragHandler, IDragHandler  //UI가 
 
     public void OnMoving()     //판매대 이동,회전,설치
     {
-        if (isMoving && GameManager.instance.CompareTo(GameManager.GameMode.Builder))
+        if (isMoving && GameManager.instance.Equals(GameManager.GameMode.Builder))
         {
             //색변경
             thisRenderer.color = new Color(0, 0, 100, 100);
@@ -276,7 +276,7 @@ public class Structure : MonoBehaviour, IBeginDragHandler, IDragHandler  //UI가 
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        if (GameManager.instance.CompareTo(GameManager.GameMode.Builder))
+        if (GameManager.instance.Equals(GameManager.GameMode.Builder))
         {
             isMoving = true;    //이동모드로 전환
             //드래그로 들어올려진 순간 현재 점유하고 있는 노드를 walkable로 변경

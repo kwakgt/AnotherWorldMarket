@@ -14,11 +14,11 @@ public class DimensionSlot : MonoBehaviour
 
     Dimension dimension;
 
-    Button button;
+    Button dimensionButton;
     List<UnitSlot> unitSlots;
     void Awake()
     {
-        button = GetComponentInChildren<Button>();
+        dimensionButton = GetComponentInChildren<Button>();
         unitSlots = GetComponentsInChildren<UnitSlot>().ToList();
     }
 
@@ -63,8 +63,8 @@ public class DimensionSlot : MonoBehaviour
 
     void SetButton()
     {
-        button.image.sprite = SpriteIconManager.instance.GetDimensionIcon(dimension);
-        button.GetComponentInChildren<TextMeshProUGUI>().text = Enum.GetName(typeof(Dimension),dimension);
+        dimensionButton.image.sprite = SpriteIconManager.instance.GetDimensionIcon(dimension);
+        dimensionButton.GetComponentInChildren<TextMeshProUGUI>().text = Enum.GetName(typeof(Dimension),dimension);
     }
 
     void OnButton()

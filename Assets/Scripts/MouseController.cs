@@ -41,7 +41,7 @@ public class MouseController : MonoBehaviour
             upHit = Physics2D.Raycast(mousePosition, Vector2.zero);     //업 시 Hit 저장
 
 
-            if (downHit && upHit && downHit == upHit && !GameManager.instance.CompareTo(GameManager.GameMode.Builder))  //다운Hit, 업Hit 비교하여 같으면 클릭성공, 건설모드일 시 작동안함
+            if (downHit && upHit && downHit == upHit && !GameManager.instance.Equals(GameManager.GameMode.Builder))  //다운Hit, 업Hit 비교하여 같으면 클릭성공, 건설모드일 시 작동안함
             {
                 if (downHit.transform.CompareTag("Customer") || downHit.transform.CompareTag("Staff"))
                 {

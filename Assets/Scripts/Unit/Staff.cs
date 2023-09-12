@@ -90,7 +90,7 @@ public class Staff : Unit
         {
             if(workType == command)
             {
-                GoDimentionPortal(target);
+                GoDimensionPortal(target);
             }
             else if(workType == WorkType.Emptying)
             {
@@ -104,16 +104,6 @@ public class Staff : Unit
     {
         if (commandOrWorktype) return command;
         else return workType;
-    }
-
-    public bool IsDimensionWork() //차원포탈을 통한 작업 : 벌목,채광,채집,사냥,낚시
-    {
-        return command switch
-        {
-            WorkType.Felling or WorkType.Mining or WorkType.Collecting or WorkType.Hunting or WorkType.Fishing => true,
-            _ => false
-        };
-            
     }
 
     public void ReceiveCommand(WorkType type) //버튼사용
@@ -229,7 +219,7 @@ public class Staff : Unit
             }
             else
             {
-                GoDimentionPortal(target);
+                GoDimensionPortal(target);
             }
         }
         else if (workType == WorkType.Emptying)
@@ -428,6 +418,16 @@ public class Staff : Unit
         dimension = _dimension;
     }
 
+    public bool IsDimensionWork() //차원포탈을 통한 작업 : 벌목,채광,채집,사냥,낚시
+    {
+        return command switch
+        {
+            WorkType.Felling or WorkType.Mining or WorkType.Collecting or WorkType.Hunting or WorkType.Fishing => true,
+            _ => false
+        };
+
+    }
+
     void PutItemInInventory(Item itemFound, int amount, int index = -1) //아이템을 내 인벤에 넣기, 창고가 아니면 index에 -1
     {
         inventory[workCount] = new Item(itemFound);
@@ -470,7 +470,7 @@ public class Staff : Unit
             target = GameManager.instance.portals[1].GetFrontPosition();
     }
 
-    void GoDimentionPortal(Vector2 _target)
+    void GoDimensionPortal(Vector2 _target)
     {
         do
         {

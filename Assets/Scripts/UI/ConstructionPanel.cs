@@ -25,7 +25,7 @@ public class ConstructionPanel : MonoBehaviour
 
     void StartConstruction()    //건설모드에서 지을 건물 클릭시 수행
     {
-        if(GameManager.instance.CompareTo(GameManager.GameMode.Builder) && selected != null && strucName != StructureName.None)
+        if(GameManager.instance.Equals(GameManager.GameMode.Builder) && selected != null && strucName != StructureName.None)
         {
             selected.OnMoving();    //건물 선택 시 이동모드 진행
 

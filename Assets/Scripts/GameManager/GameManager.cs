@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static GameManager;
 
 public class GameManager : MonoBehaviour
 {
@@ -93,12 +95,14 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public bool CompareTo(GameMode _gameMode)
+    public bool Equals(GameMode other)
     {
-        if (gameMode == _gameMode)
+        if (gameMode == other)
             return true;
         else
             return false;
     }
+
+
     public enum GameMode { Seller, Builder }
 }
