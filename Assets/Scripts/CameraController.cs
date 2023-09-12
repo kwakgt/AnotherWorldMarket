@@ -150,6 +150,6 @@ public class CameraController : MonoBehaviour
             transform.position = new Vector3(x, mapPosition.y + (mapSize.y / 2) - cameraXY.y, -10);
         }
 
-        //대각선
+        //TODO :: 대각선
     }
 }

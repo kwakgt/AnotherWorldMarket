@@ -32,9 +32,10 @@ public class DimensionSlot : MonoBehaviour
         SetUnitList();
     }
 
-    public void SetDimension(Dimension _dimension)
+    public Dimension Dimension
     {
-        dimension = _dimension;
+        get { return dimension; }
+        set { dimension = value; }
     }
 
     void SetUnitList()

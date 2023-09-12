@@ -14,7 +14,7 @@ public class Staff : Unit
     WorkType command;               //현재 명령 상태 (명령 수행 전에 아이템을 비우기 위해 Work.Emptying을 수행 후 실제로 받은 명령 저장)
     WorkType receivedCommand;       //실제로 받은 명령(Work.Emptying을 수행해야하므로 실제 받은 명령 따로 저장해야된다.)
 
-    Dimension dimension;
+    public Dimension dimension { get; private set; }
 
     Warehouse warehouse;
     List<CheckingItem> checkingItems = new List<CheckingItem>(); //아이템 재고 확인리스트
@@ -422,6 +422,9 @@ public class Staff : Unit
     {
         if (dimension == _dimension) return;
         DimensionManager.instance.ShiftDimension(dimension, _dimension, this);
+        //차원이동시 차원작업만 수행햐야됨, 기본으로 채광선택
+        if(!IsDimensionWork() && _dimension != Dimension.Astaria)  
+            ReceiveCommand(WorkType.Mining);
         dimension = _dimension;
     }
 

@@ -7,7 +7,7 @@ public class DimensionPanel : MonoBehaviour
     DimensionSlot[] dimensionSlot;
 
     //TODO:: 차원 구매에 따른 이용여부 추가
-    
+
     void Awake()
     {
         dimensionSlot = GetComponentsInChildren<DimensionSlot>();
@@ -27,7 +27,25 @@ public class DimensionPanel : MonoBehaviour
         int i = 0;
         foreach (Dimension dimension in Enum.GetValues(typeof(Dimension)))
         {
-            dimensionSlot[i++].SetDimension(dimension);
+            dimensionSlot[i++].Dimension = dimension;
         }
+    }
+
+    /// <summary>
+    /// 차원패널에서 차원이동을 할 때 필요, 유닛슬롯 드래그가 끝났을 때의 차원을 반환
+    /// </summary>
+    public bool DimensionContainsScreenPoint(Vector2 screenPoint, out Dimension dimension)
+    {
+        foreach (var slot in dimensionSlot)
+        {
+            if (RectTransformUtility.RectangleContainsScreenPoint(slot.GetComponent<RectTransform>(), screenPoint))
+            {
+                dimension = slot.Dimension;
+                return true;
+            }
+        }
+
+        dimension = Dimension.Astaria;
+        return false;
     }
 }
