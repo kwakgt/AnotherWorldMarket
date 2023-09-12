@@ -45,4 +45,9 @@ namespace EnumManager
     /// </summary>
     public enum StatBind { PurchaseMin, PurchaseMax, CarryingMin, CarryingMax, FellingMin, FellingMax, MiningMin, MiningMax, CollectingMin, CollectingMax, HuntingMin, HuntingMax, FishingMin, FishingMax }
 
+    /// <summary>
+    /// UI매니저 관리 패널명
+    /// </summary>
+    public enum PanelName { Off, DimensionPanel, StaffManagementPanel }
+
 }

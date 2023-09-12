@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using EnumManager;
 
 public class MouseController : MonoBehaviour
 {
@@ -43,17 +43,17 @@ public class MouseController : MonoBehaviour
 
             if (downHit && upHit && downHit == upHit && !GameManager.instance.Equals(GameManager.GameMode.Builder))  //다운Hit, 업Hit 비교하여 같으면 클릭성공, 건설모드일 시 작동안함
             {
-                if (downHit.transform.CompareTag("Customer") || downHit.transform.CompareTag("Staff"))
+                if ((downHit.transform.CompareTag("Customer") || downHit.transform.CompareTag("Staff")) && UIManager.instance.IsAllOff)
                 {
                     GameManager.instance.selectedUnit = downHit.transform.GetComponent<Unit>();
                     PanelSetActive(true, false, false);
                 }
-                else if (downHit.transform.CompareTag("Shelf"))
+                else if (downHit.transform.CompareTag("Shelf") && UIManager.instance.IsAllOff)
                 {
                     GameManager.instance.selectedShelf = downHit.transform.GetComponent<Shelf>();
                     PanelSetActive(false, true, false);
                 }
-                else if (downHit.transform.CompareTag("Warehouse"))
+                else if (downHit.transform.CompareTag("Warehouse") && UIManager.instance.IsAllOff)
                 {
                     GameManager.instance.selectedWarehouse = downHit.transform.GetComponent<Warehouse>();
                     PanelSetActive(false, false, true);

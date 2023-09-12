@@ -1,9 +1,11 @@
 using EnumManager;
-using UnityEngine;
 using System;
+using UnityEngine;
 
-public class DimensionPanel : MonoBehaviour
+public class DimensionPanel : MonoBehaviour, IPanelOnOff
 {
+    public PanelName PanelName { get { return PanelName.DimensionPanel; } }
+    
     DimensionSlot[] dimensionSlot;
 
     //TODO:: 차원 구매에 따른 이용여부 추가
@@ -12,6 +14,8 @@ public class DimensionPanel : MonoBehaviour
     {
         dimensionSlot = GetComponentsInChildren<DimensionSlot>();
         SetDimensionSlot();
+
+        SetUIManager();
     }
 
     void Start()
@@ -47,5 +51,18 @@ public class DimensionPanel : MonoBehaviour
 
         dimension = Dimension.Astaria;
         return false;
+    }
+
+    public void SetUIManager()
+    {
+        UIManager.instance.panelOnOff += OnOff;
+    }
+
+    public void OnOff(PanelName panel)
+    {
+        if (PanelName == panel)
+            gameObject.gameObject.SetActive(true);
+        else
+            gameObject.gameObject.SetActive(false);
     }
 }

@@ -40,22 +40,22 @@ public class DimensionSlot : MonoBehaviour
 
     void SetUnitList()
     {
-        for (int i = 0; i < DimensionManager.instance.dimensions[dimension].Count; i++)
+        for (int i = 0; i < DimensionManager.instance.dimensionStaff[dimension].Count; i++)
         {
             if (i < unitSlots.Count) //슬롯이 남아있다면
             {
-                unitSlots[i].SetStaff(DimensionManager.instance.dimensions[dimension][i]);
+                unitSlots[i].SetStaff(DimensionManager.instance.dimensionStaff[dimension][i]);
                 unitSlots[i].gameObject.SetActive(true);
             }
             else
             {
                 UnitSlot slot = Instantiate(unitSlotPrefab, contents.transform).GetComponent<UnitSlot>();
-                slot.SetStaff(DimensionManager.instance.dimensions[dimension][i]);
+                slot.SetStaff(DimensionManager.instance.dimensionStaff[dimension][i]);
                 unitSlots.Add(slot);
             }
         }
 
-        for (int i = DimensionManager.instance.dimensions[dimension].Count; i < unitSlots.Count; i++)
+        for (int i = DimensionManager.instance.dimensionStaff[dimension].Count; i < unitSlots.Count; i++)
         {
             unitSlots[i].gameObject.SetActive(false);
         }

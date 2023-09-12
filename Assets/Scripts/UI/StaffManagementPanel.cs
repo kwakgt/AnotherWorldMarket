@@ -1,10 +1,12 @@
-using System.Collections;
+using EnumManager;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class StaffManagementPanel : MonoBehaviour
+public class StaffManagementPanel : MonoBehaviour, IPanelOnOff
 {
+    public PanelName PanelName { get { return PanelName.StaffManagementPanel; } }
+
     //½ºÅÇ°ü¸®½½·Ô ÇÁ¸®ÆÕ
     public GameObject staffManagementSlotPrefab;
     public GameObject contents; //ÇÁ¸®ÆÕ ºÎ¸ð¿ÀºêÁ§Æ®
@@ -13,6 +15,7 @@ public class StaffManagementPanel : MonoBehaviour
     Transform staffListPanel;
 
     List<StaffManagementSlot> staffSlots;
+
     void Awake()
     {
         topPanel = transform.GetChild(0);
@@ -21,6 +24,8 @@ public class StaffManagementPanel : MonoBehaviour
 
         staffListPanel = transform.GetChild(1);
         staffSlots = staffListPanel.GetComponentsInChildren<StaffManagementSlot>().ToList();
+
+        SetUIManager();
     }
 
     void Start()
@@ -56,4 +61,16 @@ public class StaffManagementPanel : MonoBehaviour
         }
     }
 
+    public void SetUIManager()
+    {
+        UIManager.instance.panelOnOff += OnOff;
+    }
+
+    public void OnOff(PanelName panel)
+    {
+        if (PanelName == panel)
+            gameObject.gameObject.SetActive(true);
+        else
+            gameObject.gameObject.SetActive(false);
+    }
 }

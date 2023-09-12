@@ -1,3 +1,4 @@
+using EnumManager;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,6 +10,7 @@ public class UnitPanel : MonoBehaviour
 
     Transform infoPanel;
     TextMeshProUGUI infoText;
+
     void Awake()
     {
         invenPanel = transform.GetChild(0);
@@ -57,4 +59,17 @@ public class UnitPanel : MonoBehaviour
             }
         }
     }
+
+    //public void SetUIManager()
+    //{
+    //    UIManager.instance.panelOnOff += OnOff;
+    //}
+
+    //public void OnOff(PanelName panel)
+    //{
+    //    if (PanelName == panel && UIManager.instance.IsAllOff)
+    //        gameObject.SetActive(true);
+    //    else
+    //        gameObject.SetActive(false);
+    //}
 }

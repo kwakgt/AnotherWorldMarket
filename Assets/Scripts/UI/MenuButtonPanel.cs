@@ -1,6 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using EnumManager;
 
 public class MenuButtonPanel : MonoBehaviour
 {
@@ -37,17 +36,17 @@ public class MenuButtonPanel : MonoBehaviour
     public void OnOffStaffManagermentPanel() //버튼용
     {
         if (staffManagermentPanel.activeSelf)
-            staffManagermentPanel.SetActive(false);
+            UIManager.instance.ExecutePanelOnOFF(PanelName.Off);
         else
-            staffManagermentPanel.SetActive(true);
+            UIManager.instance.ExecutePanelOnOFF(PanelName.StaffManagementPanel);
     }
 
     //차원패널 On/Off
     public void OnOffDimensionPanel() //버튼용
     {
         if(dimensionPanel.activeSelf)
-            dimensionPanel.SetActive(false);
+            UIManager.instance.ExecutePanelOnOFF(PanelName.Off);
         else
-            dimensionPanel.SetActive(true);
+            UIManager.instance.ExecutePanelOnOFF(PanelName.DimensionPanel);
     }
 }

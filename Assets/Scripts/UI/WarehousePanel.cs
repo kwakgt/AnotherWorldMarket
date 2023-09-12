@@ -1,3 +1,4 @@
+using EnumManager;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -43,4 +44,17 @@ public class WarehousePanel : MonoBehaviour
             }
         }
     }
+
+    //public void SetUIManager()
+    //{
+    //    UIManager.instance.panelOnOff += OnOff;
+    //}
+
+    //public void OnOff(PanelName panel)
+    //{
+    //    if (PanelName == panel)
+    //        gameObject.gameObject.SetActive(true);
+    //    else
+    //        gameObject.gameObject.SetActive(false);
+    //}
 }

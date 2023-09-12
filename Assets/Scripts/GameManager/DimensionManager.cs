@@ -10,7 +10,7 @@ public class DimensionManager : MonoBehaviour
     public static DimensionManager instance;
 
     //차원에 있는 직원 리스트
-    public Dictionary<Dimension, List<Staff>> dimensions { get; private set; }
+    public Dictionary<Dimension, List<Staff>> dimensionStaff { get; private set; }
     //차원에서 얻을 수 있는 자원(작업타입에 따른 분류 저장).  ex) Hungting : 빅터고기,빅터가죽. Fishing : 피라사바 
     Dictionary<Dimension, Dictionary<WorkType, List<Item>>> items;
 
@@ -19,10 +19,10 @@ public class DimensionManager : MonoBehaviour
         instance = this;
 
         //차원의 직원리스트 초기화
-        dimensions = new Dictionary<Dimension, List<Staff>>();
+        dimensionStaff = new Dictionary<Dimension, List<Staff>>();
         foreach(Dimension name in Enum.GetValues(typeof(Dimension)))
         {
-            dimensions.Add(name, new List<Staff>());
+            dimensionStaff.Add(name, new List<Staff>());
         }
 
         //차원의 자원리스트 초기화
@@ -76,13 +76,13 @@ public class DimensionManager : MonoBehaviour
 
     public void EnterDimension(Dimension enter, Staff staff)
     {
-        dimensions[enter].Add(staff);
+        dimensionStaff[enter].Add(staff);
     }
 
     public void ShiftDimension(Dimension from, Dimension to, Staff staff)
     {
-        dimensions[from].Remove(staff);
-        dimensions[to].Add(staff);
+        dimensionStaff[from].Remove(staff);
+        dimensionStaff[to].Add(staff);
     }
 
 

@@ -1,13 +1,16 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using EnumManager;
+using System.Runtime.InteropServices.WindowsRuntime;
 
 public class ShelfPanel : MonoBehaviour
 {
     Transform invenPanel;
 
-    
     Image[] invenImage;
+
+
     void Awake()
     {
         invenPanel = transform.GetChild(0);
@@ -43,4 +46,17 @@ public class ShelfPanel : MonoBehaviour
             }
         }
     }
+
+    //public void SetUIManager()
+    //{
+    //    UIManager.instance.panelOnOff += OnOff;
+    //}
+
+    //public void OnOff(PanelName panel)
+    //{
+    //    if(PanelName == panel && UIManager.instance.IsAllOff)
+    //        gameObject.SetActive(true);
+    //    else
+    //        gameObject.SetActive(false);
+    //}
 }
