@@ -14,12 +14,11 @@ public class DimensionPanel : MonoBehaviour, IPanelOnOff
     {
         dimensionSlot = GetComponentsInChildren<DimensionSlot>();
         SetDimensionSlot();
-
-        SetUIManager();
     }
 
     void Start()
     {
+        SetUIManager();
         gameObject.SetActive(false); //MenuBottonPanel에서 GameObject.Find함수 사용을 위해 Start에서 비활성화, 비활성화된 오브젝트는 Find함수에 감지 안됨.
     }
 
