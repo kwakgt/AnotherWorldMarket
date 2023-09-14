@@ -123,6 +123,9 @@ public class Structure : MonoBehaviour, IBeginDragHandler, IDragHandler  //UI가 
     {
         if (isMoving && GameManager.instance.Equals(GameManager.GameMode.Builder))
         {
+            //하이어라키 제일 마지막으로 보내기(이미지가 위로 오게)
+            transform.SetAsLastSibling();
+
             //색변경
             thisRenderer.color = new Color(0, 0, 100, 100);
             frontRenderer.color = Color.white;
@@ -136,10 +139,7 @@ public class Structure : MonoBehaviour, IBeginDragHandler, IDragHandler  //UI가 
 
             //회전
             if (InputManager.instance.rKeyDown)
-            {
-                InputManager.instance.rKeyDown = false;
                 Rotate();
-            }
 
             //설치
             if (Input.GetMouseButtonDown(0))

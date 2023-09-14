@@ -37,7 +37,7 @@ public class StaffManagementSlot : MonoBehaviour
 
         //차원패널에서 차원이동 시 드롭다운 차원 동기화
         dimensionDropdown.captionText.text = Enum.GetName(typeof(Dimension), staff.dimension);
-        dimensionDropdown.captionImage.sprite = SpriteIconManager.instance.GetDimensionIcon(staff.dimension);
+        dimensionDropdown.captionImage.sprite = SpriteManager.instance.GetDimensionImage(staff.dimension);
         dimensionDropdown.value = (int)staff.dimension;
     }
 

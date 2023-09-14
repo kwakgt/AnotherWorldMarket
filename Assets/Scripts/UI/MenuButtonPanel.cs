@@ -22,12 +22,10 @@ public class MenuButtonPanel : MonoBehaviour
     {
         if(InputManager.instance.fKeyDown)
         {
-            InputManager.instance.fKeyDown = false;
             OnOffStaffManagermentPanel();
         }
         else if(InputManager.instance.eKeyDown)
         {
-            InputManager.instance.eKeyDown = false;
             OnOffDimensionPanel();
         }
     }
@@ -36,17 +34,17 @@ public class MenuButtonPanel : MonoBehaviour
     public void OnOffStaffManagermentPanel() //버튼용
     {
         if (staffManagermentPanel.activeSelf)
-            UIManager.instance.ExecutePanelOnOFF(PanelName.Off);
+            UIManager.instance.ExecutePanelOnOff(PanelName.Off);
         else
-            UIManager.instance.ExecutePanelOnOFF(PanelName.StaffManagementPanel);
+            UIManager.instance.ExecutePanelOnOff(PanelName.StaffManagementPanel);
     }
 
     //차원패널 On/Off
     public void OnOffDimensionPanel() //버튼용
     {
         if(dimensionPanel.activeSelf)
-            UIManager.instance.ExecutePanelOnOFF(PanelName.Off);
+            UIManager.instance.ExecutePanelOnOff(PanelName.Off);
         else
-            UIManager.instance.ExecutePanelOnOFF(PanelName.DimensionPanel);
+            UIManager.instance.ExecutePanelOnOff(PanelName.DimensionPanel);
     }
 }

@@ -37,7 +37,6 @@ public class GameManager : MonoBehaviour
     {
         if (InputManager.instance.spaceKeyDown)
         {
-            InputManager.instance.spaceKeyDown = false;
             if (Time.timeScale > 0)
             {
                 ChangeGameSpeed(0);
@@ -53,7 +52,6 @@ public class GameManager : MonoBehaviour
     {
         if (InputManager.instance.bKeyDown)
         {
-            InputManager.instance.bKeyDown = false;
             ChangeMode();
         }
     }

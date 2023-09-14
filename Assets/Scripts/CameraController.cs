@@ -91,7 +91,6 @@ public class CameraController : MonoBehaviour
     {
         if(InputManager.instance.tabKeyDown)
         {
-            InputManager.instance.tabKeyDown = false;
             if(gridIndex == 0)
             {
                 ChangeIndex(1);

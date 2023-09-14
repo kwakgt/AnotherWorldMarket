@@ -32,34 +32,13 @@ public class InputManager : MonoBehaviour
 
     void SetInputKey()
     {
-        if (Input.GetKeyDown(KeyCode.B))
-        {
-            bKeyDown = true;
-        }
-        if(Input.GetKeyUp(KeyCode.E))
-        {
-            eKeyDown = true;
-        }
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            fKeyDown = true;
-        }
-        if (Input.GetKeyDown(KeyCode.I))
-        {
-            iKeyDown = true;
-        }
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            rKeyDown = true;
-        }
-        if (Input.GetKeyDown(KeyCode.Space))
-        { 
-            spaceKeyDown = true;
-        }
-        if (Input.GetKeyDown(KeyCode.Tab))
-        {
-            tabKeyDown = true;
-        }
+        bKeyDown = Input.GetKeyDown(KeyCode.B);
+        eKeyDown = Input.GetKeyUp(KeyCode.E);
+        fKeyDown = Input.GetKeyDown(KeyCode.F);
+        iKeyDown = Input.GetKeyDown(KeyCode.I);
+        rKeyDown = Input.GetKeyDown(KeyCode.R);
+        spaceKeyDown = Input.GetKeyDown(KeyCode.Space);
+        tabKeyDown = Input.GetKeyDown(KeyCode.Tab);
         //TODO:: 단축키 추가
     }
 

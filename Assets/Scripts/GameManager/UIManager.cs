@@ -14,7 +14,7 @@ public class UIManager : MonoBehaviour
         instance = this;
     }
 
-    public void ExecutePanelOnOFF(PanelName panel)
+    public void ExecutePanelOnOff(PanelName panel)
     {
         panelOnOff(panel);
         if(panel == PanelName.Off)

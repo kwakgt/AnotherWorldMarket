@@ -8,9 +8,9 @@ public class SpriteManager : MonoBehaviour
     public static SpriteManager instance;
 
     //작업 이미지
-    Dictionary<WorkType, Sprite> workIconDict = new Dictionary<WorkType, Sprite>();
+    Dictionary<WorkType, Sprite> workImageDict = new Dictionary<WorkType, Sprite>();
     //차원 이미지
-    Dictionary<Dimension, Sprite> dimensionIconDict = new Dictionary<Dimension, Sprite>();
+    Dictionary<Dimension, Sprite> dimensionImageDict = new Dictionary<Dimension, Sprite>();
 
     //인벤 사용불가 이미지
     public Sprite unusableSlot { get; private set; }
@@ -18,52 +18,52 @@ public class SpriteManager : MonoBehaviour
     {
         instance = this;
 
-        SetWorkIconDictionary();
-        SetDimensionIconDictionary();
+        SetWorkImageDictionary();
+        SetDimensionImageDictionary();
 
         unusableSlot = Resources.Load<Sprite>("Sprite/Item/UnusableSlot");
     }
 
     public Sprite GetWorkImage(WorkType workType)
     {
-        if (workIconDict.ContainsKey(workType)) { return workIconDict[workType]; }
-        else return workIconDict[WorkType.Checking];
+        if (workImageDict.ContainsKey(workType)) { return workImageDict[workType]; }
+        else return workImageDict[WorkType.Checking];
     }
 
     public Sprite GetDimensionImage(Dimension dimension)
     {
-        if (dimensionIconDict.ContainsKey(dimension)) return dimensionIconDict[dimension];
-        else return dimensionIconDict[Dimension.Astaria];
+        if (dimensionImageDict.ContainsKey(dimension)) return dimensionImageDict[dimension];
+        else return dimensionImageDict[Dimension.Astaria];
     }
 
-    void SetWorkIconDictionary()
+    void SetWorkImageDictionary()
     {
         string spritePath = "Sprite/WorkIcon/";
-        workIconDict.Add(WorkType.Checking, Resources.Load<Sprite>(spritePath + "Checking"));
-        workIconDict.Add(WorkType.Purchase, Resources.Load<Sprite>(spritePath + "Purchase"));
-        workIconDict.Add(WorkType.Carrying, Resources.Load<Sprite>(spritePath + "Carrying"));
-        workIconDict.Add(WorkType.Felling, Resources.Load<Sprite>(spritePath + "Felling"));
-        workIconDict.Add(WorkType.Mining, Resources.Load<Sprite>(spritePath + "Mining"));
-        workIconDict.Add(WorkType.Collecting, Resources.Load<Sprite>(spritePath + "Collecting"));
-        workIconDict.Add(WorkType.Hunting, Resources.Load<Sprite>(spritePath + "Hunting"));
-        workIconDict.Add(WorkType.Fishing, Resources.Load<Sprite>(spritePath + "Fishing"));
+        workImageDict.Add(WorkType.Checking, Resources.Load<Sprite>(spritePath + "Checking"));
+        workImageDict.Add(WorkType.Purchase, Resources.Load<Sprite>(spritePath + "Purchase"));
+        workImageDict.Add(WorkType.Carrying, Resources.Load<Sprite>(spritePath + "Carrying"));
+        workImageDict.Add(WorkType.Felling, Resources.Load<Sprite>(spritePath + "Felling"));
+        workImageDict.Add(WorkType.Mining, Resources.Load<Sprite>(spritePath + "Mining"));
+        workImageDict.Add(WorkType.Collecting, Resources.Load<Sprite>(spritePath + "Collecting"));
+        workImageDict.Add(WorkType.Hunting, Resources.Load<Sprite>(spritePath + "Hunting"));
+        workImageDict.Add(WorkType.Fishing, Resources.Load<Sprite>(spritePath + "Fishing"));
 
         //TODO:: 작업 아이콘 추가
     }
 
-    void SetDimensionIconDictionary()
+    void SetDimensionImageDictionary()
     {
         string spritePath = "Sprite/Dimension/";
-        dimensionIconDict.Add(Dimension.Astaria, Resources.Load<Sprite>(spritePath + "Astaria"));
-        dimensionIconDict.Add(Dimension.Animaia, Resources.Load<Sprite>(spritePath + "Animaia"));
-        dimensionIconDict.Add(Dimension.Manujhar, Resources.Load<Sprite>(spritePath + "Manujhar"));
-        dimensionIconDict.Add(Dimension.Navarore, Resources.Load<Sprite>(spritePath + "Navarore"));
-        dimensionIconDict.Add(Dimension.Hyloth, Resources.Load<Sprite>(spritePath + "Hyloth"));
-        dimensionIconDict.Add(Dimension.Voltroth, Resources.Load<Sprite>(spritePath + "Voltroth"));
-        dimensionIconDict.Add(Dimension.Genierth, Resources.Load<Sprite>(spritePath + "Genierth"));
-        dimensionIconDict.Add(Dimension.Dreatera, Resources.Load<Sprite>(spritePath + "Dreatera"));
-        dimensionIconDict.Add(Dimension.Devlearn, Resources.Load<Sprite>(spritePath + "Devlearn"));
-        dimensionIconDict.Add(Dimension.Holysacria, Resources.Load<Sprite>(spritePath + "Holysacria"));
+        dimensionImageDict.Add(Dimension.Astaria, Resources.Load<Sprite>(spritePath + "Astaria"));
+        dimensionImageDict.Add(Dimension.Animaia, Resources.Load<Sprite>(spritePath + "Animaia"));
+        dimensionImageDict.Add(Dimension.Manujhar, Resources.Load<Sprite>(spritePath + "Manujhar"));
+        dimensionImageDict.Add(Dimension.Navarore, Resources.Load<Sprite>(spritePath + "Navarore"));
+        dimensionImageDict.Add(Dimension.Hyloth, Resources.Load<Sprite>(spritePath + "Hyloth"));
+        dimensionImageDict.Add(Dimension.Voltroth, Resources.Load<Sprite>(spritePath + "Voltroth"));
+        dimensionImageDict.Add(Dimension.Genierth, Resources.Load<Sprite>(spritePath + "Genierth"));
+        dimensionImageDict.Add(Dimension.Dreatera, Resources.Load<Sprite>(spritePath + "Dreatera"));
+        dimensionImageDict.Add(Dimension.Devlearn, Resources.Load<Sprite>(spritePath + "Devlearn"));
+        dimensionImageDict.Add(Dimension.Holysacria, Resources.Load<Sprite>(spritePath + "Holysacria"));
 
         //TODO:: 차원 아이콘 추가
     }

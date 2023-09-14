@@ -41,7 +41,7 @@ public class UnitSlot : MonoBehaviour , IBeginDragHandler, IDragHandler, IEndDra
             //TODO:: 얼굴이미지 추가
             workGauge.maxValue = staff.slider.maxValue;
             workGauge.value = staff.slider.value;
-            workImage.sprite = SpriteIconManager.instance.GetWorkIcon(staff.GetWorkState(false));
+            workImage.sprite = SpriteManager.instance.GetWorkImage(staff.GetWorkState(false));
         }
 
         //staff == null 이면 StaffManagementSlot이 파괴되거나 disable
