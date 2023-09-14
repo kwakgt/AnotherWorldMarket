@@ -1,6 +1,4 @@
 using EnumManager;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -43,7 +41,7 @@ public class StatSlot : MonoBehaviour
     {
         if (staff != null)
         {
-            workImage.sprite = SpriteIconManager.instance.GetWorkIcon(workType);
+            workImage.sprite = SpriteManager.instance.GetWorkImage(workType);
             stat.text = staff.stat.ReplaceFromWorkTypeToInt(workType).ToString();
         }
 

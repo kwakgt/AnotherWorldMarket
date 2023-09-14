@@ -2,15 +2,17 @@ using EnumManager;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpriteIconManager : MonoBehaviour
+public class SpriteManager : MonoBehaviour
 {
-    public static SpriteIconManager instance;
+    //Sprite DB;
+    public static SpriteManager instance;
 
-    //작업 아이콘
+    //작업 이미지
     Dictionary<WorkType, Sprite> workIconDict = new Dictionary<WorkType, Sprite>();
+    //차원 이미지
     Dictionary<Dimension, Sprite> dimensionIconDict = new Dictionary<Dimension, Sprite>();
 
-    //인벤 사용불가 아이콘
+    //인벤 사용불가 이미지
     public Sprite unusableSlot { get; private set; }
     void Awake()
     {
@@ -22,13 +24,13 @@ public class SpriteIconManager : MonoBehaviour
         unusableSlot = Resources.Load<Sprite>("Sprite/Item/UnusableSlot");
     }
 
-    public Sprite GetWorkIcon(WorkType workType)
+    public Sprite GetWorkImage(WorkType workType)
     {
         if (workIconDict.ContainsKey(workType)) { return workIconDict[workType]; }
         else return workIconDict[WorkType.Checking];
     }
 
-    public Sprite GetDimensionIcon(Dimension dimension)
+    public Sprite GetDimensionImage(Dimension dimension)
     {
         if (dimensionIconDict.ContainsKey(dimension)) return dimensionIconDict[dimension];
         else return dimensionIconDict[Dimension.Astaria];

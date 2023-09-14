@@ -65,7 +65,7 @@ public class DimensionSlot : MonoBehaviour
 
     void SetButton()
     {
-        dimensionButton.image.sprite = SpriteIconManager.instance.GetDimensionIcon(dimension);
+        dimensionButton.image.sprite = SpriteManager.instance.GetDimensionImage(dimension);
         dimensionButton.GetComponentInChildren<TextMeshProUGUI>().text = Enum.GetName(typeof(Dimension),dimension);
     }
 

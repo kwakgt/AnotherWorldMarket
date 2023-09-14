@@ -53,7 +53,7 @@ public class ItemSlot : MonoBehaviour
         {
             //사용불가슬롯이라면 X 표시
             itemImage.color = Color.white;
-            itemImage.texture = SpriteIconManager.instance.unusableSlot.texture;
+            itemImage.texture = SpriteManager.instance.unusableSlot.texture;
             itemName.text = null;
         }
         else
