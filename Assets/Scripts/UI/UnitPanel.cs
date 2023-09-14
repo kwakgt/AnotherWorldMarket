@@ -1,12 +1,13 @@
 using EnumManager;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class UnitPanel : MonoBehaviour
 {
     Transform invenPanel;
-    Image[] invenImage;
+    ItemSlot[] itemSlot;
 
     Transform infoPanel;
     TextMeshProUGUI infoText;
@@ -14,7 +15,7 @@ public class UnitPanel : MonoBehaviour
     void Awake()
     {
         invenPanel = transform.GetChild(0);
-        invenImage = invenPanel.GetComponentsInChildren<Image>();   //InvenPanel의 Image까지 포함되어 Length = 13;
+        itemSlot = invenPanel.GetComponentsInChildren<ItemSlot>();   //InvenPanel의 Image까지 포함되어 Length = 13;
 
         infoPanel = transform.GetChild(1);
         infoText = infoPanel.GetComponent<TextMeshProUGUI>();
@@ -45,31 +46,14 @@ public class UnitPanel : MonoBehaviour
             infoText.text = null;
 
         //인벤토리 패널
-        for (int i = 1; i < unit.invenSizeAvailable + 1; i++)    //1부터 시작하므로 범위에 +1해준다, 0은 부모 Image여서 제외
+        for(int i = 0; i < unit.invenSizeAvailable; i++)
         {
-            if (unit.GetItemInInven(i - 1) != null)                  //unit 인벤트로니는 0부터
-            {
-                invenImage[i].sprite = unit.GetItemInInven(i - 1).sprite;
-                invenImage[i].GetComponentInChildren<TextMeshProUGUI>().text = unit.GetItemInInven(i - 1).amount.ToString();
-            }
-            else
-            {
-                invenImage[i].sprite = null;
-                invenImage[i].GetComponentInChildren<TextMeshProUGUI>().text = null;
-            }
+            itemSlot[i].SetItem(unit.GetItemInInven(i));
+        }
+
+        for(int i = unit.invenSizeAvailable; i < itemSlot.Length; i++ )
+        {
+            itemSlot[i].SetUnusableItemSlot();
         }
     }
-
-    //public void SetUIManager()
-    //{
-    //    UIManager.instance.panelOnOff += OnOff;
-    //}
-
-    //public void OnOff(PanelName panel)
-    //{
-    //    if (PanelName == panel && UIManager.instance.IsAllOff)
-    //        gameObject.SetActive(true);
-    //    else
-    //        gameObject.SetActive(false);
-    //}
 }

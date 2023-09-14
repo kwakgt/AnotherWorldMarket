@@ -7,13 +7,12 @@ public class UIManager : MonoBehaviour
     public static UIManager instance;
 
     public event Action<PanelName> panelOnOff;
+    public bool IsAllOff { get; private set; } = true;
 
     void Awake()
     {
         instance = this;
     }
-
-    public bool IsAllOff { get; private set; }
 
     public void ExecutePanelOnOFF(PanelName panel)
     {

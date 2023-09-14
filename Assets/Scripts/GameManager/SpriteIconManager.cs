@@ -10,12 +10,16 @@ public class SpriteIconManager : MonoBehaviour
     Dictionary<WorkType, Sprite> workIconDict = new Dictionary<WorkType, Sprite>();
     Dictionary<Dimension, Sprite> dimensionIconDict = new Dictionary<Dimension, Sprite>();
 
+    //인벤 사용불가 아이콘
+    public Sprite unusableSlot { get; private set; }
     void Awake()
     {
         instance = this;
 
         SetWorkIconDictionary();
         SetDimensionIconDictionary();
+
+        unusableSlot = Resources.Load<Sprite>("Sprite/Item/UnusableSlot");
     }
 
     public Sprite GetWorkIcon(WorkType workType)

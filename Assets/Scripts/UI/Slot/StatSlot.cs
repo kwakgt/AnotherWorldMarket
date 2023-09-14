@@ -7,6 +7,8 @@ using UnityEngine.UI;
 
 public class StatSlot : MonoBehaviour
 {
+    //작업이미지, 작업버튼, 스탯텍스트 각각 1개로 구성
+
     Staff staff;
     WorkType workType;
 

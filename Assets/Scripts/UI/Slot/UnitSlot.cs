@@ -7,6 +7,8 @@ using UnityEngine.UI;
 
 public class UnitSlot : MonoBehaviour , IBeginDragHandler, IDragHandler, IEndDragHandler
 {
+    //얼굴이미지, 현재 작업중인 이미지, 이름텍스트, 작업게이지 각각 1개로 구성
+
     Staff staff;
     public Image faceImage;
     public Image workImage;

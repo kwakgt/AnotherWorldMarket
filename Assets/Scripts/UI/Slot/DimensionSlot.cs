@@ -9,6 +9,8 @@ using TMPro;
 
 public class DimensionSlot : MonoBehaviour
 {
+    //차원버튼 1개, 유닛슬롯 리스트로 구성
+
     public GameObject unitSlotPrefab;   //유닛슬롯프리팹
     public GameObject contents;          //프리팹 부모오브젝트
 
