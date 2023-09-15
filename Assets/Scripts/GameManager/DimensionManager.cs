@@ -51,23 +51,30 @@ public class DimensionManager : MonoBehaviour
 
     void InitDimentionItem()
     {
-        //Astaria
+        for(int i = 0; i < ItemManager.instance.CountOfAllItem(); i++)
         {
-            //Felling
-            items[Dimension.Astaria][WorkType.Felling].Add(ItemManager.instance.GetItem("통나무", 1000));
-            //Mining
-            items[Dimension.Astaria][WorkType.Mining].Add(ItemManager.instance.GetItem("광석", 1000));
-            //Collecting
-            items[Dimension.Astaria][WorkType.Collecting].Add(ItemManager.instance.GetItem("초사과", 1000));
-            items[Dimension.Astaria][WorkType.Collecting].Add(ItemManager.instance.GetItem("생강무", 1000));
-            //Hunting
-            items[Dimension.Astaria][WorkType.Hunting].Add(ItemManager.instance.GetItem("빅버고기", 1000));
-            items[Dimension.Astaria][WorkType.Hunting].Add(ItemManager.instance.GetItem("빅버가죽", 1000));
-            //Fishing
-            items[Dimension.Astaria][WorkType.Fishing].Add(ItemManager.instance.GetItem("피라사바", 1000));
-
-            //TODO::차원 아이템 추가
+            Item item = ItemManager.instance.GetItem(i, 1000);
+            items[item.dimension][item.workType].Add(item);
         }
+
+
+        //Astaria
+        //{
+        //    //Felling
+        //    items[Dimension.Astaria][WorkType.Felling].Add(ItemManager.instance.GetItem("통나무", 1000));
+        //    //Mining
+        //    items[Dimension.Astaria][WorkType.Mining].Add(ItemManager.instance.GetItem("광석", 1000));
+        //    //Collecting
+        //    items[Dimension.Astaria][WorkType.Collecting].Add(ItemManager.instance.GetItem("초사과", 1000));
+        //    items[Dimension.Astaria][WorkType.Collecting].Add(ItemManager.instance.GetItem("생강무", 1000));
+        //    //Hunting
+        //    items[Dimension.Astaria][WorkType.Hunting].Add(ItemManager.instance.GetItem("빅버고기", 1000));
+        //    items[Dimension.Astaria][WorkType.Hunting].Add(ItemManager.instance.GetItem("빅버가죽", 1000));
+        //    //Fishing
+        //    items[Dimension.Astaria][WorkType.Fishing].Add(ItemManager.instance.GetItem("피라사바", 1000));
+
+        //    //TODO::차원 아이템 추가
+        //}
 
         //TODO:: 차원 추가
     }

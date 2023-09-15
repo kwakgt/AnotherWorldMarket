@@ -10,10 +10,11 @@ public class UnitSlot : MonoBehaviour , IBeginDragHandler, IDragHandler, IEndDra
     //얼굴이미지, 현재 작업중인 이미지, 이름텍스트, 작업게이지 각각 1개로 구성
 
     Staff staff;
-    public Image faceImage;
-    public Image workImage;
-    public TextMeshProUGUI unitName;
-    public Slider workGauge;
+    Image faceImage;
+    Image workImage;
+    TextMeshProUGUI unitName;
+    
+    Slider workGauge;
 
     Transform parent;
     void Awake()
@@ -38,10 +39,11 @@ public class UnitSlot : MonoBehaviour , IBeginDragHandler, IDragHandler, IEndDra
     {
         if(staff != null)
         {
-            //TODO:: 얼굴이미지 추가
+            faceImage.sprite = staff.faceImage.sprite;
             workGauge.maxValue = staff.slider.maxValue;
             workGauge.value = staff.slider.value;
             workImage.sprite = SpriteManager.instance.GetWorkImage(staff.GetWorkState(false));
+            //TODO:: 이름추가
         }
 
         //staff == null 이면 StaffManagementSlot이 파괴되거나 disable

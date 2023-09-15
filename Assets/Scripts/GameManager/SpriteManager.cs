@@ -1,6 +1,7 @@
 using EnumManager;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class SpriteManager : MonoBehaviour
 {
@@ -39,14 +40,22 @@ public class SpriteManager : MonoBehaviour
     void SetWorkImageDictionary()
     {
         string spritePath = "Sprite/WorkIcon/";
-        workImageDict.Add(WorkType.Checking, Resources.Load<Sprite>(spritePath + "Checking"));
-        workImageDict.Add(WorkType.Purchase, Resources.Load<Sprite>(spritePath + "Purchase"));
-        workImageDict.Add(WorkType.Carrying, Resources.Load<Sprite>(spritePath + "Carrying"));
-        workImageDict.Add(WorkType.Felling, Resources.Load<Sprite>(spritePath + "Felling"));
-        workImageDict.Add(WorkType.Mining, Resources.Load<Sprite>(spritePath + "Mining"));
-        workImageDict.Add(WorkType.Collecting, Resources.Load<Sprite>(spritePath + "Collecting"));
-        workImageDict.Add(WorkType.Hunting, Resources.Load<Sprite>(spritePath + "Hunting"));
-        workImageDict.Add(WorkType.Fishing, Resources.Load<Sprite>(spritePath + "Fishing"));
+        foreach(WorkType type in Enum.GetValues(typeof(WorkType)))
+        {
+            Sprite sprite = Resources.Load<Sprite>(spritePath + Enum.GetName(typeof(WorkType), type));
+            if (sprite != null)
+            {
+                workImageDict.Add(type, sprite);
+            }
+        }
+        //workImageDict.Add(WorkType.Checking, Resources.Load<Sprite>(spritePath + "Checking"));
+        //workImageDict.Add(WorkType.Purchase, Resources.Load<Sprite>(spritePath + "Purchase"));
+        //workImageDict.Add(WorkType.Carrying, Resources.Load<Sprite>(spritePath + "Carrying"));
+        //workImageDict.Add(WorkType.Felling, Resources.Load<Sprite>(spritePath + "Felling"));
+        //workImageDict.Add(WorkType.Mining, Resources.Load<Sprite>(spritePath + "Mining"));
+        //workImageDict.Add(WorkType.Collecting, Resources.Load<Sprite>(spritePath + "Collecting"));
+        //workImageDict.Add(WorkType.Hunting, Resources.Load<Sprite>(spritePath + "Hunting"));
+        //workImageDict.Add(WorkType.Fishing, Resources.Load<Sprite>(spritePath + "Fishing"));
 
         //TODO:: 작업 아이콘 추가
     }

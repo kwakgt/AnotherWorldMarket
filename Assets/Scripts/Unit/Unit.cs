@@ -25,7 +25,8 @@ public class Unit : MonoBehaviour   //IPointerClickHandler //UI가 아니면 카메라�
     int maxInvenSize = 12;
     protected Vector2 respawn;            //탄생,소멸위치
 
-
+    //자식 오브젝트
+    public Image faceImage { get; set; }
     TextMeshProUGUI nameText;                                 //자식인덱스 0
     protected TextMeshProUGUI priceText;                      //자식인덱스 1;
     public Slider slider { get; protected set; }              //자식인덱스 2;
@@ -35,11 +36,12 @@ public class Unit : MonoBehaviour   //IPointerClickHandler //UI가 아니면 카메라�
         tribe = Tribe.Human; //기본 휴먼
         stat = GetComponent<UnitStat>();
         inventory = new Item[maxInvenSize];
-        
-        //transform.GetChild(0)은 Canvas
-        nameText = transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>();
-        priceText = transform.GetChild(0).GetChild(1).GetComponent<TextMeshProUGUI>();
-        slider = transform.GetChild(0).GetChild(2).GetComponent<Slider>();
+
+        faceImage = transform.GetChild(0).GetComponent<Image>();
+        //transform.GetChild(1)은 Canvas
+        nameText = transform.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>();
+        priceText = transform.GetChild(1).GetChild(1).GetComponent<TextMeshProUGUI>();
+        slider = transform.GetChild(1).GetChild(2).GetComponent<Slider>();
     }
     protected virtual void Start()
     {

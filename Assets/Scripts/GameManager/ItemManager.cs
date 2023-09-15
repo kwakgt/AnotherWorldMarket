@@ -1,5 +1,8 @@
+using EnumManager;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
+using Random = UnityEngine.Random;
 
 public class ItemManager : MonoBehaviour
 {
@@ -21,8 +24,12 @@ public class ItemManager : MonoBehaviour
         {
             string spritePath = "Sprite/Item/" + list[i]["nameEN"];
             Sprite sprite = Resources.Load<Sprite>(spritePath); //리소스에서 Sprite 불러오기
-            itemNameDB.Add((string)list[i]["name"], new Item((string)list[i]["name"], (int)list[i]["uniqueKey"], (int)list[i]["price"], (int)list[i]["amountOfShelf"], (int)list[i]["amountOfWarehouse"], sprite));
-            itemUniqueKeyDB.Add((int)list[i]["uniqueKey"], new Item((string)list[i]["name"], (int)list[i]["uniqueKey"], (int)list[i]["price"], (int)list[i]["amountOfShelf"], (int)list[i]["amountOfWarehouse"], sprite));
+            Dimension dimension = (Dimension)Enum.Parse(typeof(Dimension), (string)list[i]["dimension"]);  //Dimension enum으로 변경
+            WorkType work = (WorkType)Enum.Parse(typeof(WorkType), (string)list[i]["workType"]);              //WorkType enum으로 변경
+            itemNameDB.Add((string)list[i]["name"], 
+                new Item((string)list[i]["name"], (int)list[i]["uniqueKey"], dimension, work, (int)list[i]["price"], (int)list[i]["amountOfShelf"], (int)list[i]["amountOfWarehouse"], sprite));
+            itemUniqueKeyDB.Add((int)list[i]["uniqueKey"], 
+                new Item((string)list[i]["name"], (int)list[i]["uniqueKey"], dimension, work, (int)list[i]["price"], (int)list[i]["amountOfShelf"], (int)list[i]["amountOfWarehouse"], sprite));
         }
     }
 

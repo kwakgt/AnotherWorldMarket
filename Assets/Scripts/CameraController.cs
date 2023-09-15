@@ -75,7 +75,7 @@ public class CameraController : MonoBehaviour
 
     void ChangeSize()
     {
-        if (InputManager.instance.scrollwheel != 0)
+        if (InputManager.instance.scrollwheel != 0 && UIManager.instance.IsAllOff)
             cam.orthographicSize = Mathf.Clamp(cam.orthographicSize + InputManager.instance.scrollwheel * zoomSpeed, zoomMin, zoomMax);
     }
 

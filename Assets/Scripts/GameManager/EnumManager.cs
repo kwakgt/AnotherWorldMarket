@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -27,7 +28,7 @@ namespace EnumManager
     /// <summary>
     /// 직원의 행동명령
     /// </summary>
-    public enum WorkType { Purchase, Checking, Finding, Carrying, Emptying, Teleporting, Felling, Mining, Collecting, Hunting, Fishing }
+    public enum WorkType { Purchase, Checking, Finding, Carrying, Emptying, Teleporting, Felling, Mining, Collecting, Hunting, Fishing, Cooking, Cutting, Drying, Juicing, Melting, Mixing, Packaging }
 
     /// <summary>
     /// 고객,직원 유닛 구분용
@@ -49,5 +50,4 @@ namespace EnumManager
     /// UI매니저 관리 패널명
     /// </summary>
     public enum PanelName { Off, DimensionPanel, StaffManagementPanel }
-
 }

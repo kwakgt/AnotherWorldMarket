@@ -1,25 +1,30 @@
 using System;
 using UnityEngine;
+using EnumManager;
 
 public class Item : IEquatable<Item>
 {
+    //상수
     public string name { get; private set; }            //아이템명
     public int uniqueKey { get; private set; }          //아이템 고유번호
+    public Dimension dimension { get; private set; }    //얻을 수 있는 차원
+    public WorkType workType { get; private set; }      //얻을 수 있는 작업
     public int price { get; private set; }              //아이템 가격
     public int amountOfShelf { get; private set; }      //판매대 한칸에 올릴 수 있는 아이템 최대개수
     public int amountOfWarehouse { get; private set; }  //창고 한칸에 넣을 수 있는 아이템 최대개수
-    
-    
-    public int amount { get; private set; }             //현재 아이템의 개수
-    
-    
     public Sprite sprite { get; private set; }          //아이템 이미지, Resources/Sprite에서 가져옴
     
+    
+    //변수
     //아이템 처음 생성 시 개수는 0이다. PlusAmount함수로 개수를 추가해야된다.
-    public Item(string _name, int _uniqueKey, int _price, int _amountOfShelf, int _amountOfWarehouse, Sprite _sprite)  
+    public int amount { get; private set; }             //현재 아이템의 개수
+
+    public Item(string _name, int _uniqueKey, Dimension _dimension, WorkType _workType, int _price, int _amountOfShelf, int _amountOfWarehouse, Sprite _sprite)
     {
         name = _name;
         uniqueKey = _uniqueKey;
+        dimension = _dimension;
+        workType = _workType;
         price = _price;
         amountOfShelf = _amountOfShelf;
         amountOfWarehouse = _amountOfWarehouse;
@@ -30,6 +35,8 @@ public class Item : IEquatable<Item>
     {
         name = item.name;
         uniqueKey = item.uniqueKey;
+        dimension= item.dimension;
+        workType = item.workType;
         price = item.price;
         amountOfShelf = item.amountOfShelf;
         amountOfWarehouse = item.amountOfWarehouse;
