@@ -7,6 +7,7 @@ using Random = UnityEngine.Random;
 public class ItemManager : MonoBehaviour
 {
     public static ItemManager instance;
+    //Item DB
     Dictionary<string, Item> itemNameDB = new Dictionary<string, Item>();
     Dictionary<int, Item> itemUniqueKeyDB = new Dictionary<int, Item>();
 
