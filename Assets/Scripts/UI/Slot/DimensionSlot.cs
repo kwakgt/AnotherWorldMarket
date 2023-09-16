@@ -1,11 +1,10 @@
 using EnumManager;
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
 public class DimensionSlot : MonoBehaviour
 {

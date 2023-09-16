@@ -5,8 +5,8 @@ using Random = UnityEngine.Random;
 public class Warehouse : Structure
 {
     public int maxInvenSize { get; private set; }                           //최대 인벤토리
-    Item[] inventory;                    //인벤토리 슬롯
-    Heap<Index> invenIdxs;                      //빈칸인 인벤 번호(인덱스)
+    Item[] inventory;                       //인벤토리 슬롯
+    Heap<Index> invenIdxs;                  //빈칸인 인벤 번호(인덱스)
 
     protected override void Awake()
     {
@@ -22,10 +22,10 @@ public class Warehouse : Structure
     {
         base.Start();
         
-        uniIndex = WarehouseManager.instance.RequestWarehouseIndex();
+        uniIndex = BuildingManager.instance.RequestWarehouseIndex();
+        BuildingManager.instance.AddWarehouseDictionary(uniIndex, this);
 
         //TEST
-        WarehouseManager.instance.AddWarehouseList(this);
         PutAllItemInInventory(2000);  //모든 아이템 창고에 넣기  
     }
 

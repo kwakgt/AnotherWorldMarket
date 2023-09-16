@@ -3,11 +3,16 @@ using EnumManager;
 
 public class Recipe
 {
-    WorkType workType;
-    Item product;
-    Item[] items = new Item[5];
+    public WorkType workType { get;}
+    public Item product { get;}
+    Item[] items { get; } = new Item[5]; 
+    bool[] check { get; } = new bool[5];
 
-    bool[] check = new bool[5];
+    public Recipe(WorkType _workType)
+    {
+        workType = _workType;
+    }
+
     public Recipe(WorkType _workType, Item _product, Item item1, Item item2, Item item3, Item item4, Item item5)
     {
         workType = _workType;

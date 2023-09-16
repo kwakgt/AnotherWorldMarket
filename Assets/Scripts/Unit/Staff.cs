@@ -322,7 +322,7 @@ public class Staff : Unit
         Item shelfItem = shelf.GetItemInInven(shelfIndex);           //옮길 아이템
         if (shelfItem == null)                                  //아이템이 없으면 다른 매대 찾기
         {
-            shelfItem = WarehouseManager.instance.GetItemInRandomWarehouse();   //아이템이 없다면 새아이템으로 채워넣기
+            shelfItem = BuildingManager.instance.GetItemInRandomWarehouse();   //아이템이 없다면 새아이템으로 채워넣기
         }
         checkingItems.Add(new CheckingItem(shelf, shelfIndex, shelfItem));       //확인리스트에 아이템 저장
         ++workCount;
@@ -451,12 +451,12 @@ public class Staff : Unit
 
     void GoWarehouse(Item itemToFind)
     {
-        warehouse = WarehouseManager.instance.FindItemInWarehouseList(itemToFind);
+        warehouse = BuildingManager.instance.FindItemInWarehouseList(itemToFind);
         if(warehouse == null)
         {
-            warehouse = WarehouseManager.instance.FindEmptyWarehouse(); //아이템이 없다면 빈창고로 가기
+            warehouse = BuildingManager.instance.FindEmptyWarehouse(); //아이템이 없다면 빈창고로 가기
             if (warehouse == null)
-                warehouse = WarehouseManager.instance.RequestRandomWarehouse(); //아이템이 없고, 빈창고도 없으면 그냥 아무창고에 가기
+                warehouse = BuildingManager.instance.RequestRandomWarehouse(); //아이템이 없고, 빈창고도 없으면 그냥 아무창고에 가기
         }
 
         target = warehouse.GetRandomWarehouseFrontPosition(target);

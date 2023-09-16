@@ -1,7 +1,7 @@
 workType,product,amount,item1,amount1,item2,amount2,item3,amount3,item4,amount4,item5,amount5
-Cutting,Wood,3,Log,1,,,,,,,,
-Cutting,Stone,3,Rock,1,,,,,,,,
-Melting,Steel,2,Ore,1,,,,,,,,
-Melting,Copper,2,Ore,1,,,,,,,,
-Drying,PepperPowder,1,PepduckPoob,1,,,,,,,,
-Packaging,Pepper,10,PepperPowder,10,Steel,1,,,,,,
+Cutting,Wood,3,Log,1,,0,,0,,0,,0
+Cutting,Stone,3,Rock,1,,0,,0,,0,,0
+Melting,Steel,2,Ore,1,,0,,0,,0,,0
+Melting,Copper,2,Ore,1,,0,,0,,0,,0
+Drying,PepperPowder,1,PepduckPoob,1,,0,,0,,0,,0
+Packaging,Pepper,10,PepperPowder,10,Steel,1,,0,,0,,0

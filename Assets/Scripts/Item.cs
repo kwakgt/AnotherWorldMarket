@@ -5,14 +5,14 @@ using EnumManager;
 public class Item : IEquatable<Item>
 {
     //상수
-    public string name { get; private set; }            //아이템명
-    public int uniqueKey { get; private set; }          //아이템 고유번호
-    public Dimension dimension { get; private set; }    //얻을 수 있는 차원
-    public WorkType workType { get; private set; }      //얻을 수 있는 작업
-    public int price { get; private set; }              //아이템 가격
-    public int amountOfShelf { get; private set; }      //판매대 한칸에 올릴 수 있는 아이템 최대개수
-    public int amountOfWarehouse { get; private set; }  //창고 한칸에 넣을 수 있는 아이템 최대개수
-    public Sprite sprite { get; private set; }          //아이템 이미지, Resources/Sprite에서 가져옴
+    public string name { get; }            //아이템명
+    public int uniqueKey { get;}          //아이템 고유번호
+    public Dimension dimension { get; }    //얻을 수 있는 차원
+    public WorkType workType { get; }      //얻을 수 있는 작업
+    public int price { get; }              //아이템 가격
+    public int amountOfShelf { get; }      //판매대 한칸에 올릴 수 있는 아이템 최대개수
+    public int amountOfWarehouse { get; }  //창고 한칸에 넣을 수 있는 아이템 최대개수
+    public Sprite sprite { get; }          //아이템 이미지, Resources/Sprite에서 가져옴
     
     
     //변수

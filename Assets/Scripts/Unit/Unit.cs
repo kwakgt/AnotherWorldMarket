@@ -123,7 +123,7 @@ public class Unit : MonoBehaviour   //IPointerClickHandler //UI가 아니면 카메라�
         float time = 0f;
         do
         {
-            shelf = ShelfManager.instance.RequestRandomShelf();
+            shelf = BuildingManager.instance.RequestRandomShelf();
             if (shelf == null)
             {
                 Debug.Log("마켓에 아무것도 없네");

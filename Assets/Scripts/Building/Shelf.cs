@@ -16,10 +16,8 @@ public class Shelf : Structure
     protected override void Start()
     {
         base.Start();
-        uniIndex = ShelfManager.instance.RequestShelfIndex();
-        
-
-        ShelfManager.instance.AddShelfDictionary(uniIndex, this); //현재 매대를 매니저에 추가
+        uniIndex = BuildingManager.instance.RequestShelfIndex();
+        BuildingManager.instance.AddShelfDictionary(uniIndex, this); //현재 매대를 매니저에 추가
 
         //TEST
         //PutRandomItemInInven(0, 50);

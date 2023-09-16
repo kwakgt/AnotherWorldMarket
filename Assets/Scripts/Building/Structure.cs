@@ -209,7 +209,7 @@ public class Structure : MonoBehaviour, IBeginDragHandler, IDragHandler  //UI가 
                     isNewStructure = false;
                     if (tag.Equals("Shelf"))
                     {
-                        ShelfManager.instance.UpdateShelfDictionary(uniIndex, (Shelf)this);  //변경된 정보 매니저에 업데이트
+                        //BuildingManager.instance.UpdateShelfDictionary(uniIndex, (Shelf)this);  //변경된 정보 매니저에 업데이트
                     }
                     //TODO:: 매니저에 업데이트 필요한 건물 추가
                 }
