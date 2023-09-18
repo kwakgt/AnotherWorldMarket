@@ -4,13 +4,15 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UnitPanel : MonoBehaviour
+public class UnitPanel : MonoBehaviour, IPanelOnOff
 {
     Transform invenPanel;
     ItemSlot[] itemSlot;
 
     Transform infoPanel;
     TextMeshProUGUI infoText;
+
+    public PanelName PanelName { get { return PanelName.UnitPanel; } }
 
     void Awake()
     {
@@ -23,6 +25,7 @@ public class UnitPanel : MonoBehaviour
 
     void Start()
     {
+        SetUIManager();
         gameObject.SetActive(false); //MouseController에서 GameObject.Find함수 사용을 위해 Start에서 비활성화, 비활성화된 오브젝트는 Find함수에 감지 안됨.
     }
 
@@ -55,5 +58,18 @@ public class UnitPanel : MonoBehaviour
         {
             itemSlot[i].SetUnusableItemSlot();
         }
+    }
+
+    public void SetUIManager()
+    {
+        UIManager.instance.selectedPanelOnOff += OnOff;
+    }
+
+    public void OnOff(PanelName panel)
+    {
+        if(panel == PanelName)
+            gameObject.SetActive(true);
+        else
+            gameObject.SetActive(false);
     }
 }

@@ -1,8 +1,5 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using static GameManager;
+using EnumManager;
 
 public class GameManager : MonoBehaviour
 {
@@ -12,9 +9,10 @@ public class GameManager : MonoBehaviour
     public Unit selectedUnit;
     public Shelf selectedShelf;
     public Warehouse selectedWarehouse;
+    public Factory selectedFactory;
 
     GameObject constructionPanel;           //활성화/비활성화
-    GameMode gameMode = GameMode.Seller;    //현재 게임모드
+    GameMode gameMode = GameMode.Selling;    //현재 게임모드
     float preTimeScale = 1f;                 //이전 속도
 
 
@@ -58,15 +56,15 @@ public class GameManager : MonoBehaviour
 
     public void ChangeMode()   //메뉴버튼 사용
     {
-        if (gameMode != GameMode.Builder)
+        if (gameMode != GameMode.Building)
         {
-            gameMode = GameMode.Builder;
+            gameMode = GameMode.Building;
             ChangeGameSpeed(0);
             constructionPanel.SetActive(true);
         }
         else
         {
-            gameMode = GameMode.Seller;
+            gameMode = GameMode.Selling;
             ChangeGameSpeed(preTimeScale);
             constructionPanel.SetActive(false);
         }
@@ -77,7 +75,7 @@ public class GameManager : MonoBehaviour
         if (Time.timeScale != 0)
             preTimeScale = Time.timeScale;  //preTimeScale에 0값 제외
 
-        if (instance.gameMode == GameMode.Builder)  //건설모드 시 속도는 무조건 0
+        if (instance.gameMode == GameMode.Building)  //건설모드 시 속도는 무조건 0
         {
             Time.timeScale = 0f; 
             return;
@@ -101,6 +99,4 @@ public class GameManager : MonoBehaviour
             return false;
     }
 
-
-    public enum GameMode { Seller, Builder }
 }

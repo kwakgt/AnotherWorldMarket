@@ -12,7 +12,7 @@ public class DimensionManager : MonoBehaviour
     //차원에 있는 직원 리스트
     public Dictionary<Dimension, List<Staff>> dimensionStaff { get; private set; }
     //차원에서 얻을 수 있는 자원(작업타입에 따른 분류 저장).  ex) Hungting : 빅터고기,빅터가죽. Fishing : 피라사바 
-    Dictionary<Dimension, Dictionary<WorkType, List<Item>>> items;
+    Dictionary<Dimension, Dictionary<StaffWork, List<Item>>> items;
 
     void Awake()
     {
@@ -26,14 +26,14 @@ public class DimensionManager : MonoBehaviour
         }
 
         //차원의 자원리스트 초기화
-        items = new Dictionary<Dimension, Dictionary<WorkType, List<Item>>>();
+        items = new Dictionary<Dimension, Dictionary<StaffWork, List<Item>>>();
         foreach(Dimension name in Enum.GetValues(typeof(Dimension)))
         {
-            items.Add(name, new Dictionary<WorkType, List<Item>>());
+            items.Add(name, new Dictionary<StaffWork, List<Item>>());
             
-            foreach(WorkType command in Enum.GetValues(typeof(WorkType)))
+            foreach(StaffWork command in Enum.GetValues(typeof(StaffWork)))
             {
-                if (command == WorkType.Emptying || command == WorkType.Checking || command == WorkType.Finding || command == WorkType.Carrying || command == WorkType.Teleporting) //불필요한 명령 제거
+                if (command == StaffWork.Emptying || command == StaffWork.Checking || command == StaffWork.Finding || command == StaffWork.Carrying || command == StaffWork.Teleporting) //불필요한 명령 제거
                     continue;
 
                 items[name].Add(command, new List<Item>());
@@ -93,7 +93,7 @@ public class DimensionManager : MonoBehaviour
     }
 
 
-    public Item GetItem(Dimension dimention, WorkType workType)
+    public Item GetItem(Dimension dimention, StaffWork workType)
     {
         List<Item> list = items[dimention][workType];
         if (list == null || list.Count <= 0) return null;   //아이템 목록이 없으면 NULL;

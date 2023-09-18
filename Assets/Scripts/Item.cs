@@ -8,7 +8,7 @@ public class Item : IEquatable<Item>
     public string name { get; }            //아이템명
     public int uniqueKey { get;}          //아이템 고유번호
     public Dimension dimension { get; }    //얻을 수 있는 차원
-    public WorkType workType { get; }      //얻을 수 있는 작업
+    public StaffWork workType { get; }      //얻을 수 있는 작업
     public int price { get; }              //아이템 가격
     public int amountOfShelf { get; }      //판매대 한칸에 올릴 수 있는 아이템 최대개수
     public int amountOfWarehouse { get; }  //창고 한칸에 넣을 수 있는 아이템 최대개수
@@ -19,7 +19,7 @@ public class Item : IEquatable<Item>
     //아이템 처음 생성 시 개수는 0이다. PlusAmount함수로 개수를 추가해야된다.
     public int amount { get; private set; }             //현재 아이템의 개수
 
-    public Item(string _name, int _uniqueKey, Dimension _dimension, WorkType _workType, int _price, int _amountOfShelf, int _amountOfWarehouse, Sprite _sprite)
+    public Item(string _name, int _uniqueKey, Dimension _dimension, StaffWork _workType, int _price, int _amountOfShelf, int _amountOfWarehouse, Sprite _sprite)
     {
         name = _name;
         uniqueKey = _uniqueKey;
@@ -31,7 +31,7 @@ public class Item : IEquatable<Item>
         sprite = _sprite;
     }
 
-    public Item(Item item)
+    public Item(Item item, int _amount = 0)
     {
         name = item.name;
         uniqueKey = item.uniqueKey;
@@ -41,6 +41,8 @@ public class Item : IEquatable<Item>
         amountOfShelf = item.amountOfShelf;
         amountOfWarehouse = item.amountOfWarehouse;
         sprite = item.sprite;
+        
+        amount = _amount;
     }
 
     public bool MinusAmount(int _amount) //마이너스 성공여부 후 플러스

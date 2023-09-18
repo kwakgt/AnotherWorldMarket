@@ -41,26 +41,6 @@ public class Warehouse : Structure
         }
     }
 
-    public Vector2 GetRandomWarehouseFrontPosition(Vector2 currPosition)
-    {
-        Vector2 randomPosition = frontPositions[Random.Range(0, frontSize)];
-        bool contains = false;
-        for (int i = 0; i < frontSize; i++) //currPosition이 창고 입구에 포함되는지 확인
-        {
-            if (frontPositions[i] == currPosition)
-            {
-                contains = true;
-                break;
-            }
-        }
-
-        while (contains && currPosition == randomPosition)              //currPosition이 입구에 포함되고 현재 위치와 랜덤입구위치가 같으면
-        {
-            randomPosition = frontPositions[Random.Range(0, frontSize)]; //다른 입구로 변경하기
-        }
-        return randomPosition;
-    }
-
     public int FirstEmptyIndexInInventory()
     {
         if (IsEmptyInInventory())   return invenIdxs.RemoveFirst().Value;
@@ -75,6 +55,8 @@ public class Warehouse : Structure
 
     public int FindItemIndexInInventory(Item itemToFind, bool putItemInWarehouse = false)
     {
+        if (itemToFind == null) return -1;
+
         if (putItemInWarehouse)
         {
             for (int i = 0; i < inventory.Length; i++)
@@ -96,6 +78,8 @@ public class Warehouse : Structure
 
     public Item GetItemInInven(int index = -1)
     {
+        if (invenIdxs.Count == maxInvenSize) return null;
+
         if(index == -1)
         {
             Item random;

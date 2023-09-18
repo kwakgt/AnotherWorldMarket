@@ -9,6 +9,7 @@ TagManager:
   - Shelf
   - Warehouse
   - Front
+  - Factory
   layers:
   - Default
   - TransparentFX

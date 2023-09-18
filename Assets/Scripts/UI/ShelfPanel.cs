@@ -4,12 +4,13 @@ using TMPro;
 using EnumManager;
 using System.Runtime.InteropServices.WindowsRuntime;
 
-public class ShelfPanel : MonoBehaviour
+public class ShelfPanel : MonoBehaviour, IPanelOnOff
 {
     Transform invenPanel;
 
     ItemSlot[] itemSlot;
 
+    public PanelName PanelName { get { return PanelName.ShelfPanel; } }
 
     void Awake()
     {
@@ -19,6 +20,7 @@ public class ShelfPanel : MonoBehaviour
 
     void Start()
     {
+        SetUIManager();
         gameObject.SetActive(false);   //MouseController에서 GameObject.Find함수 사용을 위해 Start에서 비활성화, 비활성화된 오브젝트는 Find함수에 감지 안됨.
     }
 
@@ -38,16 +40,16 @@ public class ShelfPanel : MonoBehaviour
         }
     }
 
-    //public void SetUIManager()
-    //{
-    //    UIManager.instance.panelOnOff += OnOff;
-    //}
+    public void SetUIManager()
+    {
+        UIManager.instance.selectedPanelOnOff += OnOff;
+    }
 
-    //public void OnOff(PanelName panel)
-    //{
-    //    if(PanelName == panel && UIManager.instance.IsAllOff)
-    //        gameObject.SetActive(true);
-    //    else
-    //        gameObject.SetActive(false);
-    //}
+    public void OnOff(PanelName panel)
+    {
+        if (PanelName == panel)
+            gameObject.SetActive(true);
+        else
+            gameObject.SetActive(false);
+    }
 }

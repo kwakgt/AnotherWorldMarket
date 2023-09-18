@@ -26,14 +26,16 @@ public class StaffManagementSlot : MonoBehaviour
 
         unitSlot.SetStaff(staff);
 
-        statSlots[0].SetStaff(staff, WorkType.Purchase);
-        statSlots[1].SetStaff(staff, WorkType.Carrying);
-        statSlots[2].SetStaff(staff, WorkType.Felling);
-        statSlots[3].SetStaff(staff, WorkType.Mining);
-        statSlots[4].SetStaff(staff, WorkType.Collecting);
-        statSlots[5].SetStaff(staff, WorkType.Hunting);
-        statSlots[6].SetStaff(staff, WorkType.Fishing);
-        //TODO:: 스탯 추가
+        int i = 0;
+
+        foreach (StaffWork work in Enum.GetValues(typeof(StaffWork)))
+        {
+            if (staff.IsDimensionWork(work) || staff.IsFactoryWork(work) || work == StaffWork.Carrying || work == StaffWork.Deliverying)
+            {
+                statSlots[i].SetStaff(staff, work);
+                i++;
+            }
+        }
 
         //차원패널에서 차원이동 시 드롭다운 차원 동기화
         dimensionDropdown.captionText.text = Enum.GetName(typeof(Dimension), staff.dimension);

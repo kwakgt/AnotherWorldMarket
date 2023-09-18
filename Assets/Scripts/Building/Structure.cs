@@ -5,7 +5,7 @@ using EnumManager;
 using Random = UnityEngine.Random;
 
 //TimeScale = 0 일 때, 충돌감지 안됨
-//리지디바디 Kinematic 설정을 해야 이동할 때 콜라이더도 같이 이동된다. -> 다시 해보니 없어도 잘됨...뭐지..
+//리지디바디 Kinematic 설정을 해야 이동할 때 콜라이더도 같이 이동된다. -> 다시 해보니 없어도 잘됨.. -> 모든 오브젝트에 리지디바디가 없으니 콜라이더가 다시 이동 안된다.
 public class Structure : MonoBehaviour, IBeginDragHandler, IDragHandler  //UI가 아니면 카메라에 Physics2DRaycater 컴포넌트 필요
 {
     public bool displayGridGizmos;
@@ -54,7 +54,7 @@ public class Structure : MonoBehaviour, IBeginDragHandler, IDragHandler  //UI가 
         DataManager.Instance.UpdateData(gameObject);
     }
 
-    private void Update()
+    protected virtual void Update()
     {
         //TEST
         OnMoving();
@@ -113,6 +113,26 @@ public class Structure : MonoBehaviour, IBeginDragHandler, IDragHandler  //UI가 
         return frontPositions[index];
     }
 
+    public Vector2 GetRandomFrontPosition(Vector2 excluded)
+    {
+        Vector2 randomPosition = frontPositions[Random.Range(0, frontSize)];
+        bool contains = false;
+        for (int i = 0; i < frontSize; i++) //excluded가 창고 입구에 포함되는지 확인
+        {
+            if (frontPositions[i] == excluded)
+            {
+                contains = true;
+                break;
+            }
+        }
+
+        while (contains && randomPosition == excluded)                      //excluded가 입구에 포함되고 제외위치와 랜덤입구위치가 같으면
+        {
+            randomPosition = frontPositions[Random.Range(0, frontSize)];    //다른 입구로 변경하기
+        }
+        return randomPosition;
+    }
+
     public int FindIndexOfFrontPosition(Vector2 _frontPosition)
     {
         //False 시 -1을 반환한다.
@@ -121,7 +141,7 @@ public class Structure : MonoBehaviour, IBeginDragHandler, IDragHandler  //UI가 
 
     public void OnMoving()     //판매대 이동,회전,설치
     {
-        if (isMoving && GameManager.instance.Equals(GameManager.GameMode.Builder))
+        if (isMoving && GameManager.instance.Equals(GameMode.Building))
         {
             //하이어라키 제일 마지막으로 보내기(이미지가 위로 오게)
             transform.SetAsLastSibling();
@@ -276,7 +296,7 @@ public class Structure : MonoBehaviour, IBeginDragHandler, IDragHandler  //UI가 
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        if (GameManager.instance.Equals(GameManager.GameMode.Builder))
+        if (GameManager.instance.Equals(GameMode.Building))
         {
             isMoving = true;    //이동모드로 전환
             //드래그로 들어올려진 순간 현재 점유하고 있는 노드를 walkable로 변경

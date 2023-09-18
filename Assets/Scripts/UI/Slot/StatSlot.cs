@@ -8,7 +8,7 @@ public class StatSlot : MonoBehaviour
     //작업이미지, 작업버튼, 스탯텍스트 각각 1개로 구성
 
     Staff staff;
-    WorkType workType;
+    StaffWork workType;
 
 
     Image workImage;
@@ -31,7 +31,7 @@ public class StatSlot : MonoBehaviour
         workButton.onClick.AddListener(() => staff.ReceiveCommand(workType));
     }
 
-    public void SetStaff(Staff _staff, WorkType _workType)
+    public void SetStaff(Staff _staff, StaffWork _workType)
     {
         staff = _staff;
         workType = _workType;

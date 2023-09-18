@@ -1,4 +1,7 @@
+using EnumManager;
 using System.Collections.Generic;
+using System.Reflection;
+using Unity.VisualScripting;
 using UnityEngine;
 
 
@@ -19,12 +22,19 @@ public class BuildingManager : MonoBehaviour
     Queue<int> warehouseIndexQue = new Queue<int>();
     int warehouseIndex;
 
+    //Factory Dictionary
+    Dictionary<int, Factory> factoryDictionary = new Dictionary<int, Factory>();
+    Dictionary<StaffWork, List<Factory>> factoryWorkTypeDictionary = new Dictionary<StaffWork, List<Factory>>();
+    Queue<int> factoryIndexQue = new Queue<int>();
+    int factoryIndex;
+
     void Awake()
     {
         instance = this;
+        InitFactoryWorkTypeDictionnary();
     }
    
-    //Shelf =======================================================================================================================
+    //Shelf ================================================================================================================================================================================
     public int RequestShelfIndex() //고유인덱스 부여
     {
         if(shelfIndexQue.Count > 0)    //인덱스 큐에 남은 인덱스가 있으면 재활용
@@ -53,10 +63,9 @@ public class BuildingManager : MonoBehaviour
     public void AddShelfDictionary(int index, Shelf shelf)
     {
         if(shelfDictionary.ContainsKey(index))
-        {
             shelfDictionary[index] = shelf;
-        }
-        shelfDictionary.Add(index, shelf);
+        else
+            shelfDictionary.Add(index, shelf);
     }
 
     public void RemoveShelfDictionary(int index)
@@ -65,7 +74,7 @@ public class BuildingManager : MonoBehaviour
         shelfIndexQue.Enqueue(index);
     }
 
-    //Warehouse =======================================================================================================================
+    //Warehouse ================================================================================================================================================================================
     public int RequestWarehouseIndex()
     {
         if (warehouseIndexQue.Count > 0)    //인덱스 큐에 남은 인덱스가 있으면 재활용
@@ -122,12 +131,69 @@ public class BuildingManager : MonoBehaviour
 
     public void AddWarehouseDictionary(int index, Warehouse warehouse)
     {
-        warehouseDictionary.Add(index, warehouse);
+        if(warehouseDictionary.ContainsKey(index))
+            warehouseDictionary[index] = warehouse;
+        else
+            warehouseDictionary.Add(index, warehouse);
     }
 
     public void RemoveWarehouseDictionary(int index)
     {
         warehouseDictionary.Remove(index);
         warehouseIndexQue.Enqueue(index);
+    }
+
+    //Factory   ================================================================================================================================================================================
+    void InitFactoryWorkTypeDictionnary()
+    {
+        factoryWorkTypeDictionary.Add(StaffWork.Cooking, new List<Factory>());
+        factoryWorkTypeDictionary.Add(StaffWork.Cutting, new List<Factory>());
+        factoryWorkTypeDictionary.Add(StaffWork.Drying, new List<Factory>());
+        factoryWorkTypeDictionary.Add(StaffWork.Juicing, new List<Factory>());
+        factoryWorkTypeDictionary.Add(StaffWork.Melting, new List<Factory>());
+        factoryWorkTypeDictionary.Add(StaffWork.Mixing, new List<Factory>());
+        factoryWorkTypeDictionary.Add(StaffWork.Packaging, new List<Factory>());
+    }
+
+    public int RequestFactoryIndex()
+    {
+        if (factoryIndexQue.Count > 0)    //인덱스 큐에 남은 인덱스가 있으면 재활용
+        {
+            return factoryIndexQue.Dequeue();
+        }
+
+        return factoryIndex++;
+    }
+
+    public Factory RequestEmptyFactory(StaffWork work)
+    {
+        List<Factory> list = factoryWorkTypeDictionary[work];
+        for (int i = 0; i < list.Count; i++)
+        {
+            if (list[i] != null && list[i].IsEmptyStaff())
+                return list[i];
+        }
+        return null;
+    }
+
+    public Factory RequestRandomFactory()
+    {
+        return factoryDictionary[Random.Range(0, factoryDictionary.Count)];
+    }
+
+    public void AddFactoryDictionary(int index, StaffWork workType, Factory factory)
+    {
+        factoryWorkTypeDictionary[workType].Add(factory);
+        if (factoryDictionary.ContainsKey(index))
+            factoryDictionary[index] = factory;
+        else
+            factoryDictionary.Add(index, factory);
+    }
+
+    public void RemoveWarehouseDictionary(int index, StaffWork workType, Factory factory)
+    {
+        factoryWorkTypeDictionary[workType].Remove(factory);
+        factoryDictionary.Remove(index);
+        factoryIndexQue.Enqueue(index);
     }
 }

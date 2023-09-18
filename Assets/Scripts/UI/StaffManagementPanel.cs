@@ -68,8 +68,8 @@ public class StaffManagementPanel : MonoBehaviour, IPanelOnOff
     public void OnOff(PanelName panel)
     {
         if (PanelName == panel)
-            gameObject.gameObject.SetActive(true);
+            gameObject.SetActive(true);
         else
-            gameObject.gameObject.SetActive(false);
+            gameObject.SetActive(false);
     }
 }

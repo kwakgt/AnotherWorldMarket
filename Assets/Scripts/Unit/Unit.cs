@@ -170,7 +170,7 @@ public class Unit : MonoBehaviour   //IPointerClickHandler //UI가 아니면 카메라�
         return -1;
     }
 
-    public Item GetItemInInven(int  index)
+    public Item GetItemInInven(int index)
     {
         return inventory[index];
     }

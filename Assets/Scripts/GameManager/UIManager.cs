@@ -6,6 +6,7 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager instance;
 
+    public event Action<PanelName> selectedPanelOnOff;
     public event Action<PanelName> panelOnOff;
     public bool IsAllOff { get; private set; } = true;
 
@@ -14,8 +15,15 @@ public class UIManager : MonoBehaviour
         instance = this;
     }
 
+    public void ExecuteSelectedPanelOnOff(PanelName panel)
+    {
+        if(IsAllOff)
+            selectedPanelOnOff(panel);
+    }
+
     public void ExecutePanelOnOff(PanelName panel)
     {
+        selectedPanelOnOff(PanelName.Off);
         panelOnOff(panel);
         if(panel == PanelName.Off)
             IsAllOff = true;

@@ -3,11 +3,13 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class WarehousePanel : MonoBehaviour
+public class WarehousePanel : MonoBehaviour, IPanelOnOff
 {
     Transform invenPanel;
 
     ItemSlot[] itemSlot;
+
+    public PanelName PanelName { get { return PanelName.WarehousePanel; } }
 
     void Awake()
     {
@@ -17,6 +19,7 @@ public class WarehousePanel : MonoBehaviour
     
     void Start()
     {
+        SetUIManager();
         gameObject.SetActive(false);
     }
 
@@ -36,16 +39,16 @@ public class WarehousePanel : MonoBehaviour
         }
     }
 
-    //public void SetUIManager()
-    //{
-    //    UIManager.instance.panelOnOff += OnOff;
-    //}
+    public void SetUIManager()
+    {
+        UIManager.instance.selectedPanelOnOff += OnOff;
+    }
 
-    //public void OnOff(PanelName panel)
-    //{
-    //    if (PanelName == panel)
-    //        gameObject.gameObject.SetActive(true);
-    //    else
-    //        gameObject.gameObject.SetActive(false);
-    //}
+    public void OnOff(PanelName panel)
+    {
+        if (PanelName == panel)
+            gameObject.SetActive(true);
+        else
+            gameObject.SetActive(false);
+    }
 }

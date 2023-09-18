@@ -9,7 +9,7 @@ public class SpriteManager : MonoBehaviour
     public static SpriteManager instance;
 
     //작업 이미지
-    Dictionary<WorkType, Sprite> workImageDict = new Dictionary<WorkType, Sprite>();
+    Dictionary<StaffWork, Sprite> workImageDict = new Dictionary<StaffWork, Sprite>();
     //차원 이미지
     Dictionary<Dimension, Sprite> dimensionImageDict = new Dictionary<Dimension, Sprite>();
 
@@ -25,10 +25,10 @@ public class SpriteManager : MonoBehaviour
         unusableSlot = Resources.Load<Sprite>("Sprite/Item/UnusableSlot");
     }
 
-    public Sprite GetWorkImage(WorkType workType)
+    public Sprite GetWorkImage(StaffWork workType)
     {
         if (workImageDict.ContainsKey(workType)) { return workImageDict[workType]; }
-        else return workImageDict[WorkType.Checking];
+        else return workImageDict[StaffWork.Checking];
     }
 
     public Sprite GetDimensionImage(Dimension dimension)
@@ -40,9 +40,9 @@ public class SpriteManager : MonoBehaviour
     void SetWorkImageDictionary()
     {
         string spritePath = "Sprite/WorkIcon/";
-        foreach(WorkType type in Enum.GetValues(typeof(WorkType)))
+        foreach(StaffWork type in Enum.GetValues(typeof(StaffWork)))
         {
-            Sprite sprite = Resources.Load<Sprite>(spritePath + Enum.GetName(typeof(WorkType), type));
+            Sprite sprite = Resources.Load<Sprite>(spritePath + Enum.GetName(typeof(StaffWork), type));
             if (sprite != null)
             {
                 workImageDict.Add(type, sprite);
