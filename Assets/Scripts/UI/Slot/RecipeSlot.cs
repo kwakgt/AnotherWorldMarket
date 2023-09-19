@@ -29,8 +29,7 @@ public class RecipeSlot : MonoBehaviour
     {
         this.factoryIndex = factoryIndex;
         this.factory = factory;
-        staff = factory.staffs[factoryIndex];
-
+        
         //레시피 드롭다운 초기화
         if (recipeList.options.Count <= 0)
         {
@@ -57,6 +56,7 @@ public class RecipeSlot : MonoBehaviour
         if (factory == null) return;
 
         //유닛슬롯 초기화
+        staff = factory.staffs[factoryIndex];
         unitSlot.SetStaff(staff);
 
         //레시피와 재료 초기화

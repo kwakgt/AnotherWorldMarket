@@ -66,7 +66,7 @@ public class Item : IEquatable<Item>
 
     public bool Equals(Item item)
     {
-        if (ReferenceEquals(item, null))
+        if (item == null)
             return false;
 
         if (name.Equals(item.name) && uniqueKey.Equals(item.uniqueKey))

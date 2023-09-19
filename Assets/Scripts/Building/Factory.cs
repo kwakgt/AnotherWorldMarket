@@ -129,23 +129,27 @@ public class Factory : Structure
 
     public void CreateProduct(int factoryIndex) //제품 생성
     {
+        if (selectedRecipe[factoryIndex].product == null) return;
+
         //재료 삭제 후 완성품 제공
-        for(int i = 0; i < selectedRecipe[factoryIndex].items.Length;i++)
+        for (int i = 0; i < selectedRecipe[factoryIndex].items.Length; i++)
         {
             Item item = selectedRecipe[factoryIndex].items[i];
-            if (item == null)   continue;
+            if (item == null) continue;
 
-            for (int j = 0; j < materials[factoryIndex].Length; j++)
+            if (item.Equals(materials[factoryIndex][i]))
             {
-                if (item.Equals(materials[factoryIndex][j]))
+                materials[factoryIndex][i].MinusAmount(item.amount);
+                if (materials[factoryIndex][i].amount <= 0)
                 {
-                    materials[factoryIndex][j].MinusAmount(item.amount);
-                    if(materials[factoryIndex][j].amount <= 0)
-                    {
-                        materials[factoryIndex][j] = null;
-                    }
+                    materials[factoryIndex][i] = null;
                 }
             }
+            else
+            {
+                return; //재료가 다르면 생산 취소
+            }
+
         }
         int idx = inventory.FindIndex(it => it.Equals(selectedRecipe[factoryIndex].product));
         if (idx > -1)
@@ -286,8 +290,8 @@ public class Factory : Structure
                 bool isMaterial = false;
                 for (int j = 0; j < selectedRecipe.Length; j++) //아이템을 3개의 레시피와 비교
                 {
-                    if (selectedRecipe[j].ContainToRecipe(inventory[i]))
-                        isMaterial |= true; //3개의 레시피 중 하나라도 포함된다면 true
+                    if (staffs[j] == null) continue;    //직원이 없으면 건너뛰기
+                    isMaterial |= selectedRecipe[j].ContainToRecipe(inventory[i]); //3개의 레시피 중 하나라도 포함된다면 true
                 }
 
                 if (!isMaterial)    //재료가 아니면 필요없는 아이템이므로 창고로 옮김

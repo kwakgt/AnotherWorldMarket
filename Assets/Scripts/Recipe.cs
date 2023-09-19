@@ -5,10 +5,10 @@ public class Recipe
 {
     public StaffWork workType { get;}
     public Item product { get;}
-    public Item[] items { get; } = new Item[5]; 
-    
-    
-    bool[] check = new bool[5];
+    public Item[] items { get; } = new Item[5];
+
+
+
 
     public Recipe(StaffWork _workType)
     {
@@ -30,42 +30,35 @@ public class Recipe
 
     public bool CompareMaterial(Item[] others)
     {
-        if (ReferenceEquals(others, null)) return false;
-        if (ReferenceEquals(product, null)) return false;
+        if (others == null) return false;
+        if (product == null) return false;
 
+        bool check = true;
         for (int i = 0; i < items.Length; i++)
         {
             if (items[i] == null)                                                       //레시피 아이템이 없다면 어떤 재료가 와도 상관없으니 true
             {
-                check[i] = true;
+                check &= true;
                 continue;
             }
             else if (others[i] == null)                                                 //재료가 없다면 false
             {
-                check[i] = false;
+                check &= false;
                 break;
             }
             else if (items[i].Equals(others[i]) && items[i].amount <= others[i].amount) //아이템이 같고, 재료의 양이 레시피보다 같거나 많으면 true
             {
-                check[i] = true;
+                check &= true;
                 continue;
             }
             else                                                                        //그 외 false
             {
-                check[i] = false;
+                check &= false;
                 break;
             }
         }
 
-        return ResultCheck();
-    }
-
-    bool ResultCheck()
-    {
-        for (int i = 0; i < check.Length; i++)
-            if (!check[i]) return false;
-
-        return true;
+        return check;
     }
 
     public bool ContainToRecipe(Item material)
