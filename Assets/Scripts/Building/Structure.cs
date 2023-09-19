@@ -109,8 +109,8 @@ public class Structure : MonoBehaviour, IBeginDragHandler, IDragHandler  //UI°¡ 
 
     public Vector2 GetFrontPosition(int index = -1)
     {
-        if (index < 0 || index >= frontSize) return frontPositions[Random.Range(0, frontSize)];
-        return frontPositions[index];
+        if (index < 0) return frontPositions[Random.Range(0, frontSize)];
+        return frontPositions[index % frontSize];
     }
 
     public Vector2 GetRandomFrontPosition(Vector2 excluded)

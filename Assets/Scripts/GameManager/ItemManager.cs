@@ -32,10 +32,10 @@ public class ItemManager : MonoBehaviour
             Sprite sprite = Resources.Load<Sprite>(spritePath); //리소스에서 Sprite 불러오기
             Dimension dimension = (Dimension)Enum.Parse(typeof(Dimension), (string)list[i]["dimension"]);  //Dimension enum으로 변경
             StaffWork work = (StaffWork)Enum.Parse(typeof(StaffWork), (string)list[i]["workType"]);              //WorkType enum으로 변경
-            itemNameDB.Add((string)list[i]["name"], 
-                new Item((string)list[i]["name"], (int)list[i]["uniqueKey"], dimension, work, (int)list[i]["price"], (int)list[i]["amountOfShelf"], (int)list[i]["amountOfWarehouse"], sprite));
+            itemNameDB.Add((string)list[i]["nameEN"], 
+                new Item((string)list[i]["nameEN"], (int)list[i]["uniqueKey"], dimension, work, (int)list[i]["price"], (int)list[i]["amountOfShelf"], (int)list[i]["amountOfWarehouse"], sprite));
             itemUniqueKeyDB.Add((int)list[i]["uniqueKey"], 
-                new Item((string)list[i]["name"], (int)list[i]["uniqueKey"], dimension, work, (int)list[i]["price"], (int)list[i]["amountOfShelf"], (int)list[i]["amountOfWarehouse"], sprite));
+                new Item((string)list[i]["nameEN"], (int)list[i]["uniqueKey"], dimension, work, (int)list[i]["price"], (int)list[i]["amountOfShelf"], (int)list[i]["amountOfWarehouse"], sprite));
         }
     }
 
@@ -74,7 +74,8 @@ public class ItemManager : MonoBehaviour
             item.PlusAmount(amount);
             return item;
         }
-        else return null;
+        
+        return null;
     }
 
     public Item GetItem(int uniqueKey, int amount = 0)

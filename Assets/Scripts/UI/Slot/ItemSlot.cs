@@ -11,7 +11,7 @@ public class ItemSlot : MonoBehaviour
     RawImage itemImage;
     TextMeshProUGUI itemName;
 
-    bool isUsable;
+    bool isUsable = true;
 
     void Awake()
     {
@@ -28,15 +28,12 @@ public class ItemSlot : MonoBehaviour
     {
         //SetItem 함수를 쓰면 무조건 사용가능 슬롯
         isUsable = true;
-
-        if (_item == null)
-            item = null;
-        else
-            item = _item;
+        item = _item;
     }
 
     public void SetUnusableItemSlot()
     {
+        gameObject.name = "Unusable";
         item = null;
         isUsable = false;
     }
@@ -45,6 +42,7 @@ public class ItemSlot : MonoBehaviour
     {
         if(item != null && isUsable)
         {
+            gameObject.name = item.name;
             itemImage.color = Color.white;
             itemImage.texture = item.sprite.texture;
             itemName.text = item.amount.ToString();
@@ -58,6 +56,7 @@ public class ItemSlot : MonoBehaviour
         }
         else
         {
+            gameObject.name = "ItemSlot";
             itemImage.color = Color.clear; //투명하게 안하면 흰색배경이미지가 보임
             itemImage.texture = null;
             itemName.text = null;

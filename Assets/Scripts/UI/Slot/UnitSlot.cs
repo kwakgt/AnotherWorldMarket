@@ -1,6 +1,5 @@
 using EnumManager;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -37,7 +36,7 @@ public class UnitSlot : MonoBehaviour , IBeginDragHandler, IDragHandler, IEndDra
 
     void Display()
     {
-        if(staff != null)
+        if (staff != null)
         {
             faceImage.sprite = staff.faceImage.sprite;
             workGauge.maxValue = staff.slider.maxValue;
@@ -45,8 +44,12 @@ public class UnitSlot : MonoBehaviour , IBeginDragHandler, IDragHandler, IEndDra
             workImage.sprite = SpriteManager.instance.GetWorkImage(staff.GetWorkState(false));
             //TODO:: 이름추가
         }
-
-        //staff == null 이면 StaffManagementSlot이 파괴되거나 disable
+        else
+        {
+            faceImage.sprite = null;
+            workGauge.value = 0;
+            workImage.sprite = null;
+        }
     }
 
     public void OnBeginDrag(PointerEventData eventData)

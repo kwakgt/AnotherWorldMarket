@@ -128,6 +128,10 @@ public class Staff : Unit
             {
                 GoFactory(command);
             }
+            else if( workType == StaffWork.Emptying)
+            {
+                GoWarehouse(inventory[workCount]);
+            }
         }
         
     }
@@ -150,7 +154,12 @@ public class Staff : Unit
         else if (stat.ReplaceFromWorkTypeToInt(type) == 0)
         {
             Debug.Log("해당 직원은 " + type + " 작업을 수행 할 수 없습니다.");
-            return true; 
+            return true;
+        }
+        else if (IsFactoryWork(type) && BuildingManager.instance.RequestEmptyFactory(type) == null)
+        {
+            Debug.Log("작업 할 수 있는 " + type + " 공장이 없습니다.");
+            return true;
         }
         else return false;
         //TODO::명령 취소 조건 작성
@@ -237,15 +246,12 @@ public class Staff : Unit
         //차원포탈 작업루틴 : 벌목,채광,채집,사냥,낚시
         else if (IsDimensionWork(command))
         {
-            yield return StartCoroutine(DimentionPortalRoutine());
+            yield return StartCoroutine(DimentionWorkRoutine());
         }
         //공장 작업루틴 : 쿠킹,컷팅,드라잉,쥬싱,멜팅,믹싱,패키징
         else if(IsFactoryWork(command))
         {
-            if(workType == command)
-            {
-                yield return RunningCoroutine(FactoryWork());
-            }
+            yield return StartCoroutine(FactoryWorkRoutine());
         }
 
         //TODO:: 작업에 따라 추가
@@ -267,6 +273,7 @@ public class Staff : Unit
                 else if(receivedCommand == StaffWork.Deliverying)
                 {
                     WorkStateMachine(StaffWork.Deliverying, StaffWork.Checking, receivedCommand, receivedCommand);
+                    checkingItems.Clear();
                 }
                 else
                 {
@@ -277,37 +284,6 @@ public class Staff : Unit
             else
             {   //인벤에 아이템이 있다면 비우러 가기
                 WorkStateMachine(receivedCommand, StaffWork.Emptying, receivedCommand, nextWorkType);
-            }
-        }
-    }
-
-    IEnumerator DimentionPortalRoutine()
-    {
-        if (workType == command)
-        {
-            //TODO:: 하이드 - 디멘션입장 - 자원채취 - 창고로 옮기기
-            yield return RunningCoroutine(DimensionWork());
-            if (workCount >= invenSizeAvailable)
-            {
-                WorkStateMachine(command, StaffWork.Emptying, command, workType);
-                workCount = 0;
-            }
-            else
-            {
-                GoDimensionPortal(target);
-            }
-        }
-        else if (workType == StaffWork.Emptying)
-        {
-            yield return RunningCoroutine(Emptying());
-            if (workCount >= invenSizeAvailable)
-            {
-                WorkStateMachine(command, command, receivedCommand, command);
-                workCount = 0;
-            }
-            else
-            {
-                GoWarehouse(inventory[workCount]);
             }
         }
     }
@@ -431,7 +407,7 @@ public class Staff : Unit
             yield return RunningCoroutine(Loading());
             if (workCount >= invenSizeAvailable)
             {
-                WorkStateMachine(command, StaffWork.Loading, command, StaffWork.Loading);
+                WorkStateMachine(command, StaffWork.Emptying, command, StaffWork.Emptying);
             }
             else
             {
@@ -453,7 +429,58 @@ public class Staff : Unit
         }
     }
 
-    IEnumerator Checking(bool isFactory = false)  //아이템 재고 확인
+    IEnumerator DimentionWorkRoutine()
+    {
+        if (workType == command)
+        {
+            //TODO:: 하이드 - 디멘션입장 - 자원채취 - 창고로 옮기기
+            yield return RunningCoroutine(DimensionWork());
+            if (workCount >= invenSizeAvailable)
+            {
+                WorkStateMachine(command, StaffWork.Emptying, command, workType);
+                workCount = 0;
+            }
+            else
+            {
+                GoDimensionPortal(target);
+            }
+        }
+        else if (workType == StaffWork.Emptying)
+        {
+            yield return RunningCoroutine(Emptying());
+            if (workCount >= invenSizeAvailable)
+            {
+                WorkStateMachine(command, command, receivedCommand, command);
+                workCount = 0;
+            }
+            else
+            {
+                GoWarehouse(inventory[workCount]);
+            }
+        }
+    }
+
+    IEnumerator FactoryWorkRoutine()
+    {
+        if (workType == command)
+        {
+            yield return RunningCoroutine(FactoryWork());
+        }
+        else if (workType == StaffWork.Emptying)
+        {
+            yield return RunningCoroutine(Emptying());
+            if (workCount >= invenSizeAvailable)
+            {
+                WorkStateMachine(command, command, command, command);
+            }
+            else
+            {
+                GoWarehouse(inventory[workCount]);
+            }
+        }
+    }
+
+    IEnumerator Checking(bool isFactory = false)  //운반할 아이템 확인
     {
         waiting = WaitingCoroutine(Waiting(checkingTime));
         yield return waiting;

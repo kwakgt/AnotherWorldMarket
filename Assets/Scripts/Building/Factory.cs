@@ -13,7 +13,7 @@ public class Factory : Structure
     //레시피 리스트
     public List<Recipe> recipes { get; private set; } = new List<Recipe>();
     //선택된 레시피
-    Recipe[] selectedRecipe = new Recipe[3];
+    public Recipe[] selectedRecipe { get; private set; } = new Recipe[3];
     //레시피 재료
     public List<Item[]> materials { get; private set; } = new List<Item[]>();
     //재료칸 사이즈
@@ -22,6 +22,8 @@ public class Factory : Structure
     int maxMaterialAmount = 50;
     //인벤토리
     List<Item> inventory = new List<Item>();
+    //최대 인벤토리 수
+    int maxInventorySize = 30;
     //공장상태
     FactoryStatus[] status = new FactoryStatus[3] { FactoryStatus.Empty, FactoryStatus.Empty, FactoryStatus.Empty };
 
@@ -36,7 +38,9 @@ public class Factory : Structure
     {
         base.Start();
         recipes = ItemManager.instance.GetRecipe(workType);
-        SelectRecipe(0);
+        SelectRecipe(0, 0);
+        SelectRecipe(1, 0);
+        SelectRecipe(2, 0);
 
         uniIndex = BuildingManager.instance.RequestFactoryIndex();
         BuildingManager.instance.AddFactoryDictionary(uniIndex, workType, this);
@@ -50,23 +54,27 @@ public class Factory : Structure
         {
             for (int factoryIndex = 0; factoryIndex < staffs.Length; factoryIndex++)    //factoryIndex : 공장 슬롯 인덱스
             {
-                //직원이 없거나 레시피 아이템이 없으면 건너뛰기(재료템이 50개보다 많으면 건너뛰기)
-                if (staffs[factoryIndex] == null || selectedRecipe[factoryIndex].items[check] == null || materials[factoryIndex][check].amount > maxMaterialAmount) continue;
-                
+                //직원이 없거나 레시피 아이템이 없으면 건너뛰기
+                if (staffs[factoryIndex] == null || selectedRecipe[factoryIndex].items[check] == null) continue;
+                //인벤토리에서 아이템 찾기
                 int index = inventory.FindIndex(it => it.Equals(selectedRecipe[factoryIndex].items[check]));
-                //인벤토리에 아이템이 없으면 건너뛰기
-                if (index < 0) continue;
-                //옮길 아이템 수량 계산
-                int amount = Mathf.Clamp(inventory[index].amount, 0, staffs[factoryIndex].stat.GetWorkingAmount(workType));
+                //if(index < 0) continue; :: 레시피 변경 시 else문 수행 안됨
                 if (materials[factoryIndex][check] == null)
                 {
+                    if (index < 0) continue;
                     //재료칸에 아이템이 없으면 창고에서 아이템 찾아 새 아이템 넣기
+                    int amount = Mathf.Clamp(inventory[index].amount, 0, staffs[factoryIndex].stat.GetWorkingAmount(workType));
                     materials[factoryIndex][check] = new Item(inventory[index]);
                     if (ExchangeItem(inventory[index], materials[factoryIndex][check], amount) && inventory[index].amount <= 0)
                         inventory.Remove(inventory[index]);
                 }
                 else if (materials[factoryIndex][check].Equals(selectedRecipe[factoryIndex].items[check]))
                 {
+                    if (index < 0) continue;
+                    //재료템이 maxMaterialAmount개보다 많으면 건너뛰기
+                    if (materials[factoryIndex][check].amount > maxMaterialAmount) continue;
+                    int max = Mathf.Min(staffs[factoryIndex].stat.GetWorkingAmount(workType), maxMaterialAmount - materials[factoryIndex][check].amount);
+                    int amount = Mathf.Clamp(inventory[index].amount, 0, max);
                     //재료칸에 아이템이 있고 레시피와 같으면 창고에서 아이템 찾아 수량만 플러스
                     if (ExchangeItem(inventory[index], materials[factoryIndex][check], amount) && inventory[index].amount <= 0)
                         inventory.Remove(inventory[index]);
@@ -88,7 +96,7 @@ public class Factory : Structure
                             materials[factoryIndex][check] = null;
                     }
                 }
-                yield return new WaitForSeconds(0.35f);
+                yield return new WaitForSeconds(0.25f);
             }
 
             if (++check == maxMaterialSize)
@@ -174,7 +182,7 @@ public class Factory : Structure
     {
         for (int i = 0; i < maxMaterialSize; i++)
         {
-            if (materials[i] == null) continue;
+            if (materials[factoryIndex][i] == null) continue;
 
             int index = inventory.FindIndex(it => it.Equals(materials[factoryIndex][i]));
             if (index < 0)
@@ -215,22 +223,17 @@ public class Factory : Structure
                 list.Add(i);
         }
 
-        return Random.Range(0, list.Count);
+        return (list.Count == 0) ? Random.Range(0, list.Count) : list[Random.Range(0, list.Count)];
     }
 
-    public void SelectRecipe(int factoryIndex) //선택 레시피 변경
+    public void SelectRecipe(int factoryIndex, int recipeIndex) //선택 레시피 변경
     {
-        selectedRecipe[factoryIndex] = recipes[factoryIndex];
+        selectedRecipe[factoryIndex] = recipes[recipeIndex];
     }
 
     public Recipe GetRecipe(int factoryIndex) //선택된 레시피
     {
         return selectedRecipe[factoryIndex];
-    }
-
-    public List<Recipe> GetRecipes()
-    {
-        return recipes;
     }
 
     public Item GetItemInInventory(int index) //아이템 얻기
@@ -248,7 +251,8 @@ public class Factory : Structure
 
     public void AddItemInInventoty(Item newItem) //인벤에 아이템 추가
     {
-        inventory.Add(newItem);
+        if(inventory.Count < maxInventorySize)
+            inventory.Add(newItem);
     }
 
     public void RemoveItemInInventory(Item item) //인벤 아이템 제거
@@ -295,4 +299,6 @@ public class Factory : Structure
     }
 
     public int MaxMaterialSize { get { return maxMaterialSize; } }
+
+    public int InventorySize { get { return inventory.Count; } }
 }

@@ -58,6 +58,9 @@ public class MouseController : MonoBehaviour
                 else
                 {
                     GameManager.instance.selectedUnit = null;
+                    GameManager.instance.selectedShelf = null;
+                    GameManager.instance.selectedWarehouse = null;
+                    GameManager.instance.selectedFactory = null;
                     UIManager.instance.ExecuteSelectedPanelOnOff(PanelName.Off);
                 }
                 //TODO::다른 태그 선택 클릭시 추가
@@ -65,7 +68,9 @@ public class MouseController : MonoBehaviour
             else
             {
                 GameManager.instance.selectedUnit = null;
-                UIManager.instance.ExecuteSelectedPanelOnOff(PanelName.Off);
+                GameManager.instance.selectedShelf = null;
+                GameManager.instance.selectedWarehouse = null;
+                GameManager.instance.selectedFactory = null;
             }
         }
     }
