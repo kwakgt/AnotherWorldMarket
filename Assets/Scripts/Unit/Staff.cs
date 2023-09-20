@@ -572,7 +572,6 @@ public class Staff : Unit
             Item notNeed = factory.UnnecessaryItem();
             if(notNeed != null)
             {
-                Debug.Log(ReferenceEquals(notNeed, factory.GetItemInInventory(factory.FindItemIndexInInventory(notNeed))));
                 if (PutItemInInventory(notNeed, Mathf.Clamp(notNeed.amount, 0, stat.GetWorkingAmount(command))) && notNeed.amount <= 0)
                     factory.RemoveItemInInventory(notNeed);
             }

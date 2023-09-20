@@ -15,9 +15,9 @@ public class GameManager : MonoBehaviour
     GameMode gameMode = GameMode.Selling;    //현재 게임모드
     float preTimeScale = 1f;                 //이전 속도
 
-
     public int day { get; set; } = 1;           //현재일수
     public int hour { get; set; }           //현재시간
+
     void Awake()
     {
         instance = this;

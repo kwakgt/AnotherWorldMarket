@@ -33,7 +33,6 @@ public class ItemSlot : MonoBehaviour
 
     public void SetUnusableItemSlot()
     {
-        gameObject.name = "Unusable";
         item = null;
         isUsable = false;
     }
@@ -50,6 +49,7 @@ public class ItemSlot : MonoBehaviour
         else if(item == null && !isUsable)
         {
             //사용불가슬롯이라면 X 표시
+            gameObject.name = "Unusable";
             itemImage.color = Color.white;
             itemImage.texture = SpriteManager.instance.unusableSlot.texture;
             itemName.text = null;

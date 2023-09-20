@@ -66,11 +66,11 @@ public class CameraController : MonoBehaviour
             mouseXY.y = InputManager.instance.mouseY;
             transform.Translate(-mouseXY * moveSpeed * Time.unscaledDeltaTime * 5);
         }
-        if (GameManager.instance.selectedUnit != null)
-        {
-            ChangeIndex(GameManager.instance.selectedUnit.gridIndex);
-            transform.position = GameManager.instance.selectedUnit.transform.position + new Vector3(0, 0, -10);
-        }
+        //if (GameManager.instance.selectedUnit != null)
+        //{
+        //    ChangeIndex(GameManager.instance.selectedUnit.gridIndex);
+        //    transform.position = GameManager.instance.selectedUnit.transform.position + new Vector3(0, 0, -10);
+        //}
     }
 
     void ChangeSize()

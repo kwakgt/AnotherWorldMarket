@@ -15,6 +15,15 @@ public class UIManager : MonoBehaviour
         instance = this;
     }
 
+    void Update()
+    {
+        if(InputManager.instance.escKeyDown)
+        {
+            ExecuteSelectedPanelOnOff(PanelName.Off);
+            ExecutePanelOnOff(PanelName.Off);
+        }
+    }
+
     public void ExecuteSelectedPanelOnOff(PanelName panel)
     {
         if(IsAllOff)

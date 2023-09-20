@@ -18,10 +18,8 @@ public class Factory : Structure
     public List<Item[]> materials { get; private set; } = new List<Item[]>();
     //재료칸 사이즈
     int maxMaterialSize = 5;
-    //재료칸 최대량
-    int maxMaterialAmount = 50;
     //인벤토리
-    List<Item> inventory = new List<Item>();
+    public List<Item> inventory = new List<Item>();
     //최대 인벤토리 수
     int maxInventorySize = 30;
     //공장상태
@@ -66,18 +64,19 @@ public class Factory : Structure
                     int amount = Mathf.Clamp(inventory[index].amount, 0, staffs[factoryIndex].stat.GetWorkingAmount(workType));
                     materials[factoryIndex][check] = new Item(inventory[index]);
                     if (ExchangeItem(inventory[index], materials[factoryIndex][check], amount) && inventory[index].amount <= 0)
-                        inventory.Remove(inventory[index]);
+                        inventory.RemoveAt(index);
+
                 }
                 else if (materials[factoryIndex][check].Equals(selectedRecipe[factoryIndex].items[check]))
                 {
                     if (index < 0) continue;
                     //재료템이 maxMaterialAmount개보다 많으면 건너뛰기
-                    if (materials[factoryIndex][check].amount > maxMaterialAmount) continue;
-                    int max = Mathf.Min(staffs[factoryIndex].stat.GetWorkingAmount(workType), maxMaterialAmount - materials[factoryIndex][check].amount);
+                    if (materials[factoryIndex][check].amount > materials[factoryIndex][check].amountOfFactory) continue;
+                    int max = Mathf.Min(staffs[factoryIndex].stat.GetWorkingAmount(workType), materials[factoryIndex][check].amountOfFactory - materials[factoryIndex][check].amount);
                     int amount = Mathf.Clamp(inventory[index].amount, 0, max);
                     //재료칸에 아이템이 있고 레시피와 같으면 창고에서 아이템 찾아 수량만 플러스
                     if (ExchangeItem(inventory[index], materials[factoryIndex][check], amount) && inventory[index].amount <= 0)
-                        inventory.Remove(inventory[index]);
+                        inventory.RemoveAt(index);
                 }
                 else
                 {
@@ -91,7 +90,8 @@ public class Factory : Structure
                     }
                     else
                     {
-                        //창고에 아이템 있으면 수량 합치고, 재료칸 아이템 삭제 
+                        //창고에 아이템 있으면 수량 합치고, 재료칸 아이템 삭제
+                        int amount = Mathf.Clamp(materials[factoryIndex][check].amount, 0, inventory[index].amountOfFactory - inventory[index].amount);
                         if (ExchangeItem(materials[factoryIndex][check], inventory[index], materials[factoryIndex][check].amount) && materials[factoryIndex][check].amount <= 0)
                             materials[factoryIndex][check] = null;
                     }
@@ -298,7 +298,6 @@ public class Factory : Structure
                     return inventory[i];
             }
         }
-
         return null;
     }
 

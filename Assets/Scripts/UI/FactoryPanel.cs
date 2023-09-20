@@ -58,15 +58,13 @@ public class FactoryPanel : MonoBehaviour, IPanelOnOff
     void Display()
     {
         Factory factory = GameManager.instance.selectedFactory;
-        if(factory == null) return;
-        for (int i = 0; i < factory.InventorySize; i++)
+        if (factory == null) return;
+        for (int i = 0; i < itemSlots.Length; i++)
         {
-            itemSlots[i].SetItem(factory.GetItemInInventory(i));
-        }
-
-        for (int i = factory.InventorySize; i < itemSlots.Length; i++)
-        {
-            itemSlots[i].SetItem(null);
+            if (i < factory.InventorySize)
+                itemSlots[i].SetItem(factory.GetItemInInventory(i));
+            else
+                itemSlots[i].SetItem(null);
         }
     }
 

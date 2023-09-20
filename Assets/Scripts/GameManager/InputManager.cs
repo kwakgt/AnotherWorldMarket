@@ -13,6 +13,7 @@ public class InputManager : MonoBehaviour
     public bool rKeyDown { get; set; }
     public bool spaceKeyDown { get; set; }
     public bool tabKeyDown { get; set; }
+    public bool escKeyDown { get; set; }
 
 
     //마우스
@@ -39,6 +40,7 @@ public class InputManager : MonoBehaviour
         rKeyDown = Input.GetKeyDown(KeyCode.R);
         spaceKeyDown = Input.GetKeyDown(KeyCode.Space);
         tabKeyDown = Input.GetKeyDown(KeyCode.Tab);
+        escKeyDown = Input.GetKeyDown(KeyCode.Escape);
         //TODO:: 단축키 추가
     }
 

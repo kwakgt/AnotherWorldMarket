@@ -6,7 +6,7 @@ using Random = UnityEngine.Random;
 
 //TimeScale = 0 일 때, 충돌감지 안됨
 //리지디바디 Kinematic 설정을 해야 이동할 때 콜라이더도 같이 이동된다. -> 다시 해보니 없어도 잘됨.. -> 모든 오브젝트에 리지디바디가 없으니 콜라이더가 다시 이동 안된다.
-public class Structure : MonoBehaviour, IBeginDragHandler, IDragHandler  //UI가 아니면 카메라에 Physics2DRaycater 컴포넌트 필요
+public class Structure : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDragHandler  //UI가 아니면 카메라에 Physics2DRaycater 컴포넌트 필요
 {
     public bool displayGridGizmos;
 
@@ -344,6 +344,29 @@ public class Structure : MonoBehaviour, IBeginDragHandler, IDragHandler  //UI가 
         {
             SwapWidthAndHeight();
             return Direction.Up;
+        }
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if(eventData.pointerClick == gameObject)
+        {
+            if (CompareTag("Factory"))
+            {
+                GameManager.instance.selectedFactory = (Factory)this;
+                UIManager.instance.ExecuteSelectedPanelOnOff(PanelName.FactoryPanel);
+            }
+            else if (CompareTag("Shelf"))
+            {
+                GameManager.instance.selectedShelf = (Shelf)this;
+                UIManager.instance.ExecuteSelectedPanelOnOff(PanelName.ShelfPanel);
+
+            }
+            else if (CompareTag("Warehouse"))
+            {
+                GameManager.instance.selectedWarehouse = (Warehouse)this;
+                UIManager.instance.ExecuteSelectedPanelOnOff(PanelName.WarehousePanel);
+            }
         }
     }
 

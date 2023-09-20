@@ -1,11 +1,11 @@
-using UnityEngine;
+using EnumManager;
 using System.Collections;
 using TMPro;
+using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using EnumManager;
-using System;
 
-public class Unit : MonoBehaviour   //IPointerClickHandler //UI가 아니면 카메라에 Physics2DRaycater 컴포넌트 필요
+public class Unit : MonoBehaviour , IPointerClickHandler //UI가 아니면 카메라에 Physics2DRaycater 컴포넌트 필요
 {
     public Vector2 target;             //이동목표
     Vector2[] path;             //찾은 경로
@@ -226,16 +226,12 @@ public class Unit : MonoBehaviour   //IPointerClickHandler //UI가 아니면 카메라�
         }
     }
 
-    /*
     public void OnPointerClick(PointerEventData eventData)
     {
-        if(eventData.pointerClick = this.gameObject)
+        if(eventData.pointerClick == gameObject)
         {
             GameManager.instance.selectedUnit = this;
+            UIManager.instance.ExecuteSelectedPanelOnOff(PanelName.UnitPanel);
         }
-
-        Debug.Log(GameManager.instance.selectedUnit);
-    }*/
-
-
+    }
 }
