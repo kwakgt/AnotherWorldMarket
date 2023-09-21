@@ -1,11 +1,5 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 namespace EnumManager
 {
-
     /// <summary>
     /// 게임모드
     /// </summary>
@@ -14,8 +8,8 @@ namespace EnumManager
     /// <summary>
     /// 구조체 입구 방향, 입구방향으로만 유닛이 접근가능하다.
     /// </summary>
-    public enum Direction { Left, Down, Right, Up }
-    
+    public enum Direction { Down, Right, Up, Left }
+
     /// <summary>
     /// 판매대,아이템 크기(소형,중형,대형)
     /// </summary>

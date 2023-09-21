@@ -6,6 +6,7 @@ using UnityEngine.UIElements;
 
 public class Factory : Structure
 {
+    public SpriteRenderer image;
     //작업 타입
     public StaffWork workType { get; private set; }
     //일하고 있는 직원
@@ -28,20 +29,12 @@ public class Factory : Structure
     protected override void Awake()
     {
         base.Awake();
-        workType = StaffWork.Cutting;   //TEST TODO:: 추후 공장 건설 시에 초기화
-        InitMaterials();
+        image = GetComponent<SpriteRenderer>();
     }
 
     protected override void Start()
     {
         base.Start();
-        recipes = ItemManager.instance.GetRecipe(workType);
-        SelectRecipe(0, 0);
-        SelectRecipe(1, 0);
-        SelectRecipe(2, 0);
-
-        uniIndex = BuildingManager.instance.RequestFactoryIndex();
-        BuildingManager.instance.AddFactoryDictionary(uniIndex, workType, this);
         StartCoroutine(MovingMaterials());
     }
 
@@ -114,6 +107,19 @@ public class Factory : Structure
         }
         else
             return false;
+    }
+
+    public void SetFactory(Sprite sprite, StaffWork _workType) //공장 초기화
+    {
+        image.sprite = sprite;
+        workType = _workType;
+        recipes = ItemManager.instance.GetRecipe(workType);
+        uniIndex = BuildingManager.instance.RequestFactoryIndex();
+        BuildingManager.instance.AddFactoryDictionary(uniIndex, workType, this);
+        InitMaterials();
+        SelectRecipe(0, 0);
+        SelectRecipe(1, 0);
+        SelectRecipe(2, 0);
     }
 
     void InitMaterials() //재료칸 초기화

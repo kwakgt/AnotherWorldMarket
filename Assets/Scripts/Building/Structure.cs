@@ -89,7 +89,7 @@ public class Structure : MonoBehaviour, IPointerClickHandler, IBeginDragHandler,
         {
             case Direction.Left:
                 for (int i = 0; i < frontSize; i++)    //가장 왼쪽줄의 worldpoint - 노드지름 
-                    position[i] = new Vector2(occupiedNodes[0, i].worldPosition.x - nodeDiameter, occupiedNodes[0, i].worldPosition.y);
+                    position[i] = new Vector2(occupiedNodes[0, i].worldPosition.x - nodeDiameter, occupiedNodes[0, i].worldPosition.y); 
                 break;
             case Direction.Right:
                 for (int i = 0; i < frontSize; i++)    //가장 오른쪽줄의 worldpoint + 노드지름 
@@ -150,8 +150,10 @@ public class Structure : MonoBehaviour, IPointerClickHandler, IBeginDragHandler,
             thisRenderer.color = new Color(0, 0, 100, 100);
             frontRenderer.color = Color.white;
 
-            //이동, worldposition 변수가 아닌 transform 현재위치로 계산해야됨
+            //초기값 저장
             Vector2 firstPosition = worldPosition;
+            
+            //이동, worldposition 변수가 아닌 transform 현재위치로 계산해야됨
             Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);    //마우스포지션 저장
             int dx = Mathf.RoundToInt(mousePosition.x - transform.position.x);              //마우스 위치와 처음위치의 x변화량
             int dy = Mathf.RoundToInt(mousePosition.y - transform.position.y);              //마우스 위치와 처음위치의 y변화량
@@ -239,8 +241,9 @@ public class Structure : MonoBehaviour, IPointerClickHandler, IBeginDragHandler,
                 }
                 else
                 {
-                    Rotate(countRotation);                      //회전 원상복구
-                    transform.position = firstPosition;         //위치 원상복구, 회전이 먼저 복구되어야함, 순서중요
+                    //원상복구
+                    Rotate(countRotation);
+                    transform.position = firstPosition;
                     countRotation = 0;
                     ChangeWalkableOfOccupiedNode(false);   //취소되면 처음에 walkable → true로 변경한 거 원상복구
                 }
@@ -270,18 +273,18 @@ public class Structure : MonoBehaviour, IPointerClickHandler, IBeginDragHandler,
     {
         for (int i = 0; i < 4 - rewind; i++)
         {
-            transform.Rotate(Vector3.forward, 90);                                      //90도 회전
-            ChangeFrontDirection();                                                     //판매방향변경
-            SwapWidthAndHeight();                                                       //노드 가로,세로 크기변경
-            countRotation = (countRotation + 1) % 4;                 //회전수++
+            transform.Rotate(Vector3.forward, 90);  //90도 회전                                  
+            ChangeFrontDirection(); //판매방향변경                                                    
+            SwapWidthAndHeight();   //노드 가로,세로 크기변경
+            countRotation = (countRotation + 1) % 4;    //회전수 카운트
         }
     }
 
     protected void ChangeFrontDirection()
     {
-        if (frontDir == Direction.Up)
+        if (frontDir == Direction.Left)
         {
-            frontDir = Direction.Left;
+            frontDir = Direction.Down;
             return;
         }
         frontDir += 1;
@@ -332,18 +335,18 @@ public class Structure : MonoBehaviour, IPointerClickHandler, IBeginDragHandler,
         Vector3 rotation = transform.rotation.eulerAngles;
 
         if (rotation == Vector3.zero)
-            return Direction.Left;
+            return Direction.Down;
         else if (rotation == new Vector3(0, 0, 90))
         {
             SwapWidthAndHeight();
-            return Direction.Down;
+            return Direction.Right;
         }
         else if (rotation == new Vector3(0, 0, 180))
-            return Direction.Right;
+            return Direction.Up;
         else
         {
             SwapWidthAndHeight();
-            return Direction.Up;
+            return Direction.Left;
         }
     }
 

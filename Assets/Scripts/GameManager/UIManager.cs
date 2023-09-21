@@ -26,7 +26,7 @@ public class UIManager : MonoBehaviour
 
     public void ExecuteSelectedPanelOnOff(PanelName panel)
     {
-        if(IsAllOff)
+        if(IsAllOff && !GameManager.instance.Equals(GameMode.Building))
             selectedPanelOnOff(panel);
     }
 
@@ -49,9 +49,10 @@ public interface IPanelOnOff
     /// UI매니저 panelOnOff 델리게이트에 등록
     /// </summary>
     void SetUIManager();
-    
+
     /// <summary>
     /// 패널명 비교하여 자기자신이면 true, 아니면 False
     /// </summary>
     void OnOff(PanelName panel);
+  
 }
